@@ -1,0 +1,44 @@
+.sider {
+   background-color: $main-bg-black;
+}
+.logo {
+   font-size: 2rem;
+   text-align: center;
+   padding: 10px;
+}
+.userInfoContainer {
+   background-color: $main-bg-black;
+   color: $main-text-white;
+   padding: 25px 20px;
+   font-size: 1rem;
+
+   .level {
+      color: $extra-text-gray;
+   }
+}
+.menu {
+   background-color: $main-bg-black;
+
+   :global {
+      .ant-menu-item {
+         transition: none !important;
+
+         &:active {
+            background: transparent !important;
+         }
+         &-selected {
+            background-color: $main-bg-black;
+         }
+      }
+   }
+}
+.logout {
+   background-color: inherit;
+   margin: 20px;
+
+   :global {
+      .ant-btn-text:active {
+         background-color: inherit;
+      }
+   }
+}

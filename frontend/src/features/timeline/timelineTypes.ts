@@ -1,0 +1,1 @@
+export type ITimelineItem = Record<string, string>;

@@ -1,13 +1,14 @@
 import type { FC } from 'react';
 import { Button, Flex, Layout, Menu } from 'antd';
 import { HistoryOutlined, FormOutlined, BarChartOutlined, SettingOutlined, LogoutOutlined } from "@ant-design/icons";
+import { Link } from 'react-router-dom';
 import styles from './Sidebar.module.scss';
 
 const { Sider } = Layout;
 
 const menuItems = [
-   { key: 'timeline', icon: <HistoryOutlined style={{ color: '#ffffff' }} />, label: 'Таймлайн' },
-   { key: 'new post', icon: <FormOutlined style={{ color: '#ffffff' }} />, label: 'Новая запись' },
+   { key: 'timeline', path: '/', icon: <HistoryOutlined style={{ color: '#ffffff' }} />, label: <Link to='/'>Таймлайн</Link> },
+   { key: 'new post', path: '/new-post', icon: <FormOutlined style={{ color: '#ffffff' }} />, label: <Link to='/new-note'>Новая запись</Link> },
    { key: 'stats', icon: <BarChartOutlined style={{ color: '#ffffff' }} />, label: 'Статистика' },
    { key: 'settings', icon: <SettingOutlined style={{ color: '#ffffff' }} />, label: 'Настройки' }
 ];

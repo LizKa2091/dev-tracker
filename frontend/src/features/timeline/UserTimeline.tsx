@@ -1,14 +1,33 @@
-import type { FC } from 'react';
-import { Timeline } from 'antd';
+import { useState, type FC } from 'react';
+import { Flex, Segmented, Timeline } from 'antd';
 import { useTimeline } from './useTimeline';
-import type { ITimelineItem } from './timelineTypes';
+import type { ISegmentedOption, TimelineItem } from './timelineTypes';
 import styles from './UserTimeline.module.scss';
 
+const segmentedOptions: ISegmentedOption[] = [
+   { label: 'День', value: 'day' },
+   { label: 'Неделя', value: 'week' },
+   { label: 'Месяц', value: 'month' },
+   { label: 'Год', value: 'year' }
+];
+
 const UserTimeline: FC = () => {
-   const timelineItems: ITimelineItem[] = useTimeline();
+   const [currSegment, setCurrSegment] = useState<string>('day');
+   
+   const timelineItems: TimelineItem[] = useTimeline(currSegment);
+
+   const handleSegmentChange = (value: string): void => {
+      setCurrSegment(value);
+   };
 
    return (
-      <Timeline items={timelineItems} className={styles.timeline}/>
+      <Flex vertical gap='large'>
+         <Flex vertical gap='small' className={styles.segmentedContainer}>
+            <p>Показывать за:</p>
+            <Segmented options={segmentedOptions} value={currSegment} onChange={handleSegmentChange} />
+         </Flex>
+         <Timeline items={timelineItems} className={styles.timeline}/>
+      </Flex>
    )
 }
 

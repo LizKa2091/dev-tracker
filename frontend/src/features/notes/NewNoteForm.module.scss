@@ -1,0 +1,21 @@
+.form {
+   &Item {
+      color: $main-text-white;
+
+      :global {
+         .ant-form-item-label label {
+            color: inherit;
+         }
+         .ant-select-selection-search-input {
+            color: $black-text !important;
+         }
+      }
+   }
+   &Tags {
+      :global {
+         .ant-select-selection-item {
+            background-color: $form-tag-text !important;
+         }
+      }
+   }
+}

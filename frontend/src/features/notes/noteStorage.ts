@@ -13,7 +13,7 @@ export const saveNote = (noteData: INoteItem): INotesStorage => {
    return notesToSave;
 };
 
-export const loadNotes = () => {
+export const loadNotes = (): INotesStorage => {
    const notesData = localStorage.getItem('notes');
 
    return notesData ? JSON.parse(notesData) : { notes: null };

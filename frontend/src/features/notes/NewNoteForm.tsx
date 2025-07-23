@@ -46,7 +46,7 @@ const NewNoteForm: FC<INewNoteFormProps> = ({ isNoteSaved, setIsNoteSaved }) => 
    }, [isNoteSaved]);
 
    const onSubmit = (data: NewNoteFormData): void => {
-      const key = data.date + data.title + data.type;
+      const key = data.date + new Date().getMilliseconds().toString();
 
       const savedNotes = saveNote({...data, key});
 

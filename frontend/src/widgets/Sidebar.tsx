@@ -18,7 +18,7 @@ const Sidebar: FC = () => {
       <>
          <Sider className={styles.sider}>
             <Flex vertical className={styles.siderContainer}>
-               <p className={styles.logo}>DevTracker</p>
+               <h1 className={styles.logo}>DevTracker</h1>
                <Flex vertical gap='middle' className={styles.userInfoContainer}>
                   <p className={styles.nickname}>nickname</p>
                   <Flex justify='space-between'>

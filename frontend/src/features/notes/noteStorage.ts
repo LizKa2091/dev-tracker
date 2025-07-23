@@ -1,4 +1,4 @@
-import type { INoteItem } from "./noteTypes";
+import type { INoteItem, LoadRecentNotesResponse } from "./noteTypes";
 
 interface INotesStorage {
    notes: INoteItem[] | null;
@@ -18,3 +18,9 @@ export const loadNotes = (): INotesStorage => {
 
    return notesData ? JSON.parse(notesData) : { notes: null };
 };
+
+export const loadRecentNotes = (amount: number = 5): LoadRecentNotesResponse => {
+   const notesData = loadNotes().notes;
+
+   return { notes: notesData?.slice(-amount).reverse() ?? null, limit: notesData?.length ?? 0 };
+}

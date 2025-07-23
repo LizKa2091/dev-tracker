@@ -1,0 +1,10 @@
+.card {
+   &Detail {
+      color: $card-text-black;
+   }
+   :global {
+      .ant-card-body {
+         padding: 15px 24px 0;
+      }
+   }
+}

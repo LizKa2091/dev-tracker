@@ -2,7 +2,7 @@ import { Button, Flex } from 'antd';
 import { useState, type FC } from 'react';
 import NewNoteForm from './NewNoteForm';
 import styles from './NewNote.module.scss';
-// import RecentNotes from './RecentNotes';
+import RecentNotes from './RecentNotes';
 
 const NewNote: FC = () => {
    const [isActive, setIsActive] = useState<boolean>(false);
@@ -14,7 +14,7 @@ const NewNote: FC = () => {
          {isActive &&
             <NewNoteForm isNoteSaved={isNoteSaved} setIsNoteSaved={setIsNoteSaved} />
          }
-         {/* <RecentNotes isNoteSaved={isNoteSaved} /> */}
+         <RecentNotes isNoteSaved={isNoteSaved} />
       </Flex>
    )
 }

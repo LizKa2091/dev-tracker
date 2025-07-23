@@ -1,4 +1,4 @@
-import { useEffect, useState, type FC } from 'react';
+import { useEffect, type FC } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Form, Input, Button, Select, DatePicker } from 'antd';
 import type { NewNoteFormData, TaskType, TagType } from './noteTypes';
@@ -29,8 +29,12 @@ const tagOptions: IOptions[] = [
    { value: 'Другое', label: 'Другое' },
 ];
 
-const NewNoteForm: FC = () => {
-   const [isNoteSaved, setIsNoteSaved] = useState<boolean>(false);
+interface INewNoteFormProps {
+   isNoteSaved: boolean;
+   setIsNoteSaved: (value: boolean) => void;
+}
+
+const NewNoteForm: FC<INewNoteFormProps> = ({ isNoteSaved, setIsNoteSaved }) => {
    const { handleSubmit, control, formState: { errors }, trigger } = useForm<NewNoteFormData>();
 
    useEffect(() => {
@@ -39,7 +43,7 @@ const NewNoteForm: FC = () => {
             setIsNoteSaved(false);
          }, 5000);
       }
-   }, [isNoteSaved])
+   }, [isNoteSaved]);
 
    const onSubmit = (data: NewNoteFormData): void => {
       const savedNotes = saveNote(data);

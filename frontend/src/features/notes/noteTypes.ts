@@ -4,6 +4,7 @@ export interface INoteItem {
    tags?: [];
    date: number;
    description?: string;
+   key: string;
 }
 
 export type NewNoteFormData = {
@@ -13,6 +14,11 @@ export type NewNoteFormData = {
    date: number;
    description?: string;
 };
+
+export type LoadRecentNotesResponse = {
+   notes: INoteItem[] | null;
+   limit: number;
+}
 
 export type TaskType = 'Багфикс' | 'Учёба' | 'Идея' | 'Спорт' | 'Другое';
 export type TagType = 'React' | 'TypeScript' | 'JavaScript' | 'C++' | 'C#' | 'Python' | 'Java' | 'Другое';

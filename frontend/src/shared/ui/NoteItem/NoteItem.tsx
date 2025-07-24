@@ -1,5 +1,5 @@
 import { type FC } from 'react'
-import type { INoteItem } from '../../features/notes/noteTypes';
+import type { INoteItem } from '../../../features/notes/noteTypes';
 import { Badge, Card, Space, Tag } from 'antd';
 import styles from './NoteItem.module.scss';
 

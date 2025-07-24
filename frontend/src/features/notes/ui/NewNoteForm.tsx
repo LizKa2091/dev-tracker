@@ -1,11 +1,11 @@
 import { useEffect, type FC } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { Form, Input, Button, Select, DatePicker, Tooltip } from 'antd';
+import { Form, Input, Button, Select, DatePicker } from 'antd';
 import type { NewNoteFormData } from '../noteTypes';
 import { saveNote } from '../model/noteStorage';
-import TextArea from 'antd/es/input/TextArea';
 import { tagOptions, typeOptions } from '../model/constants';
 import styles from './NewNoteForm.module.scss';
+import MarkdownTextarea from '../../../shared/ui/MarkdownTextarea/MarkdownTextarea';
 
 interface INewNoteFormProps {
    isNoteSaved: boolean;
@@ -55,11 +55,7 @@ const NewNoteForm: FC<INewNoteFormProps> = ({ isNoteSaved, setIsNoteSaved }) => 
             </Form.Item>
             <Form.Item label='Описание' className={styles.formItem}>
                <Controller name='description' control={control} render={({ field }) => (
-                     <Tooltip title='Поддерживается форматирование кода. Просто оберните код в одиночные обратные кавычки (`) или 3 обратные кавычки (```)' placement="bottom">
-                        <div>
-                           <TextArea rows={4} {...field} />
-                        </div>
-                     </Tooltip>
+                     <MarkdownTextarea {...field} />
                   )}
                />
             </Form.Item>

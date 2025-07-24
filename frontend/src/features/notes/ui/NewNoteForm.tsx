@@ -1,4 +1,4 @@
-import { useEffect, type FC } from 'react';
+import { useEffect, useState, type FC } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Form, Input, Button, Select, DatePicker } from 'antd';
 import type { NewNoteFormData } from '../noteTypes';
@@ -15,6 +15,8 @@ interface INewNoteFormProps {
 const NewNoteForm: FC<INewNoteFormProps> = ({ isNoteSaved, setIsNoteSaved }) => {
    const { handleSubmit, control, formState: { errors }, trigger } = useForm<NewNoteFormData>();
 
+   const [formattedDescription, setFormattedDescription] = useState<string>('');
+
    useEffect(() => {
       if (isNoteSaved) {
          setTimeout(() => {
@@ -26,7 +28,7 @@ const NewNoteForm: FC<INewNoteFormProps> = ({ isNoteSaved, setIsNoteSaved }) => 
    const onSubmit = (data: NewNoteFormData): void => {
       const key = data.date + new Date().getMilliseconds().toString();
 
-      const savedNotes = saveNote({...data, key});
+      const savedNotes = saveNote({...data, key, formattedDescription: formattedDescription || ''});
 
       if (savedNotes) setIsNoteSaved(true);
       else setIsNoteSaved(false);
@@ -55,7 +57,7 @@ const NewNoteForm: FC<INewNoteFormProps> = ({ isNoteSaved, setIsNoteSaved }) => 
             </Form.Item>
             <Form.Item label='Описание' className={styles.formItem}>
                <Controller name='description' control={control} render={({ field }) => (
-                     <MarkdownTextarea {...field} />
+                     <MarkdownTextarea {...field} onFormattedChange={(formattedText: string) => setFormattedDescription(formattedText)} />
                   )}
                />
             </Form.Item>

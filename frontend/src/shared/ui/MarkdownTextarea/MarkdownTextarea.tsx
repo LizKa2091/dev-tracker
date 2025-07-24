@@ -17,7 +17,7 @@ const MarkdownTextarea: FC<IMarkdownTextarea> = ({ value = '', onChange, ref, on
    const [formattedInput, setFormattedInput] = useState<string>('');
    const [isFocused, setIsFocused] = useState<boolean>(false);
 
-   const debouncedInput: string = useDebounce(userInput, 1000);
+   const debouncedInput: string = useDebounce(userInput, 300);
 
    useEffect(() => {
       onChange(debouncedInput);

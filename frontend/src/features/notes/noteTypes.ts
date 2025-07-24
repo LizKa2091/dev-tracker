@@ -5,6 +5,7 @@ export interface INoteItem {
    date: number;
    description?: string;
    key: string;
+   formattedDescription?: string;
 }
 
 export type NewNoteFormData = {

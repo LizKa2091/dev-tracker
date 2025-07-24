@@ -1,34 +1,11 @@
 import { useEffect, type FC } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { Form, Input, Button, Select, DatePicker } from 'antd';
-import type { NewNoteFormData, TaskType, TagType } from './noteTypes';
-import { saveNote } from './noteStorage';
+import { Form, Input, Button, Select, DatePicker, Tooltip } from 'antd';
+import type { NewNoteFormData } from '../noteTypes';
+import { saveNote } from '../model/noteStorage';
 import TextArea from 'antd/es/input/TextArea';
+import { tagOptions, typeOptions } from '../model/constants';
 import styles from './NewNoteForm.module.scss';
-
-interface IOptions {
-   value: TaskType | TagType;
-   label: TaskType | TagType;
-};
-
-const typeOptions: IOptions[] = [
-   { value: 'Багфикс', label: 'Багфикс' },
-   { value: 'Учёба', label: 'Учёба' },
-   { value: 'Идея', label: 'Идея' },
-   { value: 'Спорт', label: 'Спорт' },
-   { value: 'Другое', label: 'Другое' },
-];
-
-const tagOptions: IOptions[] = [
-   { value: 'React', label: 'React' },
-   { value: 'TypeScript', label: 'TypeScript' },
-   { value: 'JavaScript', label: 'JavaScript' },
-   { value: 'C++', label: 'C++' },
-   { value: 'C#', label: 'C#' },
-   { value: 'Python', label: 'Python' },
-   { value: 'Java', label: 'Java' },
-   { value: 'Другое', label: 'Другое' },
-];
 
 interface INewNoteFormProps {
    isNoteSaved: boolean;
@@ -77,7 +54,14 @@ const NewNoteForm: FC<INewNoteFormProps> = ({ isNoteSaved, setIsNoteSaved }) => 
                <Controller name='date' control={control} rules={{ required: true }} render={({ field }) => <DatePicker {...field} />} />
             </Form.Item>
             <Form.Item label='Описание' className={styles.formItem}>
-               <Controller name='description' control={control} render={({ field }) => <TextArea rows={4} {...field} />} />
+               <Controller name='description' control={control} render={({ field }) => (
+                     <Tooltip title='Поддерживается форматирование кода. Просто оберните код в одиночные обратные кавычки (`) или 3 обратные кавычки (```)' placement="bottom">
+                        <div>
+                           <TextArea rows={4} {...field} />
+                        </div>
+                     </Tooltip>
+                  )}
+               />
             </Form.Item>
             <Button color="default" variant="solid" htmlType='submit'>Создать</Button>
          </Form>

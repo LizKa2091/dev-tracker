@@ -1,4 +1,4 @@
-import type { INoteItem, LoadRecentNotesResponse } from "./noteTypes";
+import type { INoteItem, LoadRecentNotesResponse } from "../noteTypes";
 
 interface INotesStorage {
    notes: INoteItem[] | null;

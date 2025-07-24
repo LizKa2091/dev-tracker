@@ -2,8 +2,9 @@ import { useEffect, type FC } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Form, Input, Button, Select, DatePicker } from 'antd';
 import type { NewNoteFormData, TaskType, TagType } from './noteTypes';
-import styles from './NewNoteForm.module.scss';
 import { saveNote } from './noteStorage';
+import TextArea from 'antd/es/input/TextArea';
+import styles from './NewNoteForm.module.scss';
 
 interface IOptions {
    value: TaskType | TagType;
@@ -76,7 +77,7 @@ const NewNoteForm: FC<INewNoteFormProps> = ({ isNoteSaved, setIsNoteSaved }) => 
                <Controller name='date' control={control} rules={{ required: true }} render={({ field }) => <DatePicker {...field} />} />
             </Form.Item>
             <Form.Item label='Описание' className={styles.formItem}>
-               <Controller name='description' control={control} render={({ field }) => <Input {...field} />} />
+               <Controller name='description' control={control} render={({ field }) => <TextArea rows={4} {...field} />} />
             </Form.Item>
             <Button color="default" variant="solid" htmlType='submit'>Создать</Button>
          </Form>

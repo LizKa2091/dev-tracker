@@ -1,6 +1,6 @@
 import type { INoteItem, LoadRecentNotesResponse } from "../noteTypes";
 
-interface INotesStorage {
+export interface INotesStorage {
    notes: INoteItem[] | null;
 }
 
@@ -34,11 +34,11 @@ export const updateNote = (noteData: INoteItem) => {
    return notesToSave;
 };
 
-export const deleteNote = (noteKey: string): INotesStorage => {
+export const deleteNote = (noteKey: string): INoteItem[] => {
    const savedNotes = loadNotes().notes ?? [];
       
    const notesToSave = { notes: savedNotes.filter(note => note.key !== noteKey) };
    
    localStorage.setItem('notes', JSON.stringify(notesToSave));
-   return notesToSave;
+   return notesToSave.notes;
 };

@@ -8,7 +8,14 @@
       }
    }
 }
-
+.spaceExtra {
+   
+   :global {
+      .ant-btn span {
+         color: $button-delete-red;
+      }
+   }
+}
 code {
    span {
       display: block;

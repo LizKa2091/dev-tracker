@@ -10,10 +10,10 @@ const NewNote: FC = () => {
 
    return (
       <Flex vertical gap='large'>
-         <Button color="default" variant="solid" onClick={() => setIsActive(!isActive)} className={styles.buttonDisplay}>{isActive ? 'Скрыть' : 'Добавить запись'}</Button>
-         {isActive &&
+         <Button color="default" variant="solid" onClick={() => setIsActive((prev) => !prev)} className={styles.buttonDisplay}>{isActive ? 'Скрыть' : 'Добавить запись'}</Button>
+         <div className={`${styles.formContainer} ${isActive ? styles.active : styles.hidden}`}>
             <NewNoteForm isNoteSaved={isNoteSaved} setIsNoteSaved={setIsNoteSaved} />
-         }
+         </div>
          <RecentNotes isNoteSaved={isNoteSaved} />
       </Flex>
    )

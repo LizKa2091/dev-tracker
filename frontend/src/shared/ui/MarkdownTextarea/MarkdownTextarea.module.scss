@@ -1,0 +1,29 @@
+.inActiveTextarea {
+   border: 1px solid $textarea-border;
+   border-radius: 4px;
+   background-color: $textarea-bg;
+   color: $black-text;
+   padding: 8px;
+   min-height: 96px;
+   overflow: auto;
+   position: relative;
+
+   code {
+      span {
+         display: block;
+         counter-increment: line;
+         position: relative;
+         color: $textarea-code-color;
+         padding-left: 35px;
+
+         &::before {
+            content: counter(line);
+            position: absolute;
+            left: 0;
+            width: 20px;
+            text-align: right;
+            color: $textarea-number-color;
+         }
+      }
+   }
+}

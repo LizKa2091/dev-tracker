@@ -1,0 +1,21 @@
+.buttonDisplay {
+   width: fit-content
+}
+.formContainer {
+   opacity: 0;
+   transform: translateY(-10px);
+   overflow: hidden;
+   transition: all 0.5s ease-in;
+   max-height: 0;
+
+   &.active {
+      opacity: 1;
+      transform: translateY(0);
+      max-height: 1000px;
+   }
+   &.hidden {
+      opacity: 0;
+      transform: translateY(-10px);
+      max-height: 0;
+   }
+}

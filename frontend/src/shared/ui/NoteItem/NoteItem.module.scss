@@ -1,0 +1,36 @@
+.card {
+   &Detail {
+      color: $card-text-black;
+   }
+   :global {
+      .ant-card-body {
+         padding: 15px 24px 0;
+      }
+   }
+}
+.spaceExtra {
+   
+   :global {
+      .ant-btn span {
+         color: $button-delete-red;
+      }
+   }
+}
+code {
+   span {
+      display: block;
+      counter-increment: line;
+      position: relative;
+      color: $textarea-code-color;
+      padding-left: 35px;
+
+      &::before {
+         content: counter(line);
+         position: absolute;
+         left: 0;
+         width: 20px;
+         text-align: right;
+         color: $textarea-number-color;
+      }
+   }
+}

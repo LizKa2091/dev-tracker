@@ -28,11 +28,17 @@ export const loadRecentNotes = (amount: number = 5): LoadRecentNotesResponse => 
 export const updateNote = (noteData: INoteItem) => {
    const savedNotes = loadNotes().notes ?? [];
 
-   const updatedNotes = savedNotes.map(note => note.key === noteData.key ? noteData : note);
-
-   const notesToSave = {notes: updatedNotes};
+   const notesToSave = {notes: savedNotes.map(note => note.key === noteData.key ? noteData : note)};
 
    localStorage.setItem('notes', JSON.stringify(notesToSave));
-   console.log(notesToSave);
    return notesToSave;
-}
+};
+
+export const deleteNote = (noteKey: string): INotesStorage => {
+   const savedNotes = loadNotes().notes ?? [];
+      
+   const notesToSave = { notes: savedNotes.filter(note => note.key !== noteKey) };
+   
+   localStorage.setItem('notes', JSON.stringify(notesToSave));
+   return notesToSave;
+};

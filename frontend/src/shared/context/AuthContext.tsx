@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState, type FC, type ReactNode } from 'react';
-import { useRegisterUser, useLoginUser, useLogoutUser, useVerifyAuthStatus } from '../../features/auth/useAuth';
+import { useRegisterUser, useLoginUser, useLogoutUser, useVerifyAuthStatus } from '../../features/auth/model/useAuth';
 
 interface IAuthContext {
    isAuthed: boolean | null;
@@ -12,6 +12,14 @@ interface IAuthContext {
 interface IAuthProvider {
    children: ReactNode;
 }
+
+interface IRequestResponseMessage {
+   message: string;
+};
+
+interface ILoginRequestResponse {
+   token: string;
+};
 
 const AuthContext  = createContext<IAuthContext | undefined>(undefined);
 
@@ -30,41 +38,66 @@ const AuthContextProvider: FC<IAuthProvider> = ({ children })=> {
       }
    }, [token]);
 
-   const register = async (email: string, password: string, name: string): Promise<void> => {
-      await registerMutate({ email, password, name });
-   };
-
-   const login = async (email: string, password: string): Promise<void> => {
-      const result = await loginMutate({ email, password });
-
-      localStorage.setItem('token', result.token);
-      setToken(result.token);
-      setIsAuthed(true);
-   };
-
-   const logout = async (token: string): Promise<void> => {
-      if (token) {
-         await logoutMutate({ token });
-         localStorage.removeItem('token');
-         setToken(null);
-         setIsAuthed(false);
+   const register = async (email: string, password: string, name: string): Promise<IRequestResponseMessage> => {
+      try {
+         const result = await registerMutate({ email, password, name });
+      
+         return result;
+      }
+      catch (error) {
+         return error as Error;
       }
    };
 
-   const checkLoginStatus = async (token: string): Promise<void> => {
+   const login = async (email: string, password: string): Promise<ILoginRequestResponse | Error> => {
+      try {
+         const result = await loginMutate({ email, password });
+      
+         localStorage.setItem('token', result.token);
+         setToken(result.token);
+         setIsAuthed(true);
+
+         return result;
+      }
+      catch (error) {
+         return error as Error;
+      }
+   };
+
+   const logout = async (token: string): Promise<IRequestResponseMessage | Error> => {
+      if (token) {
+         try {
+            const response = await logoutMutate({ token });
+
+            localStorage.removeItem('token');
+            setToken(null);
+            setIsAuthed(false);
+
+            return response;
+         }
+         catch (error) {
+            return error as Error;
+         }
+      }
+      throw new Error('нет токена');
+   };
+
+   const checkLoginStatus = async (token: string) => {
       if (!token) {
          setIsAuthed(false);
-         return;
+         throw new Error('нет токена');
       }
       
       try {
-         await refecthAuth();
+         const response = await refecthAuth();
          setIsAuthed(true);
+         
+         return response;
       }
-      catch {
+      catch (error) {
          setIsAuthed(false);
+         return error as Error;
       }
-
    };
 
    return (

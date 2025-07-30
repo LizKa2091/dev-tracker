@@ -24,7 +24,7 @@ const registerUser = async (email: string, password: string, name: string): Prom
       body: JSON.stringify({email, password, name})
    });
 
-   if (!response.ok) throw new Error('ошибка сервера');
+   if (!response.ok) throw new Error('ошибка сервера или пользователь уже существует');
 
    const result = await response.json();
    return result;
@@ -47,6 +47,7 @@ const loginUser = async (email: string, password: string): Promise<ILoginRequest
       body: JSON.stringify({email, password})
    });
 
+   if (response.status === 401) throw new Error('Неверный email или пароль')
    if (!response.ok) throw new Error('ошибка сервера');
 
    const result = await response.json();

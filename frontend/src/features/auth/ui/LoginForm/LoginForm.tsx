@@ -1,17 +1,31 @@
-import { useState, type FC } from 'react'
+import { useLayoutEffect, useState, type FC } from 'react'
 import { Controller, useForm } from 'react-hook-form';
 import { type ILoginFormData } from '../../authTypes';
 import { Button, Form, Input } from 'antd';
 import AuthExports from '../../../../shared/context/AuthContext';
 import styles from './LoginForm.module.scss';
+import { useNavigate } from 'react-router-dom';
 
 const { useAuthContext } = AuthExports;
 
 const LoginForm: FC = () => {
    const [loginStatus, setLoginStatus] = useState<string>('');
+   const [isSuccessLogin, setIsSuccessLogin] = useState<boolean>(false);
 
    const { handleSubmit, control, formState: { errors }, trigger } = useForm<ILoginFormData>();
-   const { login } = useAuthContext(); 
+   const { login } = useAuthContext();
+
+   const navigate = useNavigate();
+
+   useLayoutEffect(() => {
+      if (isSuccessLogin) {
+         setLoginStatus('Вход выполнен успешно, через 3 секунды вы будете переадресованы на главную страницу');
+
+         setTimeout(() => {
+            navigate('/');
+         }, 3000);
+      }
+   }, [isSuccessLogin, navigate]);
 
    const onFinish = async (): Promise<void> => {
       const isValidData = await trigger(['email', 'password']);
@@ -20,13 +34,17 @@ const LoginForm: FC = () => {
    };
 
    const onSubmit = async (data: ILoginFormData): Promise<void> => {
+      setLoginStatus('');
+
       const response = await login(data.email, data.password);
       
       if (response?.message) {
          setLoginStatus(response.message);
+         setIsSuccessLogin(false);
       }
       else if (response.token) {
          localStorage.setItem('token', response.token);
+         setIsSuccessLogin(true);
       }
    };
 
@@ -41,7 +59,16 @@ const LoginForm: FC = () => {
             </Form.Item>
             <Button color="default" variant="solid" htmlType='submit'>Войти</Button>
          </Form>
-         {loginStatus && <span className={loginStatus.toLowerCase().includes('неверный') ? styles.badRequest : styles.successRequest}>{loginStatus}</span>}
+         {loginStatus && 
+            <span className={
+               loginStatus.toLowerCase().includes('неверный') ||
+               loginStatus.toLowerCase().includes('failed') ||
+               loginStatus.toLowerCase().includes('ошибка') ? 
+               styles.badRequest : styles.successRequest
+            }>
+               {loginStatus}
+            </span>
+         }
       </>
    )
 }

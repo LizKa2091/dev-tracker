@@ -20,6 +20,7 @@ const RegisterForm: FC = () => {
    };
    
    const onSubmit = async (data: IRegisterFormData): Promise<void> => {
+      setRegisterStatus('');
       const response = await register(data.email, data.password, data.username);
 
       if (response?.message) {
@@ -41,7 +42,16 @@ const RegisterForm: FC = () => {
             </Form.Item>
             <Button color="default" variant="solid" htmlType='submit'>Зарегистрироваться</Button>
          </Form>
-         {registerStatus && <span className={registerStatus.toLowerCase().includes('ошибка') ? styles.badRequest : styles.successRequest}>{registerStatus}</span>}
+         {registerStatus && 
+            <span className={
+               registerStatus.toLowerCase().includes('неверный') ||
+               registerStatus.toLowerCase().includes('failed') ||
+               registerStatus.toLowerCase().includes('ошибка') ? 
+               styles.badRequest : styles.successRequest
+            }>
+               {registerStatus}
+            </span>
+         }
       </>
    )
 }

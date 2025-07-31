@@ -1,10 +1,12 @@
-import type { FC } from 'react';
+import { type FC } from 'react';
 import { Button, Flex, Layout, Menu } from 'antd';
-import { HistoryOutlined, FormOutlined, BarChartOutlined, SettingOutlined, LogoutOutlined } from "@ant-design/icons";
-import { Link } from 'react-router-dom';
+import { HistoryOutlined, FormOutlined, BarChartOutlined, SettingOutlined, LogoutOutlined, LoginOutlined } from "@ant-design/icons";
+import { Link, useNavigate } from 'react-router-dom';
+import AuthExports from '../shared/context/AuthContext';
 import styles from './Sidebar.module.scss';
 
 const { Sider } = Layout;
+const { useAuthContext } = AuthExports;
 
 const menuItems = [
    { key: 'timeline', path: '/', icon: <HistoryOutlined style={{ color: '#ffffff' }} />, label: <Link to='/'>Таймлайн</Link> },
@@ -14,6 +16,19 @@ const menuItems = [
 ];
 
 const Sidebar: FC = () => {
+   const { isAuthed, logout } = useAuthContext();
+   const navigate = useNavigate();
+
+   const handleLogout = (): void => {
+      const token: string | null = localStorage.getItem('token');
+
+      if (token) {
+         logout(token);
+
+         navigate('/');
+      }
+   };
+
    return (
       <>
          <Sider className={styles.sider}>
@@ -27,7 +42,13 @@ const Sidebar: FC = () => {
                   </Flex>
                </Flex>
                <Menu items={menuItems} className={styles.menu} />
-               <Button type='text' icon={<LogoutOutlined />} className={styles.logout}>Выйти</Button>
+               {isAuthed ? (
+                  <Button type='text' onClick={handleLogout} icon={<LogoutOutlined />} iconPosition='end' className={styles.logout}>Выйти</Button>
+               ) : (
+                  <Link to='/auth' className={styles.login}>
+                     <Button type='text' icon={<LoginOutlined />}>Войти</Button>
+                  </Link>
+               )}
             </Flex>
          </Sider>
       </>

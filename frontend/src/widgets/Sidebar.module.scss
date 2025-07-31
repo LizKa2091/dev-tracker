@@ -32,7 +32,19 @@
       }
    }
 }
+.login {
+   text-align: center;
+   background-color: inherit;
+   margin: 20px;
+
+   :global {
+      .ant-btn-text:active {
+         background-color: inherit;
+      }
+   }
+}
 .logout {
+   text-align: center;  
    background-color: inherit;
    margin: 20px;
 

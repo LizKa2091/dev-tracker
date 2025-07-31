@@ -1,0 +1,19 @@
+.form{
+   &Item {
+      color: $main-text-white;
+      max-width: 550px;
+
+      :global {
+         .ant-form-item-label label {
+            color: inherit;
+         }
+      }
+   }
+}
+
+.badRequest {
+   color: $bad-request-red;
+}
+.successRequest {
+   color: $success-request-green;
+}

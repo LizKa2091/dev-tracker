@@ -9,7 +9,7 @@ const { Sider } = Layout;
 const { useAuthContext } = AuthExports;
 
 const menuItems = [
-   { key: 'timeline', path: '/', icon: <HistoryOutlined style={{ color: '#ffffff' }} />, label: <Link to='/'>Таймлайн</Link> },
+   { key: 'timeline', path: '/timeline', icon: <HistoryOutlined style={{ color: '#ffffff' }} />, label: <Link to='/'>Таймлайн</Link> },
    { key: 'new post', path: '/new-post', icon: <FormOutlined style={{ color: '#ffffff' }} />, label: <Link to='/new-note'>Новая запись</Link> },
    { key: 'stats', icon: <BarChartOutlined style={{ color: '#ffffff' }} />, label: 'Статистика' },
    { key: 'settings', icon: <SettingOutlined style={{ color: '#ffffff' }} />, label: 'Настройки' }

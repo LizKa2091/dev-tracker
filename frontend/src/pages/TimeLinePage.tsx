@@ -1,23 +1,23 @@
 import type { FC } from 'react';
 import { Flex, Layout } from 'antd';
 import Sidebar from '../widgets/Sidebar';
-import DeadlineChart from '../features/deadlines/ui/DeadlineChart';
+import UserTimeline from '../features/timeline/UserTimeline';
 import styles from './HomePage.module.scss';
 
 const { Content } = Layout;
 
-const HomePage: FC = () => {
+const TimeLinePage: FC = () => {
    return (
       <Layout>
          <Sidebar />
          <Content className={styles.content}>
             <Flex vertical gap='large'>
-               <h2 className={styles.title}>Главная</h2>
-               <DeadlineChart />
+               <h2 className={styles.title}>Таймлайн</h2>
+               <UserTimeline />
             </Flex>
          </Content>
       </Layout>
    )
 }
-   
-export default HomePage;
+
+export default TimeLinePage;

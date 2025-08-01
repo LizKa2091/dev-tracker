@@ -1,8 +1,5 @@
 import type { INoteItem, LoadRecentNotesResponse } from "../noteTypes";
-
-export interface INotesStorage {
-   notes: INoteItem[] | null;
-}
+import type { INotesStorage } from "./constants";
 
 export const saveNote = (noteData: INoteItem): INotesStorage => {
    const savedNotesData = loadNotes().notes ?? [];

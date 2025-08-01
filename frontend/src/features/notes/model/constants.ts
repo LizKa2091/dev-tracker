@@ -1,4 +1,4 @@
-import type { TagType, TaskType } from "../noteTypes";
+import type { INoteItem, TagType, TaskType } from "../noteTypes";
 
 interface IOptions {
    value: TaskType | TagType;
@@ -23,3 +23,7 @@ export const tagOptions: IOptions[] = [
    { value: 'Java', label: 'Java' },
    { value: 'Другое', label: 'Другое' },
 ];
+
+export interface INotesStorage {
+   notes: INoteItem[] | null;
+}

@@ -1,7 +1,7 @@
 import { useState, type FC } from 'react';
 import { Flex, Segmented, Timeline } from 'antd';
-import { useTimeline } from './useTimeline';
-import type { ISegmentedOption, TimelineItem } from './timelineTypes';
+import { useTimeline } from '../model/useTimeline';
+import type { ISegmentedOption, TimelineItem } from '../timelineTypes';
 import styles from './UserTimeline.module.scss';
 
 const segmentedOptions: ISegmentedOption[] = [

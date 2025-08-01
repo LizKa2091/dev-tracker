@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { Flex, Layout } from 'antd';
 import Sidebar from '../widgets/Sidebar';
-import UserTimeline from '../features/timeline/UserTimeline';
+import UserTimeline from '../features/timeline/ui/UserTimeline';
 import styles from './HomePage.module.scss';
 
 const { Content } = Layout;

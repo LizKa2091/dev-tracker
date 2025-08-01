@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import HomePage from '../pages/HomePage';
 import NewNotePage from '../pages/NewNotePage';
 import AuthPage from '../pages/AuthPage';
+import TimeLinePage from '../pages/TimeLinePage';
 
 const Router: FC = () => {
    return (
@@ -10,6 +11,7 @@ const Router: FC = () => {
          <BrowserRouter>
             <Routes>
                <Route element={<HomePage />} path='/' />
+               <Route element={<TimeLinePage />} path='/timeline' />
                <Route element={<AuthPage />} path='/auth' />
                <Route element={<NewNotePage />} path='/new-note' />
             </Routes>

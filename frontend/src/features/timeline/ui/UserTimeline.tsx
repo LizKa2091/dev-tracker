@@ -1,8 +1,11 @@
-import { useState, type FC } from 'react';
-import { Flex, Segmented, Timeline } from 'antd';
-import { useTimeline } from '../model/useTimeline';
-import type { ISegmentedOption, TimelineItem } from '../timelineTypes';
+import { useEffect, useState, type FC } from 'react';
+import { Flex, Segmented } from 'antd';
+import { filterByDate } from '../model/filterByDate';
+import type { ISegmentedOption } from '../timelineTypes';
 import styles from './UserTimeline.module.scss';
+import { type INoteItem } from '../../notes/noteTypes';
+import NoteItem from '../../../shared/ui/NoteItem/ui/NoteItem';
+import { deleteNote } from '../../notes/model/noteStorage';
 
 const segmentedOptions: ISegmentedOption[] = [
    { label: 'День', value: 'day' },
@@ -13,8 +16,20 @@ const segmentedOptions: ISegmentedOption[] = [
 
 const UserTimeline: FC = () => {
    const [currSegment, setCurrSegment] = useState<string>('day');
+   const [timelineNotes, setTimelineNotes] = useState<INoteItem[]>([]);
    
-   const timelineItems: TimelineItem[] = useTimeline(currSegment);
+   useEffect(() => {
+      setTimelineNotes(filterByDate(currSegment));
+   }, [currSegment]);
+
+   const handleDeleteNote = (noteKey: string): void => {
+      const updatedNotes = deleteNote(noteKey);
+
+      if (updatedNotes) {
+         setTimelineNotes(updatedNotes);
+      }
+      setTimelineNotes(updatedNotes);
+   }
 
    const handleSegmentChange = (value: string): void => {
       setCurrSegment(value);
@@ -26,7 +41,9 @@ const UserTimeline: FC = () => {
             <p>Показывать за:</p>
             <Segmented options={segmentedOptions} value={currSegment} onChange={handleSegmentChange} />
          </Flex>
-         <Timeline items={timelineItems} className={styles.timeline}/>
+         {timelineNotes.map((note: INoteItem) => 
+            <NoteItem key={note.key} noteItemData={note} handleDeleteNote={handleDeleteNote} />
+         )}
       </Flex>
    )
 }

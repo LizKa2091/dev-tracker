@@ -6,6 +6,7 @@ export interface INoteItem {
    description?: string;
    key: string;
    formattedDescription?: string;
+   status: taskStatus;
 }
 
 export type NewNoteFormData = {
@@ -19,7 +20,9 @@ export type NewNoteFormData = {
 export type LoadRecentNotesResponse = {
    notes: INoteItem[] | null;
    limit: number;
-}
+};
+
+export type taskStatus = 'completed' | 'active';
 
 export type TaskType = 'Багфикс' | 'Учёба' | 'Идея' | 'Спорт' | 'Другое';
 export type TagType = 'React' | 'TypeScript' | 'JavaScript' | 'C++' | 'C#' | 'Python' | 'Java' | 'Другое';

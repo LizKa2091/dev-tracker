@@ -2,7 +2,7 @@ import { Button, Flex, Space } from 'antd';
 import { useEffect, useState, type FC } from 'react'
 import { type INoteItem } from '../noteTypes';
 import { deleteNote, loadRecentNotes } from '../model/noteStorage';
-import NoteItem from '../../../shared/ui/NoteItem/NoteItem';
+import NoteItem from '../../../shared/ui/NoteItem/ui/NoteItem';
 
 interface IRecentNotesProps {
    isNoteSaved: boolean;

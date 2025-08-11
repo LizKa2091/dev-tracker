@@ -1,0 +1,58 @@
+.card {
+   &Detail {
+      color: $card-text-black;
+   }
+   :global {
+      .ant-card-body {
+         padding: 15px 24px 0;
+      }
+   }
+}
+.editButton {
+   :global {
+      .ant-btn span {
+         color: $card-text-black;
+      }
+   }
+}
+.spaceExtra {
+   p {
+      font-size: 0.75rem;
+   }
+   .completed {
+      color: $completed-status;
+   }
+   :global {
+      .anticon-edit {
+         color: $mark-completed-button;
+      }
+   }
+}
+.spaceExtra {
+   :global {
+      .ant-btn span {
+         color: $button-delete-red;
+      }
+      .ant-btn-icon span {
+         color: $button-delete-red;
+      }
+   }
+}
+code {
+   span {
+      display: block;
+      counter-increment: line;
+      position: relative;
+      color: $textarea-code-color;
+      padding-left: 35px;
+
+      &::before {
+         content: counter(line);
+         position: absolute;
+         left: 0;
+         width: 20px;
+         text-align: right;
+         color: $textarea-number-color;
+      }
+   }
+}

@@ -4,8 +4,10 @@ import cors from 'cors';
 import jwt, { JwtPayload, VerifyErrors } from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
+// add logic for levels based on xp
 // TODO: add user profile pictures
 // TODO: get user file from the form
+
 dotenv.config();
 
 const app = express();
@@ -110,6 +112,25 @@ app.post('/logout', authenticateToken, (req: Request, res: Response): void => {
    res.json({ message: 'Успешный выход' });
 });
 
+function getLevelAndProgress(xp: number) {
+   let level = 1;
+   let xpForNextLevel = 100;
+   let accumulatedXP = 0;
+
+   while (xp >= xpForNextLevel) {
+      xp -= xpForNextLevel;
+      accumulatedXP += xpForNextLevel;
+      level++;
+      xpForNextLevel = level * 100;
+   }
+
+   return {
+      level,
+      currentXP: xp,
+      xpForNextLevel
+   };
+}
+
 app.get('/me', authenticateToken, (req: Request, res: Response): void => {
    const userEmail = req.user?.email;
 
@@ -119,11 +140,13 @@ app.get('/me', authenticateToken, (req: Request, res: Response): void => {
    }
 
    const user = users[userEmail];
+   const levelData = getLevelAndProgress(user.xp);
 
    res.json({
       email: user.email,
       name: user.name,
       xp: user.xp,
+      ...levelData
    });
 });
 
@@ -142,7 +165,11 @@ app.post('/xp/add', authenticateToken, (req: Request, res: Response): void => {
    }
 
    users[userEmail].xp += amount;
-   res.json({ xp: users[userEmail].xp });
+
+   res.json({
+      xp: users[userEmail].xp,
+      ...getLevelAndProgress(users[userEmail].xp)
+   });
 });
 
 app.post('/xp/remove', authenticateToken, (req: Request, res: Response): void => {
@@ -161,7 +188,10 @@ app.post('/xp/remove', authenticateToken, (req: Request, res: Response): void =>
 
    users[userEmail].xp = Math.max(0, users[userEmail].xp - amount);
 
-   res.json({ xp: users[userEmail].xp });
+   res.json({
+      xp: users[userEmail].xp,
+      ...getLevelAndProgress(users[userEmail].xp)
+   });
 });
 
 app.get('/', (req: Request, res: Response): void => {

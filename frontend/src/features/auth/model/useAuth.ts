@@ -13,6 +13,7 @@ interface ILoginRequestResponse {
 interface IVerifyAuthStatusResponse {
    email: string;
    name: string;
+   xp: number;
 }
 
 const registerUser = async (email: string, password: string, name: string): Promise<IRequestResponseMessage> => {

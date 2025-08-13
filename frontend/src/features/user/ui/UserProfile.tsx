@@ -4,14 +4,18 @@ import { useUserData } from '../model/useUserData';
 import { type IUserDataResponse } from '../userTypes';
 import styles from './UserProfile.module.scss';
 
-const UserProfile: FC = () => {
+interface IUserProfileProps {
+   isAuthed: boolean;
+};
+
+const UserProfile: FC<IUserProfileProps> = ({ isAuthed }) => {
    const [token, setToken] = useState<string | null>(null);
 
    const { data, isLoading } = useUserData(token);
 
    useEffect(() => {
       setToken(localStorage.getItem('token'));
-   }, []);
+   }, [isAuthed]);
 
    const calcProgress = (data: IUserDataResponse): number => {
       if (!data) return 0;

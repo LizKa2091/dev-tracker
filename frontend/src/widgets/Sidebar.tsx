@@ -35,7 +35,7 @@ const Sidebar: FC = () => {
          <Sider className={styles.sider}>
             <Flex vertical className={styles.siderContainer}>
                <h1 className={styles.logo}>DevTracker</h1>
-               <UserProfile />
+               <UserProfile isAuthed={isAuthed ?? false} />
                <Menu items={menuItems} className={styles.menu} />
                {isAuthed ? (
                   <Button type='text' onClick={handleLogout} icon={<LogoutOutlined />} iconPosition='end' className={styles.logout}>Выйти</Button>

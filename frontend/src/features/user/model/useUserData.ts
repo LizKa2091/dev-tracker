@@ -2,8 +2,10 @@ import { useQuery } from "@tanstack/react-query";
 
 interface IUserDataResponse {
    email: string;
+   level: number;
    name: string;
    xp: number;
+   xpForNextLevel: number;
 };
 
 const getUserData = async (token: string) => {

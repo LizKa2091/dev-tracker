@@ -4,6 +4,7 @@ import { HistoryOutlined, FormOutlined, BarChartOutlined, SettingOutlined, Logou
 import { Link, useNavigate } from 'react-router-dom';
 import AuthExports from '../shared/context/AuthContext';
 import styles from './Sidebar.module.scss';
+import UserProfile from '../features/user/ui/UserProfile';
 
 const { Sider } = Layout;
 const { useAuthContext } = AuthExports;
@@ -34,13 +35,7 @@ const Sidebar: FC = () => {
          <Sider className={styles.sider}>
             <Flex vertical className={styles.siderContainer}>
                <h1 className={styles.logo}>DevTracker</h1>
-               <Flex vertical gap='middle' className={styles.userInfoContainer}>
-                  <p className={styles.nickname}>nickname</p>
-                  <Flex justify='space-between'>
-                     <p className={styles.xp}>XP: 1290</p>
-                     <p className={styles.level}>Уровень 5</p>
-                  </Flex>
-               </Flex>
+               <UserProfile />
                <Menu items={menuItems} className={styles.menu} />
                {isAuthed ? (
                   <Button type='text' onClick={handleLogout} icon={<LogoutOutlined />} iconPosition='end' className={styles.logout}>Выйти</Button>

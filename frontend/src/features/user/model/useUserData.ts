@@ -1,12 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-
-interface IUserDataResponse {
-   email: string;
-   level: number;
-   name: string;
-   xp: number;
-   xpForNextLevel: number;
-};
+import type { IUserDataResponse } from "../userTypes";
 
 const getUserData = async (token: string) => {
    const response = await fetch(`http://localhost:5001/me`, {

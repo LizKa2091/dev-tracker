@@ -38,9 +38,9 @@ const ProfileSettings: FC = () => {
    };
 
    return (
-      <Flex vertical gap='large'>
+      <Flex vertical gap='large' className={styles.container}>
          <h3>Профиль</h3>
-         <Form onFinish={onFinish}>
+         <Form onFinish={onFinish} className={styles.form}>
             <Form.Item label='Имя пользователя' validateStatus={errors.username ? 'error' : ''} help={errors.username?.message} className={styles.formItem}>
                <Controller name='username' control={control} rules={{ required: true, minLength: { value: 4, message: 'Никнейм должен содержать минимум 4 символа' } }} render={({ field }) => <Input {...field} />} />
             </Form.Item>
@@ -49,11 +49,9 @@ const ProfileSettings: FC = () => {
             </Form.Item>
             <Button color="default" variant="solid" htmlType='submit' className={styles.buttonSave}>Сохранить</Button>
          </Form>
-         <span className={styles.formError}>
-            {isPending ? <Spin /> :
-               isSuccess ? 'Данные успешно обновлены' : 
-               isError ? 'Произошла ошибка' : ''}
-         </span>
+         {isPending ? <Spin /> :
+            isSuccess ? <span className={styles.formSuccess}>Данные успешно обновлены</span> : 
+            isError ? <span className={styles.formError}>Произошла ошибка</span> : ''}
       </Flex>
    )
 }

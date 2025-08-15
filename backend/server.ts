@@ -150,6 +150,50 @@ app.get('/me', authenticateToken, (req: Request, res: Response): void => {
    });
 });
 
+app.patch('/me', authenticateToken, (req: Request, res: Response): void => {
+   const userEmail = req.user?.email;
+   const { name, email } = req.body;
+
+   if (!userEmail || !users[userEmail]) {
+      res.status(404).json({ message: 'Пользователь не найден' });
+      return;
+   }
+
+   if (email && email !== userEmail) {
+      if (users[email]) {
+         res.status(400).json({ message: 'Email уже используется' });
+         return;
+      }
+      users[email] = { ...users[userEmail], email };
+      delete users[userEmail];
+   }
+
+   if (name) {
+      const targetEmail = email || userEmail;
+      users[targetEmail].name = name;
+   }
+
+   const updatedEmail = email || userEmail;
+   const updatedUser = users[updatedEmail];
+
+   const newToken = jwt.sign(
+      { email: updatedUser.email, name: updatedUser.name },
+      process.env.JWT_SECRET!,
+      { expiresIn: '1h' }
+   );
+
+   res.json({
+      message: 'Данные обновлены',
+      token: newToken,
+      user: {
+         email: updatedUser.email,
+         name: updatedUser.name,
+         xp: updatedUser.xp,
+         ...getLevelAndProgress(updatedUser.xp)
+      }
+   });
+});
+
 app.post('/xp/add', authenticateToken, (req: Request, res: Response): void => {
    const { amount } = req.body;
    const userEmail = req.user?.email;

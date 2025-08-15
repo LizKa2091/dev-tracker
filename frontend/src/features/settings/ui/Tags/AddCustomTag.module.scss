@@ -7,6 +7,9 @@
       }
    }
 }
+:global(.ant-modal-content) {
+   background-color: $settings-item-bg !important;
+}
 .container {
    width: fit-content;
 }

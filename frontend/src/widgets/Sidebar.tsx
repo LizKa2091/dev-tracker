@@ -13,7 +13,7 @@ const menuItems = [
    { key: 'timeline', path: '/timeline', icon: <HistoryOutlined style={{ color: '#ffffff' }} />, label: <Link to='/'>Таймлайн</Link> },
    { key: 'new post', path: '/new-post', icon: <FormOutlined style={{ color: '#ffffff' }} />, label: <Link to='/new-note'>Новая запись</Link> },
    { key: 'stats', icon: <BarChartOutlined style={{ color: '#ffffff' }} />, label: 'Статистика' },
-   { key: 'settings', icon: <SettingOutlined style={{ color: '#ffffff' }} />, label: 'Настройки' }
+   { key: 'settings', path: '/settings', icon: <SettingOutlined style={{ color: '#ffffff' }} />, label: <Link to='/settings'>Настройки</Link> }
 ];
 
 const Sidebar: FC = () => {
@@ -31,22 +31,20 @@ const Sidebar: FC = () => {
    };
 
    return (
-      <>
-         <Sider className={styles.sider}>
-            <Flex vertical className={styles.siderContainer}>
-               <h1 className={styles.logo}>DevTracker</h1>
-               <UserProfile isAuthed={isAuthed ?? false} />
-               <Menu items={menuItems} className={styles.menu} />
-               {isAuthed ? (
-                  <Button type='text' onClick={handleLogout} icon={<LogoutOutlined />} iconPosition='end' className={styles.logout}>Выйти</Button>
-               ) : (
-                  <Link to='/auth' className={styles.login}>
-                     <Button type='text' icon={<LoginOutlined />}>Войти</Button>
-                  </Link>
-               )}
-            </Flex>
-         </Sider>
-      </>
+      <Sider className={styles.sider}>
+         <Flex vertical className={styles.siderContainer}>
+            <h1 className={styles.logo}>DevTracker</h1>
+            <UserProfile isAuthed={isAuthed ?? false} />
+            <Menu items={menuItems} className={styles.menu} />
+            {isAuthed ? (
+               <Button type='text' onClick={handleLogout} icon={<LogoutOutlined />} iconPosition='end' className={styles.logout}>Выйти</Button>
+            ) : (
+               <Link to='/auth' className={styles.login}>
+                  <Button type='text' icon={<LoginOutlined />}>Войти</Button>
+               </Link>
+            )}
+         </Flex>
+      </Sider>
    )
 }
 

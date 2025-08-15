@@ -1,7 +1,8 @@
-import { Button, Flex, Form, Input } from 'antd';
+import { Button, Flex, Form, Input, Spin } from 'antd';
 import { useEffect, useState, type FC } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useUserData } from '../../user/model/useUserData';
+import { useUpdateUserData } from '../model/useUpdateUserData';
 import styles from './ProfileSettings.module.scss';
 
 interface IFormData {
@@ -14,6 +15,7 @@ const ProfileSettings: FC = () => {
 
    const { handleSubmit, control, trigger, formState: { errors }, reset } = useForm<IFormData>();
    const { data: userData } = useUserData(token);
+   const { mutate: updateUser, isPending, isSuccess, isError } = useUpdateUserData(token);
 
    useEffect(() => {
       setToken(localStorage.getItem('token'));
@@ -32,7 +34,7 @@ const ProfileSettings: FC = () => {
    };
 
    const onSubmit = async (data: IFormData) => {
-      console.log(data);
+      updateUser({ name: data.username, email: data.email });
    };
 
    return (
@@ -47,6 +49,11 @@ const ProfileSettings: FC = () => {
             </Form.Item>
             <Button color="default" variant="solid" htmlType='submit' className={styles.buttonSave}>Сохранить</Button>
          </Form>
+         <span className={styles.formError}>
+            {isPending ? <Spin /> :
+               isSuccess ? 'Данные успешно обновлены' : 
+               isError ? 'Произошла ошибка' : ''}
+         </span>
       </Flex>
    )
 }

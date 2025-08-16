@@ -21,3 +21,8 @@
    background-color: $settings-item-bg;
    padding: 15px;
 }
+.buttonSave {
+   position: relative;
+   left: 50%;
+   transform: translateX(-50%);
+}

@@ -3,9 +3,9 @@ import { useRegisterUser, useLoginUser, useLogoutUser, useVerifyAuthStatus } fro
 
 interface IAuthContext {
    isAuthed: boolean | null;
-   register: (email: string, password: string, name: string) => void;
-   login: (email: string, password: string) => void;
-   logout: (token: string) => void;
+   register: (email: string, password: string, name: string) => Promise<IRequestResponseMessage>;
+   login: (email: string, password: string) => Promise<ILoginRequestResponse>;
+   logout: (token: string) => Promise<IRequestResponseMessage | Error>;
    checkLoginStatus: (token: string) => void;
 };
 
@@ -18,7 +18,8 @@ interface IRequestResponseMessage {
 };
 
 interface ILoginRequestResponse {
-   token: string;
+   token?: string;
+   message?: string;
 };
 
 const AuthContext  = createContext<IAuthContext | undefined>(undefined);
@@ -49,7 +50,7 @@ const AuthContextProvider: FC<IAuthProvider> = ({ children })=> {
       }
    };
 
-   const login = async (email: string, password: string): Promise<ILoginRequestResponse | Error> => {
+   const login = async (email: string, password: string): Promise<ILoginRequestResponse> => {
       try {
          const result = await loginMutate({ email, password });
       

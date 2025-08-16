@@ -38,7 +38,7 @@ const NewNoteForm: FC<INewNoteFormProps> = ({ isNoteSaved, setIsNoteSaved }) => 
    const onSubmit = (data: NewNoteFormData): void => {
       const key = data.date + new Date().getMilliseconds().toString();
 
-      const savedNotes = saveNote({...data, key, formattedDescription: formattedDescription || '', status: 'active'});
+      const savedNotes = saveNote({...data, tags: data.tags || [], key, formattedDescription: formattedDescription || '', status: 'active'});
 
       if (savedNotes) setIsNoteSaved(true);
       else setIsNoteSaved(false);
@@ -60,14 +60,31 @@ const NewNoteForm: FC<INewNoteFormProps> = ({ isNoteSaved, setIsNoteSaved }) => 
                <Controller name='type' control={control} rules={{ required: true }} render={({ field }) => <Select showSearch options={typeOptions} {...field} />} />
             </Form.Item>
             <Form.Item label='Теги' className={styles.formItem}>
-               <Controller name='tags' control={control} render={() => (
-                  <Select mode='tags' options={userTags} className={styles.formTags} tagRender={(props) => {
-                     const { label, value, closable, onClose } = props;
-                     const color = userTags?.find(tag => tag.value === value)?.color || '#888';
+               <Controller name='tags' control={control} render={({ field }) => {
+                  const { value = [], onChange } = field;
+                  const selectedValues = value.map(tag => tag.value);
 
-                     return <Tag color={color} closable={closable} onClose={onClose}>{label}</Tag>;
-                  }} />
-               )} />
+                  return (
+                     <Select mode='tags' value={selectedValues}
+                        options={userTags?.map(tag => ({ label: tag.label, value: tag.value })) || []}
+                        onChange={(selected: string[]) => {
+                           const updatedTags: ITagItem[] = selected.map(val =>
+                              userTags?.find(tag => tag.value === val) || { value: val, label: val, color: '#888', key: val }
+                           );
+                           onChange(updatedTags);
+                        }}
+                        tagRender={({ label, value, closable, onClose }) => {
+                           const color = userTags?.find(tag => tag.value === value)?.color || '#888';
+                           return (
+                           <Tag color={color} closable={closable} onClose={onClose}>
+                              {label}
+                           </Tag>
+                           );
+                        }}
+                        className={styles.formTags}
+                     />);
+                  }}
+               />
             </Form.Item>
             <Form.Item label='Выполнить до' required validateStatus={errors.date ? 'error' : ''} help={errors.date && 'Обязательное поле'} className={styles.formItem}>
                <Controller name='date' control={control} rules={{ required: true }} render={({ field }) => <DatePicker {...field} />} />

@@ -1,7 +1,9 @@
+import type { ITagItem } from "../settings/tagTypes";
+
 export interface INoteItem {
    title: string;
    type: string;
-   tags?: [];
+   tags: ITagItem[];
    date: number;
    description?: string;
    key: string;
@@ -12,7 +14,7 @@ export interface INoteItem {
 export type NewNoteFormData = {
    title: string;
    type: string;
-   tags?: [];
+   tags?: ITagItem[];
    date: number;
    description?: string;
 };

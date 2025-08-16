@@ -1,4 +1,6 @@
 .form {
+   width: fit-content;
+
    &Item {
       :global {
          .ant-form-item-label label {

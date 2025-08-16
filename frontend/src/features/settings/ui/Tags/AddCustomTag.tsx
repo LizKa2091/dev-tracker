@@ -1,7 +1,9 @@
 import { Button, ColorPicker, Flex, Form, Input, Modal, Tag } from 'antd';
 import { useEffect, useState, type FC } from 'react'
 import { Controller, useForm } from 'react-hook-form';
+import { updateUserTags } from '../../model/tagActions';
 import styles from './AddCustomTag.module.scss';
+import type { ITagItem } from '../../tagTypes';
 
 const cancelButtonStyles = {
    backgroundColor: '#000',
@@ -17,9 +19,10 @@ interface IFormData {
 interface IAddCustomTagProps {
    isModalOpen: boolean;
    setIsModalOpen: (value: boolean) => void;
+   setSavedTags: (tags: ITagItem[]) => void;
 }
 
-const AddCustomTag: FC<IAddCustomTagProps> = ({ isModalOpen, setIsModalOpen }) => {
+const AddCustomTag: FC<IAddCustomTagProps> = ({ isModalOpen, setIsModalOpen, setSavedTags }) => {
    const [token, setToken] = useState<string | null>(null);
 
    const { handleSubmit, control, trigger, formState: { errors }, watch } = useForm<IFormData>({defaultValues: { tagName: '', color: '#000' }});
@@ -38,7 +41,8 @@ const AddCustomTag: FC<IAddCustomTagProps> = ({ isModalOpen, setIsModalOpen }) =
 
    const onSubmit = async (data: IFormData) => {
       if (token) {
-         console.log(data);
+         const updatedTags = updateUserTags(data.tagName, data.color);
+         setSavedTags(updatedTags);
       }
    };
 
@@ -55,9 +59,6 @@ const AddCustomTag: FC<IAddCustomTagProps> = ({ isModalOpen, setIsModalOpen }) =
                </Form.Item>
                <Button color="default" variant="solid" htmlType='submit' className={styles.buttonSave}>Добавить</Button>
             </Form>
-            {/* {isPending ? <Spin /> :
-            isSuccess ? <span className={styles.formSuccess}>Данные успешно обновлены</span> : 
-            isError ? <span className={styles.formError}>Произошла ошибка</span> : ''} */}
             <h4>Предпросмотр тэга</h4>
             <Tag color={tagColor} className={styles.tagPreview}>{tagName}</Tag>
          </Flex>

@@ -71,6 +71,9 @@ const AuthContextProvider: FC<IAuthProvider> = ({ children })=> {
             const response = await logoutMutate({ token });
 
             localStorage.removeItem('token');
+            localStorage.removeItem('notes');
+            localStorage.removeItem('userTags');
+            
             setToken(null);
             setIsAuthed(false);
 

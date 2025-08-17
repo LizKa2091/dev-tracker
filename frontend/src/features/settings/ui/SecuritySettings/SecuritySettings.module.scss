@@ -1,0 +1,26 @@
+.container {
+   border: 2px solid $main-bg-black;
+   border-radius: 16px;
+   background-color: $settings-item-bg;
+   padding: 15px;
+}
+.innerContainer {
+   width: fit-content;
+}
+.form {
+   &Item {
+      :global {
+         .ant-form-item-label label {
+            color: $main-text-white;
+         }
+      }
+   }
+}
+.response {
+   &Success {
+      color: $success-request-green;
+   }
+   &Failed {
+      color: $bad-request-red;
+   }
+}

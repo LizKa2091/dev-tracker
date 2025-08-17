@@ -3,8 +3,9 @@ import { Controller, useForm } from 'react-hook-form';
 import { type ILoginFormData } from '../../authTypes';
 import { Button, Form, Input } from 'antd';
 import AuthExports from '../../../../shared/context/AuthContext';
-import styles from './LoginForm.module.scss';
 import { useNavigate } from 'react-router-dom';
+import { initTags } from '../../../notes/model/initTags';
+import styles from './LoginForm.module.scss';
 
 const { useAuthContext } = AuthExports;
 
@@ -20,6 +21,7 @@ const LoginForm: FC = () => {
    useLayoutEffect(() => {
       if (isSuccessLogin) {
          setLoginStatus('Вход выполнен успешно, через 3 секунды вы будете переадресованы на главную страницу');
+         initTags();
 
          setTimeout(() => {
             navigate('/');

@@ -5,7 +5,6 @@ import { DeleteOutlined } from '@ant-design/icons';
 import { changeNoteStatus } from '../model/changeNoteStatus';
 import EditField from './EditField'
 import styles from './NoteItem.module.scss';
-// commit implement editing field logic - commented
 
 interface INoteItemProps {
    noteItemData: INoteItem;
@@ -80,7 +79,7 @@ const NoteItem: FC<INoteItemProps> = ({ noteItemData, handleDeleteNote }) => {
             </Flex>
             <Space>
                {currNote.tags?.map(tag => 
-                  <Badge key={tag} count={tag} text={tag} />
+                  <Badge key={tag.key} color={tag.color || '#888'} text={tag.value} className={styles.badge} />
                )}
             </Space>
          </Space>

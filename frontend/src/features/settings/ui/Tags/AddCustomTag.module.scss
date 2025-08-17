@@ -1,0 +1,18 @@
+.form {
+   &Item {
+      :global {
+         .ant-form-item-label label {
+            color: $main-text-white;
+         }
+      }
+   }
+}
+:global(.ant-modal-content) {
+   background-color: $settings-item-bg !important;
+}
+.container {
+   width: fit-content;
+}
+.tagPreview {
+   width: fit-content;
+}

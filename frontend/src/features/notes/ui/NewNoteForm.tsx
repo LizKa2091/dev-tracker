@@ -1,11 +1,13 @@
 import { useEffect, useState, type FC } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { Form, Input, Button, Select, DatePicker } from 'antd';
+import { Form, Input, Button, Select, DatePicker, Tag } from 'antd';
 import type { NewNoteFormData } from '../noteTypes';
 import { saveNote } from '../model/noteStorage';
-import { tagOptions, typeOptions } from '../model/constants';
-import styles from './NewNoteForm.module.scss';
+import { typeOptions } from '../model/constants';
 import MarkdownTextarea from '../../../shared/ui/MarkdownTextarea/MarkdownTextarea';
+import { loadUserTags } from '../../settings/model/tagActions';
+import { type ITagItem } from '../../settings/tagTypes';
+import styles from './NewNoteForm.module.scss';
 
 interface INewNoteFormProps {
    isNoteSaved: boolean;
@@ -13,9 +15,17 @@ interface INewNoteFormProps {
 }
 
 const NewNoteForm: FC<INewNoteFormProps> = ({ isNoteSaved, setIsNoteSaved }) => {
+   const [userTags, setUserTags] = useState<ITagItem[]>();
+   const [formattedDescription, setFormattedDescription] = useState<string>('');
    const { handleSubmit, control, formState: { errors }, trigger } = useForm<NewNoteFormData>();
 
-   const [formattedDescription, setFormattedDescription] = useState<string>('');
+   const token = localStorage.getItem('token');
+
+   useEffect(() => {
+      if (token) {
+         setUserTags(loadUserTags());
+      }
+   }, [token])
 
    useEffect(() => {
       if (isNoteSaved) {
@@ -23,12 +33,12 @@ const NewNoteForm: FC<INewNoteFormProps> = ({ isNoteSaved, setIsNoteSaved }) => 
             setIsNoteSaved(false);
          }, 5000);
       }
-   }, [isNoteSaved]);
+   }, [isNoteSaved, setIsNoteSaved]);
 
    const onSubmit = (data: NewNoteFormData): void => {
       const key = data.date + new Date().getMilliseconds().toString();
 
-      const savedNotes = saveNote({...data, key, formattedDescription: formattedDescription || '', status: 'active'});
+      const savedNotes = saveNote({...data, tags: data.tags || [], key, formattedDescription: formattedDescription || '', status: 'active'});
 
       if (savedNotes) setIsNoteSaved(true);
       else setIsNoteSaved(false);
@@ -50,7 +60,31 @@ const NewNoteForm: FC<INewNoteFormProps> = ({ isNoteSaved, setIsNoteSaved }) => 
                <Controller name='type' control={control} rules={{ required: true }} render={({ field }) => <Select showSearch options={typeOptions} {...field} />} />
             </Form.Item>
             <Form.Item label='Теги' className={styles.formItem}>
-               <Controller name='tags' control={control} render={({ field }) => <Select mode='tags' options={tagOptions} className={styles.formTags} {...field} />} />
+               <Controller name='tags' control={control} render={({ field }) => {
+                  const { value = [], onChange } = field;
+                  const selectedValues = value.map(tag => tag.value);
+
+                  return (
+                     <Select mode='tags' value={selectedValues}
+                        options={userTags?.map(tag => ({ label: tag.label, value: tag.value })) || []}
+                        onChange={(selected: string[]) => {
+                           const updatedTags: ITagItem[] = selected.map(val =>
+                              userTags?.find(tag => tag.value === val) || { value: val, label: val, color: '#888', key: val }
+                           );
+                           onChange(updatedTags);
+                        }}
+                        tagRender={({ label, value, closable, onClose }) => {
+                           const color = userTags?.find(tag => tag.value === value)?.color || '#888';
+                           return (
+                           <Tag color={color} closable={closable} onClose={onClose}>
+                              {label}
+                           </Tag>
+                           );
+                        }}
+                        className={styles.formTags}
+                     />);
+                  }}
+               />
             </Form.Item>
             <Form.Item label='Выполнить до' required validateStatus={errors.date ? 'error' : ''} help={errors.date && 'Обязательное поле'} className={styles.formItem}>
                <Controller name='date' control={control} rules={{ required: true }} render={({ field }) => <DatePicker {...field} />} />

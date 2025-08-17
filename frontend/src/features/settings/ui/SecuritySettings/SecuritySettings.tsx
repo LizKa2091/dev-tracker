@@ -2,6 +2,8 @@ import { Button, Flex, Form, Input } from 'antd';
 import { useState, type FC } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useChangePassword } from '../../model/useChangePassword';
+import AuthExports from '../../../../shared/context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import styles from './SecuritySettings.module.scss';
 
 interface IFormData {
@@ -9,12 +11,16 @@ interface IFormData {
    newPass: string;
 };
 
+const { useAuthContext } = AuthExports;
+
 const SecuritySettings: FC = () => {
    const [requestStatus, setRequestStatus] = useState<string>('');
    const token: string | null = localStorage.getItem('token');
 
    const { control, handleSubmit, formState: { errors }, trigger } = useForm<IFormData>();
    const { mutateAsync } = useChangePassword(token);
+   const { logout } = useAuthContext();
+   const navigate = useNavigate();
 
    const onFinish = async () => {
       const isValidData = await trigger(['currPass', 'newPass']);
@@ -32,6 +38,14 @@ const SecuritySettings: FC = () => {
       catch (e) {
          const error = e as Error;
          setRequestStatus(error.message || 'Произошла ошибка при смене пароля');
+      }
+   };
+
+   const handleLogout = () => {
+      if (token) {
+         logout(token);
+
+         navigate('/');
       }
    };
 
@@ -56,8 +70,9 @@ const SecuritySettings: FC = () => {
                }
             >{requestStatus}</span>
          </Flex>
-         <Flex>
+         <Flex vertical gap='middle' className={styles.logoutContainer}>
             <h4>Выход из аккаунта</h4>
+            <Button color='default' variant='solid' onClick={handleLogout}>Выйти</Button>
          </Flex>
       </Flex>
    )

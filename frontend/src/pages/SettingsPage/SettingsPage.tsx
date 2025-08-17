@@ -4,7 +4,7 @@ import Sidebar from '../../widgets/Sidebar';
 import styles from './SettingsPage.module.scss';
 import ProfileSettings from '../../features/settings/ui/ProfileSettings';
 import TagsSettings from '../../features/settings/ui/Tags/TagsSettings';
-import SecuritySettings from '../../features/settings/ui/SecuritySettings';
+import SecuritySettings from '../../features/settings/ui/SecuritySettings/SecuritySettings';
 
 const { Content } = Layout;
 

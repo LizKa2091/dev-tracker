@@ -194,6 +194,32 @@ app.patch('/me', authenticateToken, (req: Request, res: Response): void => {
    });
 });
 
+app.post('/me/change-password', authenticateToken, (req: Request, res: Response): void => {
+   const userEmail = req.user?.email;
+   const { oldPassword, newPassword } = req.body;
+
+   if (!userEmail || !users[userEmail]) {
+      res.status(404).json({ message: 'Пользователь не найден' });
+      return;
+   }
+
+   const user = users[userEmail];
+
+   if (!oldPassword || !newPassword) {
+      res.status(400).json({ message: 'Старый и новый пароли обязательны' });
+      return;
+   }
+
+   if (user.password !== oldPassword) {
+      res.status(400).json({ message: 'Неверный старый пароль' });
+      return;
+   }
+
+   users[userEmail].password = newPassword;
+
+   res.json({ message: 'Пароль успешно изменён' });
+});
+
 app.post('/xp/add', authenticateToken, (req: Request, res: Response): void => {
    const { amount } = req.body;
    const userEmail = req.user?.email;

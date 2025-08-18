@@ -5,6 +5,7 @@ import jwt, { JwtPayload, VerifyErrors } from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import multer from 'multer';
 import path from 'path';
+import fs from 'fs';
 
 dotenv.config();
 
@@ -182,6 +183,8 @@ app.patch('/me', authenticateToken, (req: Request, res: Response): void => {
       { expiresIn: '1h' }
    );
 
+   const user = users[userEmail];
+
    res.json({
       message: 'Данные обновлены',
       token: newToken,
@@ -189,6 +192,7 @@ app.patch('/me', authenticateToken, (req: Request, res: Response): void => {
          email: updatedUser.email,
          name: updatedUser.name,
          xp: updatedUser.xp,
+         profilePic: user.profilePic ? `${req.protocol}://${req.get('host')}/${user.profilePic}` : null, 
          ...getLevelAndProgress(updatedUser.xp)
       }
    });
@@ -220,9 +224,14 @@ app.post('/me/change-password', authenticateToken, (req: Request, res: Response)
    res.json({ message: 'Пароль успешно изменён' });
 });
 
+const uploadDir = path.resolve('uploads');
+if (!fs.existsSync(uploadDir)) {
+   fs.mkdirSync(uploadDir);
+}
+
 const storage = multer.diskStorage({
    destination: (req, file, cb) => {
-      cb(null, 'uploads/');
+      cb(null, uploadDir);
    },
    filename: (req, file, cb) => {
       const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
@@ -258,11 +267,13 @@ app.post('/me/avatar', authenticateToken, upload.single('avatar'), (req: Request
       return;
    }
 
-   users[userEmail].profilePic = req.file.path;
+   const relativePath = `uploads/${req.file.filename}`;
+
+   users[userEmail].profilePic = relativePath;
 
    res.json({ 
       message: 'Аватар обновлен',
-      profilePic: req.file.path
+      profilePic: `${req.protocol}://${req.get('host')}/${relativePath}`
    });
 });
 
@@ -310,7 +321,7 @@ app.post('/xp/remove', authenticateToken, (req: Request, res: Response): void =>
    });
 });
 
-app.use('/uploads', express.static('uploads'));
+app.use('/uploads', express.static(path.resolve('uploads')));
 
 app.get('/', (req: Request, res: Response): void => {
    res.send('Сервер авторизации работает!');

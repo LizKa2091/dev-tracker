@@ -3,10 +3,8 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import jwt, { JwtPayload, VerifyErrors } from 'jsonwebtoken';
 import dotenv from 'dotenv';
-
-// add logic for levels based on xp
-// TODO: add user profile pictures
-// TODO: get user file from the form
+import multer from 'multer';
+import path from 'path';
 
 dotenv.config();
 
@@ -32,6 +30,7 @@ interface User {
    password: string;
    name?: string;
    xp: number;
+   profilePic?: string;
 }
 
 const users: Record<string, User> = {};
@@ -146,6 +145,7 @@ app.get('/me', authenticateToken, (req: Request, res: Response): void => {
       email: user.email,
       name: user.name,
       xp: user.xp,
+      profilePic: user.profilePic ? `http://localhost:5001/${user.profilePic}` : null,
       ...levelData
    });
 });
@@ -220,6 +220,52 @@ app.post('/me/change-password', authenticateToken, (req: Request, res: Response)
    res.json({ message: 'Пароль успешно изменён' });
 });
 
+const storage = multer.diskStorage({
+   destination: (req, file, cb) => {
+      cb(null, 'uploads/');
+   },
+   filename: (req, file, cb) => {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+      cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+   }
+});
+
+const fileFilter = (req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
+   const allowedTypes = /jpeg|jpg|png/;
+   const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+   const mimetype = allowedTypes.test(file.mimetype);
+
+   if (extname && mimetype) {
+      cb(null, true);
+   } 
+   else {
+      cb(new Error('Только изображения формата jpeg, jpg или png!'));
+   }
+};
+
+const upload = multer({ storage, fileFilter });
+
+app.post('/me/avatar', authenticateToken, upload.single('avatar'), (req: Request, res: Response): void => {
+   const userEmail = req.user?.email;
+
+   if (!userEmail || !users[userEmail]) {
+      res.status(404).json({ message: 'Пользователь не найден' });
+      return;
+   }
+
+   if (!req.file) {
+      res.status(400).json({ message: 'Файл не загружен' });
+      return;
+   }
+
+   users[userEmail].profilePic = req.file.path;
+
+   res.json({ 
+      message: 'Аватар обновлен',
+      profilePic: req.file.path
+   });
+});
+
 app.post('/xp/add', authenticateToken, (req: Request, res: Response): void => {
    const { amount } = req.body;
    const userEmail = req.user?.email;
@@ -263,6 +309,8 @@ app.post('/xp/remove', authenticateToken, (req: Request, res: Response): void =>
       ...getLevelAndProgress(users[userEmail].xp)
    });
 });
+
+app.use('/uploads', express.static('uploads'));
 
 app.get('/', (req: Request, res: Response): void => {
    res.send('Сервер авторизации работает!');

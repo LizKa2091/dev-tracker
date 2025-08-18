@@ -4,4 +4,5 @@ export interface IUserDataResponse {
    name: string;
    xp: number;
    xpForNextLevel: number;
+   profilePic: string | null;
 };

@@ -3,9 +3,10 @@ import { useEffect, useState, type FC } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useUserData } from '../../user/model/useUserData';
 import { useUpdateUserData } from '../model/useUpdateUserData';
-import styles from './ProfileSettings.module.scss';
 import { useUpdateAvatar } from '../model/useUpdateAvatar';
 import { UploadOutlined, UserOutlined } from '@ant-design/icons';
+import { useQueryClient } from '@tanstack/react-query';
+import styles from './ProfileSettings.module.scss';
 
 interface IUserDataFormData {
    username: string;
@@ -25,6 +26,8 @@ const ProfileSettings: FC = () => {
    const { data: userData } = useUserData(token);
    const { mutate: updateUser, isPending: isUserPending, isSuccess: isUserSuccess, isError: isUserError } = useUpdateUserData(token);
    const { mutate: updateAvatar, isPending: isAvatarPending, isSuccess: isAvatarSuccess, isError: isAvatarError } = useUpdateAvatar(token);
+
+   const queryClient = useQueryClient();
 
    useEffect(() => {
       if (userData) {
@@ -57,6 +60,8 @@ const ProfileSettings: FC = () => {
 
             return res.profilePic;
          })
+
+         queryClient.invalidateQueries({ queryKey: ['userData', token]});
       }});
    };
 

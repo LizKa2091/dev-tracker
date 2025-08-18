@@ -1,7 +1,8 @@
-import { Flex, Progress } from 'antd';
+import { Avatar, Flex, Progress } from 'antd';
 import { useEffect, useState, type FC } from 'react';
 import { useUserData } from '../model/useUserData';
 import { type IUserDataResponse } from '../userTypes';
+import { UserOutlined } from '@ant-design/icons';
 import styles from './UserProfile.module.scss';
 
 interface IUserProfileProps {
@@ -37,7 +38,10 @@ const UserProfile: FC<IUserProfileProps> = ({ isAuthed }) => {
 
    return (
       <Flex vertical gap='middle' className={styles.userInfoContainer}>
-         <p className={styles.nickname}>{isLoading ? 'Загрузка...' : data?.name || 'Гость' }</p>
+         <Flex align='center' gap='middle'>
+            <Avatar size={48} src={data?.profilePic ? data?.profilePic : <UserOutlined />} />
+            <p className={styles.nickname}>{isLoading ? 'Загрузка...' : data?.name || 'Гость' }</p>
+         </Flex>
          <Flex justify='space-between' vertical gap='small'>
             <p className={styles.xp}>XP: {isLoading ? 'Загрузка...' : data?.xp || 0 }</p>
             {data && 

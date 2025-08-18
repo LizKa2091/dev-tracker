@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import type { IUserDataResponse } from "../userTypes";
 
-const getUserData = async (token: string) => {
+const getUserData = async (token: string): Promise<IUserDataResponse> => {
    const response = await fetch(`http://localhost:5001/me`, {
       method: 'GET',
       headers: {

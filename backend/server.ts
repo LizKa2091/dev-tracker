@@ -32,6 +32,7 @@ interface User {
    name?: string;
    xp: number;
    profilePic?: string;
+   difficulty: 'default' | 'hard';
 }
 
 const users: Record<string, User> = {};
@@ -79,7 +80,7 @@ app.post('/register', (req: Request, res: Response): void => {
       return;
    }
 
-   users[email] = { email, password, name, xp: 0 };
+   users[email] = { email, password, name, xp: 0, difficulty: 'default' };
    res.status(201).json({ message: 'Пользователь зарегистрирован' });
 });
 
@@ -147,6 +148,7 @@ app.get('/me', authenticateToken, (req: Request, res: Response): void => {
       name: user.name,
       xp: user.xp,
       profilePic: user.profilePic ? `http://localhost:5001/${user.profilePic}` : null,
+      difficulty: user.difficulty,
       ...levelData
    });
 });
@@ -224,6 +226,28 @@ app.post('/me/change-password', authenticateToken, (req: Request, res: Response)
    res.json({ message: 'Пароль успешно изменён' });
 });
 
+app.patch('/me/difficulty', authenticateToken, (req: Request, res: Response): void => {
+   const userEmail = req.user?.email;
+   const { difficulty } = req.body;
+
+   if (!userEmail || !users[userEmail]) {
+      res.status(404).json({ message: 'Пользователь не найден' });
+      return;
+   }
+
+   if (!['default', 'hard'].includes(difficulty)) {
+      res.status(400).json({ message: 'Недопустимый режим сложности' });
+      return;
+   }
+
+   users[userEmail].difficulty = difficulty as 'default' | 'hard';
+
+   res.json({
+      message: 'Режим сложности обновлён',
+      difficulty: users[userEmail].difficulty
+   });
+});
+
 const uploadDir = path.resolve('uploads');
 if (!fs.existsSync(uploadDir)) {
    fs.mkdirSync(uploadDir);
@@ -278,7 +302,6 @@ app.post('/me/avatar', authenticateToken, upload.single('avatar'), (req: Request
 });
 
 app.post('/xp/add', authenticateToken, (req: Request, res: Response): void => {
-   const { amount } = req.body;
    const userEmail = req.user?.email;
 
    if (!userEmail || !users[userEmail]) {
@@ -286,21 +309,26 @@ app.post('/xp/add', authenticateToken, (req: Request, res: Response): void => {
       return;
    }
 
-   if (typeof amount !== 'number' || amount <= 0) {
-      res.status(400).json({ message: 'Сумма для добавления должна быть положительным числом' });
-      return;
+   let xpToAdd: number = 0;
+
+   switch (users[userEmail].difficulty) {
+      case 'hard':
+         xpToAdd = 12;
+         break;
+      default:
+         xpToAdd = 20;
    }
 
-   users[userEmail].xp += amount;
+   users[userEmail].xp += xpToAdd;
 
    res.json({
+      message: `Добавлено ${xpToAdd} XP`,
       xp: users[userEmail].xp,
       ...getLevelAndProgress(users[userEmail].xp)
    });
 });
 
 app.post('/xp/remove', authenticateToken, (req: Request, res: Response): void => {
-   const { amount } = req.body;
    const userEmail = req.user?.email;
 
    if (!userEmail || !users[userEmail]) {
@@ -308,14 +336,19 @@ app.post('/xp/remove', authenticateToken, (req: Request, res: Response): void =>
       return;
    }
 
-   if (typeof amount !== 'number' || amount <= 0) {
-      res.status(400).json({ message: 'Сумма для вычитания должна быть положительным числом' });
-      return;
+   let xpToRemove = 0;
+   switch (users[userEmail].difficulty) {
+      case 'hard':
+         xpToRemove = 25;
+         break;
+      default:
+         xpToRemove = 15;
    }
 
-   users[userEmail].xp = Math.max(0, users[userEmail].xp - amount);
+   users[userEmail].xp = Math.max(0, users[userEmail].xp - xpToRemove);
 
    res.json({
+      message: `Вычтено ${xpToRemove} XP`,
       xp: users[userEmail].xp,
       ...getLevelAndProgress(users[userEmail].xp)
    });

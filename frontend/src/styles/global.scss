@@ -1,0 +1,21 @@
+#root {
+   min-height: 100dvh;
+}
+.mainLayout.ant-layout {
+   min-height: 100dvh;
+}
+.content {
+   background-color: $content-bg-blue;
+   padding: 20px 50px;
+
+   .title {
+      font-size: 1.75rem;
+   }
+}
+.footer.ant-layout-footer {
+   background-color: $settings-item-bg;
+
+   & p {
+      text-align: center;
+   }
+}

@@ -3,18 +3,21 @@ import AuthSwitcher from '../../features/auth/ui/AuthSwitcher';
 import { Flex, Layout } from 'antd';
 import Sidebar from '../../widgets/Sidebar';
 import { Content } from 'antd/es/layout/layout';
-import styles from './AuthPage.module.scss';
+import FooterBar from '../../widgets/FooterBar/ui/FooterBar';
 
 const AuthPage: FC = () => {
    return (
-      <Layout>
+      <Layout className='mainLayout'>
          <Sidebar />
-         <Content className={styles.content}>
-            <Flex vertical gap='large'>
-               <h2 className={styles.title}>Авторизация</h2>
-               <AuthSwitcher />
-            </Flex>
-         </Content>
+         <Layout>
+            <Content className='content'>
+               <Flex vertical gap='large'>
+                  <h2 className='title'>Авторизация</h2>
+                  <AuthSwitcher />
+               </Flex>
+            </Content>
+            <FooterBar />
+         </Layout>
       </Layout>
    )
 }

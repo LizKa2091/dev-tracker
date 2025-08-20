@@ -5,4 +5,7 @@ export interface IUserDataResponse {
    xp: number;
    xpForNextLevel: number;
    profilePic: string | null;
+   difficulty: Difficulty;
 };
+
+export type Difficulty = 'default' | 'hard';

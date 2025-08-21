@@ -3,6 +3,7 @@ import { useRegisterUser, useLoginUser, useLogoutUser, useVerifyAuthStatus } fro
 
 interface IAuthContext {
    isAuthed: boolean | null;
+   token: string | null;
    register: (email: string, password: string, name: string) => Promise<IRequestResponseMessage>;
    login: (email: string, password: string) => Promise<ILoginRequestResponse>;
    logout: (token: string) => Promise<IRequestResponseMessage | Error>;
@@ -39,6 +40,14 @@ const AuthContextProvider: FC<IAuthProvider> = ({ children })=> {
       }
    }, [token]);
 
+   const clearAuthData = (): void => {
+      localStorage.removeItem('token');
+      localStorage.removeItem('notes');
+      localStorage.removeItem('userTags');
+      setToken(null);
+      setIsAuthed(false);
+   };
+
    const register = async (email: string, password: string, name: string): Promise<IRequestResponseMessage> => {
       try {
          const result = await registerMutate({ email, password, name });
@@ -70,17 +79,13 @@ const AuthContextProvider: FC<IAuthProvider> = ({ children })=> {
          try {
             const response = await logoutMutate({ token });
 
-            localStorage.removeItem('token');
-            localStorage.removeItem('notes');
-            localStorage.removeItem('userTags');
-            
-            setToken(null);
-            setIsAuthed(false);
-
             return response;
          }
          catch (error) {
             return error as Error;
+         }
+         finally {
+            clearAuthData();
          }
       }
       throw new Error('нет токена');
@@ -88,24 +93,25 @@ const AuthContextProvider: FC<IAuthProvider> = ({ children })=> {
 
    const checkLoginStatus = async (token: string) => {
       if (!token) {
-         setIsAuthed(false);
+         clearAuthData();
+
          throw new Error('нет токена');
       }
       
-      try {
-         const response = await refecthAuth();
-         setIsAuthed(true);
+      const result = await refecthAuth();
+
+      if (result.error) {
+         clearAuthData();
          
-         return response;
+         return result.error;
       }
-      catch (error) {
-         setIsAuthed(false);
-         return error as Error;
-      }
+
+      setIsAuthed(true);
+      return result.data;
    };
 
    return (
-      <AuthContext.Provider value={{ isAuthed, register, login, logout, checkLoginStatus }}>
+      <AuthContext.Provider value={{ isAuthed, token, register, login, logout, checkLoginStatus }}>
          {children}
       </AuthContext.Provider>
    );

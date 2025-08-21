@@ -66,7 +66,7 @@ const LoginForm: FC = () => {
                loginStatus.toLowerCase().includes('неверный') ||
                loginStatus.toLowerCase().includes('failed') ||
                loginStatus.toLowerCase().includes('ошибка') ? 
-               styles.badRequest : styles.successRequest
+               'bad-request' : 'success-request'
             }>
                {loginStatus}
             </span>

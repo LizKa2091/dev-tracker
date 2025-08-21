@@ -98,7 +98,7 @@ const NewNoteForm: FC<INewNoteFormProps> = ({ isNoteSaved, setIsNoteSaved }) => 
             <Button color="default" variant="solid" htmlType='submit'>Создать</Button>
          </Form>
          {isNoteSaved && 
-            <span>Запись успешно сохранена</span>
+            <span className='success-response'>Запись успешно сохранена</span>
          }
       </>
       

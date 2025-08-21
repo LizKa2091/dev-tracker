@@ -12,6 +12,12 @@
       font-size: 1.75rem;
    }
 }
+.bad-request {
+   color: $bad-request-red;
+}
+.success-request {
+   color: $success-request-green;
+}
 .footer.ant-layout-footer {
    background-color: $settings-item-bg;
 

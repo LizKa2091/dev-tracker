@@ -66,7 +66,7 @@ const SecuritySettings: FC = () => {
             <span className={
                   requestStatus.toLowerCase().includes('не найден') ||
                   requestStatus.toLowerCase().includes('неверный') ?
-                  styles.responseFailed : styles.responseSuccess
+                  'bad-request' : '.success-request'
                }
             >{requestStatus}</span>
          </Flex>

@@ -47,7 +47,7 @@ const RegisterForm: FC = () => {
                registerStatus.toLowerCase().includes('неверный') ||
                registerStatus.toLowerCase().includes('failed') ||
                registerStatus.toLowerCase().includes('ошибка') ? 
-               styles.badRequest : styles.successRequest
+               'bad-request' : 'success-request'
             }>
                {registerStatus}
             </span>

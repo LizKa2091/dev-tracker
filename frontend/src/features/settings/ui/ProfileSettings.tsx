@@ -7,6 +7,7 @@ import { useUpdateAvatar } from '../model/useUpdateAvatar';
 import { UploadOutlined, UserOutlined } from '@ant-design/icons';
 import { useQueryClient } from '@tanstack/react-query';
 import styles from './ProfileSettings.module.scss';
+import DifficultySwitcher from './Difficulty/DifficultySwitcher';
 
 interface IUserDataFormData {
    username: string;
@@ -83,6 +84,8 @@ const ProfileSettings: FC = () => {
             isUserSuccess ? <span className={styles.formSuccess}>Данные успешно обновлены</span> : 
             isUserError ? <span className={styles.formError}>Произошла ошибка</span> : ''
          }
+         
+         <DifficultySwitcher />
 
          <h4>Смена аватара</h4>
          <Form onFinish={onFinishAvatarForm} className={styles.form}>

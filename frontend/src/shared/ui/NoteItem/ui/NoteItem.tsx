@@ -3,6 +3,7 @@ import type { INoteItem } from '../../../../features/notes/noteTypes';
 import { Badge, Button, Card, Flex, Space, Tag } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { changeNoteStatus } from '../model/changeNoteStatus';
+import { useXpAction } from '../model/useXpAction';
 import EditField from './EditField'
 import styles from './NoteItem.module.scss';
 
@@ -15,6 +16,10 @@ const NoteItem: FC<INoteItemProps> = ({ noteItemData, handleDeleteNote }) => {
    const [currNote, setCurrNote] = useState<INoteItem>(noteItemData);
    const [isConfirmed, setIsConfirmed] = useState<boolean | null>(null);
    const [isCompleted, setIsCompleted] = useState<boolean>(noteItemData.status === 'completed');
+
+   const token = localStorage.getItem('token');
+
+   const { addXp } = useXpAction(token);
 
    useEffect(() => {
       if (isConfirmed) {
@@ -34,7 +39,10 @@ const NoteItem: FC<INoteItemProps> = ({ noteItemData, handleDeleteNote }) => {
    const handleChangeStatus = (key: string): void => {
       const newStatus = changeNoteStatus(key);
 
-      if (newStatus === 'completed') setIsCompleted(true);
+      if (newStatus === 'completed') {
+         setIsCompleted(true);
+         addXp();
+      }
       else setIsCompleted(false);
    };
 

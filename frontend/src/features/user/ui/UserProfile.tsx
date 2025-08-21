@@ -1,22 +1,14 @@
 import { Avatar, Flex, Progress } from 'antd';
-import { useEffect, useState, type FC } from 'react';
+import { type FC } from 'react';
 import { useUserData } from '../model/useUserData';
 import { type IUserDataResponse } from '../userTypes';
 import { UserOutlined } from '@ant-design/icons';
+import AuthExports from '../../../shared/context/AuthContext';
 import styles from './UserProfile.module.scss';
 
-interface IUserProfileProps {
-   isAuthed: boolean;
-};
-
-const UserProfile: FC<IUserProfileProps> = ({ isAuthed }) => {
-   const [token, setToken] = useState<string | null>(null);
-
+const UserProfile: FC = () => {
+   const { token } = AuthExports.useAuthContext();
    const { data, isLoading } = useUserData(token);
-
-   useEffect(() => {
-      setToken(localStorage.getItem('token'));
-   }, [isAuthed]);
 
    const calcProgress = (data: IUserDataResponse): number => {
       if (!data) return 0;

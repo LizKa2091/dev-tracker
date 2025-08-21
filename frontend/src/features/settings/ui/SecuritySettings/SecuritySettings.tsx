@@ -14,8 +14,8 @@ interface IFormData {
 const { useAuthContext } = AuthExports;
 
 const SecuritySettings: FC = () => {
+   const { token } = AuthExports.useAuthContext();
    const [requestStatus, setRequestStatus] = useState<string>('');
-   const token: string | null = localStorage.getItem('token');
 
    const { control, handleSubmit, formState: { errors }, trigger } = useForm<IFormData>();
    const { mutateAsync } = useChangePassword(token);

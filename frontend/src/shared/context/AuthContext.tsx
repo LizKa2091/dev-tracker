@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, type FC, type ReactNode } from 'react';
+import { createContext, useContext, useState, type FC, type ReactNode } from 'react';
 import { useRegisterUser, useLoginUser, useLogoutUser, useVerifyAuthStatus } from '../../features/auth/model/useAuth';
 
 interface IAuthContext {
@@ -34,12 +34,6 @@ const AuthContextProvider: FC<IAuthProvider> = ({ children })=> {
    const { mutateAsync: logoutMutate } = useLogoutUser();
    const { refetch: refecthAuth } = useVerifyAuthStatus(token);
 
-   useEffect(() => {
-      if (token) {
-         checkLoginStatus(token);
-      }
-   }, [token]);
-
    const clearAuthData = (): void => {
       localStorage.removeItem('token');
       localStorage.removeItem('notes');
@@ -64,7 +58,6 @@ const AuthContextProvider: FC<IAuthProvider> = ({ children })=> {
          const result = await loginMutate({ email, password });
       
          localStorage.setItem('token', result.token);
-         setToken(result.token);
          setIsAuthed(true);
 
          return result;
@@ -102,7 +95,7 @@ const AuthContextProvider: FC<IAuthProvider> = ({ children })=> {
 
       if (result.error) {
          clearAuthData();
-         
+
          return result.error;
       }
 

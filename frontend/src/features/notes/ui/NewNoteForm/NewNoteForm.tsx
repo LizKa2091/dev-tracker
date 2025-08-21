@@ -7,6 +7,7 @@ import { typeOptions } from '../../model/constants';
 import MarkdownTextarea from '../../../../shared/markdown-textarea/ui/ui/MarkdownTextarea';
 import { loadUserTags } from '../../../settings/model/tagActions';
 import { type ITagItem } from '../../../settings/tagTypes';
+import AuthExports from '../../../../shared/context/AuthContext';
 import styles from './NewNoteForm.module.scss';
 
 interface INewNoteFormProps {
@@ -15,11 +16,10 @@ interface INewNoteFormProps {
 }
 
 const NewNoteForm: FC<INewNoteFormProps> = ({ isNoteSaved, setIsNoteSaved }) => {
+   const { token } = AuthExports.useAuthContext();
    const [userTags, setUserTags] = useState<ITagItem[]>();
    const [formattedDescription, setFormattedDescription] = useState<string>('');
    const { handleSubmit, control, formState: { errors }, trigger } = useForm<NewNoteFormData>();
-
-   const token = localStorage.getItem('token');
 
    useEffect(() => {
       if (token) {

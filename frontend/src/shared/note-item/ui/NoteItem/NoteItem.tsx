@@ -5,6 +5,7 @@ import { DeleteOutlined } from '@ant-design/icons';
 import { changeNoteStatus } from '../../model/changeNoteStatus';
 import { useXpAction } from '../../model/useXpAction';
 import EditField from '../EditField/EditField';
+import AuthExports from '../../../context/AuthContext';
 import styles from './NoteItem.module.scss';
 
 interface INoteItemProps {
@@ -13,11 +14,10 @@ interface INoteItemProps {
 };
 
 const NoteItem: FC<INoteItemProps> = ({ noteItemData, handleDeleteNote }) => {
+   const { token } = AuthExports.useAuthContext();
    const [currNote, setCurrNote] = useState<INoteItem>(noteItemData);
    const [isConfirmed, setIsConfirmed] = useState<boolean | null>(null);
    const [isCompleted, setIsCompleted] = useState<boolean>(noteItemData.status === 'completed');
-
-   const token = localStorage.getItem('token');
 
    const { addXp } = useXpAction(token);
 

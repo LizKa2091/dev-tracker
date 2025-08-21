@@ -1,9 +1,10 @@
 import { Button, ColorPicker, Flex, Form, Input, Modal, Tag } from 'antd';
-import { useEffect, useState, type FC } from 'react'
+import { type FC } from 'react'
 import { Controller, useForm } from 'react-hook-form';
 import { updateUserTags } from '../../model/tagActions';
-import styles from './AddCustomTag.module.scss';
 import type { ITagItem } from '../../tagTypes';
+import AuthExports from '../../../../shared/context/AuthContext';
+import styles from './AddCustomTag.module.scss';
 
 const cancelButtonStyles = {
    backgroundColor: '#000',
@@ -23,15 +24,11 @@ interface IAddCustomTagProps {
 }
 
 const AddCustomTag: FC<IAddCustomTagProps> = ({ isModalOpen, setIsModalOpen, setSavedTags }) => {
-   const [token, setToken] = useState<string | null>(null);
+   const { token } = AuthExports.useAuthContext();
 
    const { handleSubmit, control, trigger, formState: { errors }, watch } = useForm<IFormData>({defaultValues: { tagName: '', color: '#000' }});
    const tagName = watch('tagName');
    const tagColor = watch('color');
-
-   useEffect(() => {
-      setToken(localStorage.getItem('token'));
-   }, []);
 
    const onFinish = async (): Promise<void> => {
       const isValidData = await trigger(['tagName', 'color']);

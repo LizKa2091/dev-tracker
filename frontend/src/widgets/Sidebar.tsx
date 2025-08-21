@@ -17,12 +17,11 @@ const menuItems = [
 ];
 
 const Sidebar: FC = () => {
-   const { isAuthed, logout } = useAuthContext();
+   const { token } = AuthExports.useAuthContext();
+   const { logout } = useAuthContext();
    const navigate = useNavigate();
 
    const handleLogout = (): void => {
-      const token: string | null = localStorage.getItem('token');
-
       if (token) {
          logout(token);
 
@@ -34,9 +33,9 @@ const Sidebar: FC = () => {
       <Sider className={styles.sider}>
          <Flex vertical className={styles.siderContainer}>
             <h1 className={styles.logo}>DevTracker</h1>
-            <UserProfile isAuthed={isAuthed ?? false} />
+            <UserProfile />
             <Menu items={menuItems} className={styles.menu} />
-            {isAuthed ? (
+            {token ? (
                <Button type='text' onClick={handleLogout} icon={<LogoutOutlined />} iconPosition='end' className={styles.logout}>Выйти</Button>
             ) : (
                <Link to='/auth' className={styles.login}>

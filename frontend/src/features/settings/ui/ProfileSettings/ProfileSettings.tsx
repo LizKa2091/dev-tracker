@@ -6,8 +6,9 @@ import { useUpdateUserData } from '../../model/useUpdateUserData';
 import { useUpdateAvatar } from '../../model/useUpdateAvatar';
 import { UploadOutlined, UserOutlined } from '@ant-design/icons';
 import { useQueryClient } from '@tanstack/react-query';
-import styles from './ProfileSettings.module.scss';
 import DifficultySwitcher from '../Difficulty/DifficultySwitcher';
+import AuthExports from '../../../../shared/context/AuthContext';
+import styles from './ProfileSettings.module.scss';
 
 interface IUserDataFormData {
    username: string;
@@ -20,7 +21,7 @@ interface IAvatarFormData {
 
 const ProfileSettings: FC = () => {
    const [previewImgUrl, setPreviewImgUrl] = useState<string | null>(null);
-   const token: string | null = localStorage.getItem('token');
+   const { token } = AuthExports.useAuthContext();
 
    const { handleSubmit: handleUserData, control: controlUserData, trigger, formState: { errors: userDataErrors }, reset } = useForm<IUserDataFormData>();
    const { handleSubmit: handleUserAvatar, control: controlAvatar, formState: { errors: avatarErrors } } = useForm<IAvatarFormData>();

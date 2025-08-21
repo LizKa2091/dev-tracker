@@ -45,7 +45,6 @@ const LoginForm: FC = () => {
          setIsSuccessLogin(false);
       }
       else if (response.token) {
-         localStorage.setItem('token', response.token);
          setIsSuccessLogin(true);
       }
    };

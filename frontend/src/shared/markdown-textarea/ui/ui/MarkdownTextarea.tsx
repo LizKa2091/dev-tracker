@@ -1,8 +1,8 @@
 import { useEffect, useState, type FC, type Ref } from 'react';
 import { Tooltip } from "antd";
 import TextArea from "antd/es/input/TextArea";
-import useDebounce from '../../lib/hooks/useDebounce';
-import { formatMarkdownDesc } from '../../lib/markdown/formatMarkdownDesc';
+import useDebounce from '../../../lib/hooks/useDebounce';
+import { formatMarkdownDesc } from '../../../lib/markdown/formatMarkdownDesc';
 import styles from './MarkdownTextarea.module.scss';
 
 interface IMarkdownTextarea {
@@ -29,7 +29,7 @@ const MarkdownTextarea: FC<IMarkdownTextarea> = ({ value = '', onChange, ref, on
          if (formattedInput.includes('<code')) onFormattedChange(formattedText);
          else onFormattedChange('');
       }
-   }, [debouncedInput]);
+   }, [debouncedInput, formattedInput, onChange, onFormattedChange]);
 
    return (
       <Tooltip title='Поддерживается форматирование кода. Просто оберните код в одиночные обратные кавычки (`) или 3 обратные кавычки (```)' placement="bottom">

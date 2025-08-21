@@ -1,13 +1,13 @@
 import { Avatar, Button, Flex, Form, Input, Spin, Upload } from 'antd';
 import { useEffect, useState, type FC } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useUserData } from '../../user/model/useUserData';
-import { useUpdateUserData } from '../model/useUpdateUserData';
-import { useUpdateAvatar } from '../model/useUpdateAvatar';
+import { useUserData } from '../../../user/model/useUserData';
+import { useUpdateUserData } from '../../model/useUpdateUserData';
+import { useUpdateAvatar } from '../../model/useUpdateAvatar';
 import { UploadOutlined, UserOutlined } from '@ant-design/icons';
 import { useQueryClient } from '@tanstack/react-query';
 import styles from './ProfileSettings.module.scss';
-import DifficultySwitcher from './Difficulty/DifficultySwitcher';
+import DifficultySwitcher from '../Difficulty/DifficultySwitcher';
 
 interface IUserDataFormData {
    username: string;

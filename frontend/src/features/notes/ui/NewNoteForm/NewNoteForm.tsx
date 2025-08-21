@@ -1,12 +1,12 @@
 import { useEffect, useState, type FC } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Form, Input, Button, Select, DatePicker, Tag } from 'antd';
-import type { NewNoteFormData } from '../noteTypes';
-import { saveNote } from '../model/noteStorage';
-import { typeOptions } from '../model/constants';
-import MarkdownTextarea from '../../../shared/ui/MarkdownTextarea/MarkdownTextarea';
-import { loadUserTags } from '../../settings/model/tagActions';
-import { type ITagItem } from '../../settings/tagTypes';
+import type { NewNoteFormData } from '../../noteTypes';
+import { saveNote } from '../../model/noteStorage';
+import { typeOptions } from '../../model/constants';
+import MarkdownTextarea from '../../../../shared/markdown-textarea/ui/ui/MarkdownTextarea';
+import { loadUserTags } from '../../../settings/model/tagActions';
+import { type ITagItem } from '../../../settings/tagTypes';
 import styles from './NewNoteForm.module.scss';
 
 interface INewNoteFormProps {

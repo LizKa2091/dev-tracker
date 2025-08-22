@@ -1,6 +1,6 @@
 import { useEffect, useState, type FC } from 'react';
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import type { IChartDataItem } from '../model/deadlineNoteTypes';
+import type { IChartDataItem } from '../deadlineNoteTypes';
 import { Flex } from 'antd';
 import styles from './DeadlineChart.module.scss';
 import { getDeadlineChartData } from '../model/getDeadlineChartData';

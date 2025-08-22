@@ -75,7 +75,7 @@ const AvatarForm: FC = () => {
                      )}
                   />
                </Form.Item>
-               <Button color="default" variant="solid" htmlType="submit" disabled={isPending} className={styles.buttonSave}>Сохранить</Button>
+               <Button color="default" variant="solid" htmlType="submit" disabled={isPending || !previewImgUrl} className={styles.buttonSave}>Сохранить</Button>
             </Flex>
          </Form>
          {isPending ? <Spin /> :

@@ -1,9 +1,9 @@
 import { Button, ColorPicker, Flex, Form, Input, Modal, Tag } from 'antd';
 import { type FC } from 'react'
 import { Controller, useForm } from 'react-hook-form';
-import { updateUserTags } from '../../model/tagActions';
-import type { ITagItem } from '../../tagTypes';
-import AuthExports from '../../../../shared/context/AuthContext';
+import { updateUserTags } from '../../../model/tagActions';
+import type { ITagItem } from '../tagTypes';
+import AuthExports from '../../../../../shared/context/AuthContext';
 import styles from './AddCustomTag.module.scss';
 
 const cancelButtonStyles = {

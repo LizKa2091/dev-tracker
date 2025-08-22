@@ -6,7 +6,7 @@ import { saveNote } from '../../model/noteStorage';
 import { typeOptions } from '../../model/constants';
 import MarkdownTextarea from '../../../../shared/markdown-textarea/ui/ui/MarkdownTextarea';
 import { loadUserTags } from '../../../settings/model/tagActions';
-import { type ITagItem } from '../../../settings/tagTypes';
+import { type ITagItem } from '../../../settings/ui/Tags/tagTypes';
 import AuthExports from '../../../../shared/context/AuthContext';
 import TagSelect from '../TagSelect/TagSelect';
 import styles from './NewNoteForm.module.scss';

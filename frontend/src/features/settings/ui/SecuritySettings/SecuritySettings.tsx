@@ -43,7 +43,7 @@ const SecuritySettings: FC = () => {
 
    const handleLogout = () => {
       if (token) {
-         logout(token);
+         logout();
 
          navigate('/');
       }

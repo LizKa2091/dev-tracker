@@ -1,6 +1,6 @@
 import { Select, Tag } from 'antd';
 import type { FC } from 'react';
-import type { ITagItem } from '../../../settings/tagTypes';
+import type { ITagItem } from '../../../settings/ui/Tags/tagTypes';
 
 interface ITagSelectProps {
    value?: ITagItem[];

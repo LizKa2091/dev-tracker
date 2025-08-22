@@ -1,0 +1,23 @@
+.form {
+   width: fit-content;
+
+   &Item {
+      :global {
+         .ant-form-item-label label {
+            color: $main-text-white;
+         }
+      }
+   }
+   &Success {
+      color: $success-request-green;
+   }
+   &Error {
+      color: $bad-request-red;
+   }
+}
+.buttonSave {
+   position: relative;
+   left: 50%;
+   transform: translateX(-50%);
+   width: fit-content;
+}

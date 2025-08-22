@@ -14,7 +14,7 @@ interface IUserDataFormData {
 const UserDataForm: FC = () => {
    const { token } = AuthExports.useAuthContext();
    const { data: userData } = useUserData(token);
-   const { mutate, isPending, isSuccess, isError } = useUpdateUserData(token);
+   const { mutate, isPending, isSuccess, isError, error } = useUpdateUserData(token);
    const { handleSubmit, control, trigger, formState: { errors }, reset } = useForm<IUserDataFormData>();
 
    useEffect(() => {
@@ -38,16 +38,16 @@ const UserDataForm: FC = () => {
          <h4>Смена данных</h4>
          <Form onFinish={onFinishUserDataForm} className={styles.form}>
             <Form.Item label='Имя пользователя' validateStatus={errors.username ? 'error' : ''} help={errors.username?.message} className={styles.formItem}>
-               <Controller name='username' control={control} rules={{ required: true, minLength: { value: 4, message: 'Никнейм должен содержать минимум 4 символа' } }} render={({ field }) => <Input {...field} />} />
+               <Controller name='username' control={control} rules={{ required: 'Укажите имя пользователя', minLength: { value: 4, message: 'Никнейм должен содержать минимум 4 символа' } }} render={({ field }) => <Input {...field} />} />
             </Form.Item>
             <Form.Item label='Почта' validateStatus={errors.email ? 'error' : ''} help={errors.email?.message} className={styles.formItem}>
-               <Controller name='email' control={control} rules={{ required: true, pattern: { value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i, message: 'Неверный формат почты' } }} render={({ field }) => <Input {...field} />} />
+               <Controller name='email' control={control} rules={{ required: 'Укажите почту', pattern: { value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i, message: 'Неверный формат почты' } }} render={({ field }) => <Input {...field} />} />
             </Form.Item>
             <Button color="default" variant="solid" htmlType='submit' disabled={isPending} className={styles.buttonSave}>Сохранить</Button>
          </Form>
          {isPending ? <Spin /> :
             isSuccess ? <span className={styles.formSuccess}>Данные успешно обновлены</span> : 
-            isError ? <span className={styles.formError}>Произошла ошибка</span> : ''
+            isError ? <span className={styles.formError}>{error?.message || 'Ошибка на сервере'}</span> : ''
          }
       </>
    )

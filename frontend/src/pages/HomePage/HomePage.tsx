@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { Flex, Layout } from 'antd';
-import Sidebar from '../../widgets/Sidebar';
+import Sidebar from '../../widgets/Sidebar/ui/Sidebar';
 import DeadlineChart from '../../features/deadlines/ui/DeadlineChart';
 
 const { Content } = Layout;

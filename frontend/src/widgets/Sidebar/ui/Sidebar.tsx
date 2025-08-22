@@ -2,9 +2,9 @@ import { type FC } from 'react';
 import { Button, Flex, Layout, Menu } from 'antd';
 import { HistoryOutlined, FormOutlined, BarChartOutlined, SettingOutlined, LogoutOutlined, LoginOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from 'react-router-dom';
-import AuthExports from '../shared/context/AuthContext';
+import AuthExports from '../../../shared/context/AuthContext';
 import styles from './Sidebar.module.scss';
-import UserProfile from '../features/user/ui/UserProfile';
+import UserProfile from '../../../features/user/ui/UserProfile';
 
 const { Sider } = Layout;
 const { useAuthContext } = AuthExports;
@@ -23,7 +23,7 @@ const Sidebar: FC = () => {
 
    const handleLogout = (): void => {
       if (token) {
-         logout(token);
+         logout();
 
          navigate('/');
       }

@@ -20,6 +20,9 @@ const DifficultySwitcher: FC = () => {
       updateDifficulty({ difficulty: newMode }, {
          onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['userData', token]});
+         },
+         onError: (err: Error) => {
+            console.error(err.message || 'Ошибка при обновлении режима');
          }
       });
    };
@@ -33,7 +36,6 @@ const DifficultySwitcher: FC = () => {
             <Switch checked={userData?.difficulty === 'hard'} onChange={handleChange} loading={isPending} />
             <span>Сложный</span>
          </Flex>
-         {}
       </Flex>
    )
 }

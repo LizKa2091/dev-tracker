@@ -4,10 +4,10 @@ import { useRegisterUser, useLoginUser, useLogoutUser, useVerifyAuthStatus } fro
 interface IAuthContext {
    isAuthed: boolean | null;
    token: string | null;
-   register: (email: string, password: string, name: string) => Promise<IRequestResponseMessage>;
-   login: (email: string, password: string) => Promise<ILoginRequestResponse>;
-   logout: (token: string) => Promise<IRequestResponseMessage | Error>;
-   checkLoginStatus: (token: string) => void;
+   register: (email: string, password: string, name: string) => Promise<IRequestResponseMessage | Error>;
+   login: (email: string, password: string) => Promise<ILoginRequestResponse | Error>;
+   logout: () => Promise<IRequestResponseMessage | Error>;
+   checkLoginStatus: () => void;
 };
 
 interface IAuthProvider {
@@ -57,8 +57,11 @@ const AuthContextProvider: FC<IAuthProvider> = ({ children })=> {
       try {
          const result = await loginMutate({ email, password });
       
-         localStorage.setItem('token', result.token);
-         setIsAuthed(true);
+         if (result.token) {
+            localStorage.setItem('token', result.token);
+            setToken(result.token);
+            setIsAuthed(true);
+         }
 
          return result;
       }
@@ -67,24 +70,20 @@ const AuthContextProvider: FC<IAuthProvider> = ({ children })=> {
       }
    };
 
-   const logout = async (token: string): Promise<IRequestResponseMessage | Error> => {
-      if (token) {
-         try {
-            const response = await logoutMutate({ token });
-
-            return response;
-         }
-         catch (error) {
-            return error as Error;
-         }
-         finally {
-            clearAuthData();
-         }
+   const logout = async (): Promise<IRequestResponseMessage | Error> => {
+      try {
+         const response = await logoutMutate();
+         return response;
       }
-      throw new Error('нет токена');
+      catch (error) {
+         return error as Error;
+      }
+      finally {
+         clearAuthData();
+      }
    };
 
-   const checkLoginStatus = async (token: string) => {
+   const checkLoginStatus = async () => {
       if (!token) {
          clearAuthData();
 

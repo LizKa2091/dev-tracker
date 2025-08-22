@@ -1,32 +1,14 @@
 import { Avatar, Flex, Progress } from 'antd';
 import { type FC } from 'react';
 import { useUserData } from '../model/useUserData';
-import { type IUserDataResponse } from '../userTypes';
 import { UserOutlined } from '@ant-design/icons';
 import AuthExports from '../../../shared/context/AuthContext';
+import { calcProgress, calcXpForLevel } from '../lib/calcXp';
 import styles from './UserProfile.module.scss';
 
 const UserProfile: FC = () => {
    const { token } = AuthExports.useAuthContext();
    const { data, isLoading } = useUserData(token);
-
-   const calcProgress = (data: IUserDataResponse): number => {
-      if (!data) return 0;
-
-      const currLevelXp: number = data.xp - calcXpForLevel(data.level);
-
-      return Math.round((currLevelXp / data.xpForNextLevel) * 100);
-   };
-
-   const calcXpForLevel = (level: number): number => {
-      let res: number = 0;
-      
-      for (let i: number = 1; i<level; i++) {
-         res += i*100;
-      }
-
-      return res;
-   };
 
    return (
       <Flex vertical gap='middle' className={styles.userInfoContainer}>

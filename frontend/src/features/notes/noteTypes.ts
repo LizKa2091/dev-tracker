@@ -1,4 +1,4 @@
-import type { ITagItem } from "../settings/tagTypes";
+import type { ITagItem } from "../settings/ui/Tags/tagTypes";
 
 export interface INoteItem {
    title: string;

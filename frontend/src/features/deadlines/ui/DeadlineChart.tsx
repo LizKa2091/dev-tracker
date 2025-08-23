@@ -1,38 +1,24 @@
 import { useEffect, useState, type FC } from 'react';
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import { loadNotes } from '../../notes/model/noteStorage';
-import { type INotesStorage } from '../../notes/model/constants';
-import type { IChartDataItem } from '../model/deadlineNoteTypes';
-import { formatNotes } from '../model/formatNotes';
+import type { IChartDataItem } from '../deadlineNoteTypes';
 import { Flex } from 'antd';
 import styles from './DeadlineChart.module.scss';
+import { getDeadlineChartData } from '../model/getDeadlineChartData';
 
 const colors: string[] = ['#8884d8', '#82ca9d', '#ffc658', '#ff7f50', '#a4de6c'];
 
 const DeadlineChart: FC = () => {
-   const [chartData, setChartData] = useState<IChartDataItem[] | null>(null);
-   const [types, setTypes] = useState<string[]>([]);
+   const [savedChartData, setSavedChartData] = useState<IChartDataItem[] | null>(null);
+   const [savedTypes, setSavedTypes] = useState<string[]>([]);
 
    useEffect(() => {
-      const savedNotes: INotesStorage = loadNotes();
+      const { chartData, types } = getDeadlineChartData();
 
-      if (savedNotes) {
-         const formattedNotes = formatNotes(savedNotes.notes!);
+      setSavedChartData(chartData);
+      setSavedTypes(types);
+   }, []);
 
-         const seenTypes = new Set<string>();
-
-         formattedNotes.forEach(item => {
-            Object.keys(item).forEach(key => {
-               if (key !== 'date') seenTypes.add(key);
-            });
-         });
-
-         setChartData(formattedNotes);
-         setTypes(Array.from(seenTypes));
-      }
-   }, [])
-
-   if (!chartData) {
+   if (!savedChartData) {
       return (
          <h3>У вас пока нет прошедших задач</h3>
       );
@@ -42,7 +28,7 @@ const DeadlineChart: FC = () => {
       <Flex vertical gap='middle' className={styles.container}>
          <h3>Прошедшие дедлайны за 14 дней по категориям</h3>
          <ResponsiveContainer width='100%' height='100%'>
-            <BarChart data={chartData}>
+            <BarChart data={savedChartData}>
                <CartesianGrid strokeDasharray='3 3' />
                <XAxis dataKey='date' />
                <YAxis allowDecimals={false} />
@@ -51,7 +37,7 @@ const DeadlineChart: FC = () => {
                   labelFormatter={(label: string) => `Дата: ${label}`}
                />
                <Legend />
-               {types.map((type, index)=> (
+               {savedTypes.map((type, index)=> (
                   <Bar dataKey={type} key={type} stackId="a" fill={colors[index]} />
                ))}
             </BarChart>

@@ -2,9 +2,9 @@ import { type FC } from 'react';
 import { Button, Flex, Layout, Menu } from 'antd';
 import { HistoryOutlined, FormOutlined, BarChartOutlined, SettingOutlined, LogoutOutlined, LoginOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from 'react-router-dom';
-import AuthExports from '../shared/context/AuthContext';
+import AuthExports from '../../../shared/context/AuthContext';
 import styles from './Sidebar.module.scss';
-import UserProfile from '../features/user/ui/UserProfile';
+import UserProfile from '../../../features/user/ui/UserProfile';
 
 const { Sider } = Layout;
 const { useAuthContext } = AuthExports;
@@ -17,14 +17,13 @@ const menuItems = [
 ];
 
 const Sidebar: FC = () => {
-   const { isAuthed, logout } = useAuthContext();
+   const { token } = AuthExports.useAuthContext();
+   const { logout } = useAuthContext();
    const navigate = useNavigate();
 
    const handleLogout = (): void => {
-      const token: string | null = localStorage.getItem('token');
-
       if (token) {
-         logout(token);
+         logout();
 
          navigate('/');
       }
@@ -34,9 +33,9 @@ const Sidebar: FC = () => {
       <Sider className={styles.sider}>
          <Flex vertical className={styles.siderContainer}>
             <h1 className={styles.logo}>DevTracker</h1>
-            <UserProfile isAuthed={isAuthed ?? false} />
+            <UserProfile />
             <Menu items={menuItems} className={styles.menu} />
-            {isAuthed ? (
+            {token ? (
                <Button type='text' onClick={handleLogout} icon={<LogoutOutlined />} iconPosition='end' className={styles.logout}>Выйти</Button>
             ) : (
                <Link to='/auth' className={styles.login}>

@@ -1,8 +1,8 @@
 import { useEffect, useState, type FC } from 'react'
-import AddCustomTag from './AddCustomTag';
+import AddCustomTag from '../AddCustomTag/AddCustomTag';
 import { Button, Flex, Tag } from 'antd';
-import { type ITagItem } from '../../tagTypes';
-import { deleteUserTag, loadUserTags } from '../../model/tagActions';
+import { type ITagItem } from '../tagTypes';
+import { deleteUserTag, loadUserTags } from '../../../model/tagActions';
 import styles from './TagsSettings.module.scss';
 
 const TagsSettings: FC = () => {

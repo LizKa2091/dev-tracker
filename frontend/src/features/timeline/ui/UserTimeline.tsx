@@ -4,7 +4,7 @@ import { filterByDate } from '../model/filterByDate';
 import type { ISegmentedOption } from '../timelineTypes';
 import styles from './UserTimeline.module.scss';
 import { type INoteItem } from '../../notes/noteTypes';
-import NoteItem from '../../../shared/ui/NoteItem/ui/NoteItem';
+import NoteItem from '../../../shared/note-item/ui/NoteItem/NoteItem';
 import { deleteNote } from '../../notes/model/noteStorage';
 
 const segmentedOptions: ISegmentedOption[] = [

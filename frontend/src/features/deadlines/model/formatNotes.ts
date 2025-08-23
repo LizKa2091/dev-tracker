@@ -3,6 +3,8 @@ import type { IChartDataItem } from "../deadlineNoteTypes";
 import dayjs from 'dayjs';
 
 export const formatNotes = (notesData: INoteItem[]): IChartDataItem[] => {
+   if (!notesData) return [];
+
    const today = dayjs();
    const fourteenDaysAgo = today.subtract(13, 'day');
 

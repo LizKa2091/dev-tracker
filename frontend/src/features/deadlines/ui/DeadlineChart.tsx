@@ -2,21 +2,32 @@ import { useEffect, useState, type FC } from 'react';
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import type { IChartDataItem } from '../deadlineNoteTypes';
 import { Flex } from 'antd';
-import styles from './DeadlineChart.module.scss';
 import { getDeadlineChartData } from '../model/getDeadlineChartData';
+import { demoChartData, demoTypeData } from '../demoDeadlineData';
+import styles from './DeadlineChart.module.scss';
 
 const colors: string[] = ['#8884d8', '#82ca9d', '#ffc658', '#ff7f50', '#a4de6c'];
 
-const DeadlineChart: FC = () => {
+interface IDeadlineChartProps {
+   type?: 'demo';
+};
+
+const DeadlineChart: FC<IDeadlineChartProps> = ({ type }) => {
    const [savedChartData, setSavedChartData] = useState<IChartDataItem[] | null>(null);
    const [savedTypes, setSavedTypes] = useState<string[]>([]);
 
    useEffect(() => {
+      if (type === 'demo') {
+         setSavedChartData(demoChartData);
+         setSavedTypes(demoTypeData);
+         return;
+      }
       const { chartData, types } = getDeadlineChartData();
 
+      console.log(chartData, types)
       setSavedChartData(chartData);
       setSavedTypes(types);
-   }, []);
+   }, [type]);
 
    if (!savedChartData) {
       return (

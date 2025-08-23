@@ -4,9 +4,10 @@ import { useUserData } from '../../../user/model/useUserData';
 import { useUpdateDifficulty } from '../../model/useUpdateDifficulty';
 import { useQueryClient } from '@tanstack/react-query';
 import type { Difficulty } from '../../../user/userTypes';
+import AuthExports from '../../../../shared/context/AuthContext';
 
 const DifficultySwitcher: FC = () => {
-   const token = localStorage.getItem('token');
+   const { token } = AuthExports.useAuthContext();
    const { data: userData } = useUserData(token);
    const { mutate: updateDifficulty, isPending } = useUpdateDifficulty(token);
 
@@ -19,6 +20,9 @@ const DifficultySwitcher: FC = () => {
       updateDifficulty({ difficulty: newMode }, {
          onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['userData', token]});
+         },
+         onError: (err: Error) => {
+            console.error(err.message || 'Ошибка при обновлении режима');
          }
       });
    };
@@ -32,7 +36,6 @@ const DifficultySwitcher: FC = () => {
             <Switch checked={userData?.difficulty === 'hard'} onChange={handleChange} loading={isPending} />
             <span>Сложный</span>
          </Flex>
-         {}
       </Flex>
    )
 }

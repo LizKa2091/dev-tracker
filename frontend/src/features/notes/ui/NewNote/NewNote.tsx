@@ -1,8 +1,8 @@
 import { Button, Flex } from 'antd';
 import { useState, type FC } from 'react';
-import NewNoteForm from './NewNoteForm';
+import NewNoteForm from '../NewNoteForm/NewNoteForm';
+import RecentNotes from '../RecentNotes/RecentNotes';
 import styles from './NewNote.module.scss';
-import RecentNotes from './RecentNotes';
 
 const NewNote: FC = () => {
    const [isActive, setIsActive] = useState<boolean>(false);

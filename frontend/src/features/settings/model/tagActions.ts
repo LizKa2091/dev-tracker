@@ -1,4 +1,4 @@
-import type { ITagItem } from "../tagTypes";
+import type { ITagItem } from "../ui/Tags/tagTypes";
 
 export const loadUserTags = (): ITagItem[] => {
    const savedTags: string | null = localStorage.getItem('userTags');

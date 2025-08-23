@@ -1,12 +1,13 @@
-import { createContext, useContext, useEffect, useState, type FC, type ReactNode } from 'react';
+import { createContext, useContext, useState, type FC, type ReactNode } from 'react';
 import { useRegisterUser, useLoginUser, useLogoutUser, useVerifyAuthStatus } from '../../features/auth/model/useAuth';
 
 interface IAuthContext {
    isAuthed: boolean | null;
-   register: (email: string, password: string, name: string) => Promise<IRequestResponseMessage>;
-   login: (email: string, password: string) => Promise<ILoginRequestResponse>;
-   logout: (token: string) => Promise<IRequestResponseMessage | Error>;
-   checkLoginStatus: (token: string) => void;
+   token: string | null;
+   register: (email: string, password: string, name: string) => Promise<IRequestResponseMessage | Error>;
+   login: (email: string, password: string) => Promise<ILoginRequestResponse | Error>;
+   logout: () => Promise<IRequestResponseMessage | Error>;
+   checkLoginStatus: () => void;
 };
 
 interface IAuthProvider {
@@ -33,11 +34,13 @@ const AuthContextProvider: FC<IAuthProvider> = ({ children })=> {
    const { mutateAsync: logoutMutate } = useLogoutUser();
    const { refetch: refecthAuth } = useVerifyAuthStatus(token);
 
-   useEffect(() => {
-      if (token) {
-         checkLoginStatus(token);
-      }
-   }, [token]);
+   const clearAuthData = (): void => {
+      localStorage.removeItem('token');
+      localStorage.removeItem('notes');
+      localStorage.removeItem('userTags');
+      setToken(null);
+      setIsAuthed(false);
+   };
 
    const register = async (email: string, password: string, name: string): Promise<IRequestResponseMessage> => {
       try {
@@ -54,9 +57,11 @@ const AuthContextProvider: FC<IAuthProvider> = ({ children })=> {
       try {
          const result = await loginMutate({ email, password });
       
-         localStorage.setItem('token', result.token);
-         setToken(result.token);
-         setIsAuthed(true);
+         if (result.token) {
+            localStorage.setItem('token', result.token);
+            setToken(result.token);
+            setIsAuthed(true);
+         }
 
          return result;
       }
@@ -65,47 +70,40 @@ const AuthContextProvider: FC<IAuthProvider> = ({ children })=> {
       }
    };
 
-   const logout = async (token: string): Promise<IRequestResponseMessage | Error> => {
-      if (token) {
-         try {
-            const response = await logoutMutate({ token });
-
-            localStorage.removeItem('token');
-            localStorage.removeItem('notes');
-            localStorage.removeItem('userTags');
-            
-            setToken(null);
-            setIsAuthed(false);
-
-            return response;
-         }
-         catch (error) {
-            return error as Error;
-         }
-      }
-      throw new Error('нет токена');
-   };
-
-   const checkLoginStatus = async (token: string) => {
-      if (!token) {
-         setIsAuthed(false);
-         throw new Error('нет токена');
-      }
-      
+   const logout = async (): Promise<IRequestResponseMessage | Error> => {
       try {
-         const response = await refecthAuth();
-         setIsAuthed(true);
-         
+         const response = await logoutMutate();
          return response;
       }
       catch (error) {
-         setIsAuthed(false);
          return error as Error;
+      }
+      finally {
+         clearAuthData();
       }
    };
 
+   const checkLoginStatus = async () => {
+      if (!token) {
+         clearAuthData();
+
+         throw new Error('нет токена');
+      }
+      
+      const result = await refecthAuth();
+
+      if (result.error) {
+         clearAuthData();
+
+         return result.error;
+      }
+
+      setIsAuthed(true);
+      return result.data;
+   };
+
    return (
-      <AuthContext.Provider value={{ isAuthed, register, login, logout, checkLoginStatus }}>
+      <AuthContext.Provider value={{ isAuthed, token, register, login, logout, checkLoginStatus }}>
          {children}
       </AuthContext.Provider>
    );

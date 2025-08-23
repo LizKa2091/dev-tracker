@@ -43,6 +43,7 @@ const LoginForm: FC = () => {
       if (response?.message) {
          setLoginStatus(response.message);
          setIsSuccessLogin(false);
+         return;
       }
       else if (response.token) {
          localStorage.setItem('token', response.token);

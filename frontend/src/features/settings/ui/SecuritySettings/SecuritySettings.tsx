@@ -18,7 +18,7 @@ const SecuritySettings: FC = () => {
    const [requestStatus, setRequestStatus] = useState<string>('');
 
    const { control, handleSubmit, formState: { errors }, trigger } = useForm<IFormData>();
-   const { mutateAsync } = useChangePassword(token);
+   const { mutateAsync, isPending } = useChangePassword(token);
    const { logout } = useAuthContext();
    const navigate = useNavigate();
 
@@ -56,17 +56,17 @@ const SecuritySettings: FC = () => {
             <h4>Смена пароля</h4>
             <Form onFinish={onFinish} className={styles.form}>
                <Form.Item label='Старый пароль' required validateStatus={errors.currPass ? 'error' : ''} help={errors.currPass?.message} className={styles.formItem}>
-                  <Controller name='currPass' control={control} rules={{ required: 'Обязательное поле', minLength: { value: 6, message: 'Пароль должен содержать минимум 6 символов' } }} render={({ field }) => <Input {...field} />} />
+                  <Controller name='currPass'  control={control} rules={{ required: 'Обязательное поле', minLength: { value: 6, message: 'Пароль должен содержать минимум 6 символов' } }} render={({ field }) => <Input.Password {...field} />} />
                </Form.Item>
                <Form.Item label='Новый пароль' required validateStatus={errors.newPass ? 'error' : ''} help={errors.newPass?.message} className={styles.formItem}>
-                  <Controller name='newPass' control={control} rules={{ required: 'Обязательное поле', minLength: { value: 6, message: 'Пароль должен содержать минимум 6 символов' } }} render={({ field }) => <Input {...field} />} />
+                  <Controller name='newPass' control={control} rules={{ required: 'Обязательное поле', minLength: { value: 6, message: 'Пароль должен содержать минимум 6 символов' } }} render={({ field }) => <Input.Password {...field} />} />
                </Form.Item>
-               <Button color="default" variant="solid" htmlType='submit'>Сменить пароль</Button>
+               <Button color="default" variant="solid" htmlType='submit' disabled={isPending}>Сменить пароль</Button>
             </Form>
             <span className={
                   requestStatus.toLowerCase().includes('не найден') ||
                   requestStatus.toLowerCase().includes('неверный') ?
-                  'bad-request' : '.success-request'
+                  'bad-request' : 'success-request'
                }
             >{requestStatus}</span>
          </Flex>

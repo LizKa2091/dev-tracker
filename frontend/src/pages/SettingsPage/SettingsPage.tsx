@@ -9,7 +9,7 @@ const { Content } = Layout;
 
 const SettingsPage: FC = () => {
    return (
-      <Layout>
+      <Layout className='mainLayout'>
          <Sidebar />
          <Content className='content'>
             <Flex vertical gap='large'>

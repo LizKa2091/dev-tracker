@@ -7,6 +7,7 @@ import SettingsPage from '../pages/SettingsPage/SettingsPage';
 import AuthedUserRoute from '../shared/lib/router/AuthedUserRoute';
 import GuestRoute from '../shared/lib/router/GuestRoute';
 import HomeRoute from '../pages/HomePage/HomeRoute';
+import ResetPasswordPage from '../pages/ResetPasswordPage/ResetPasswordPage';
 
 const Router: FC = () => {
    return (
@@ -32,6 +33,11 @@ const Router: FC = () => {
                   </GuestRoute>
                }
             />
+            <Route path='/reset-password' element={
+                  <GuestRoute>
+                     <ResetPasswordPage />
+                  </GuestRoute>
+            } />
          </Routes>
       </BrowserRouter>
    )

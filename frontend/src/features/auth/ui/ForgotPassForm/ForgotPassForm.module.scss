@@ -1,0 +1,15 @@
+.form {
+   min-width: 474px;
+   width: fit-content;
+
+   &Item {
+      color: $main-text-white;
+      max-width: 550px;
+
+      :global {
+         .ant-form-item-label label {
+            color: inherit;
+         }
+      }
+   }
+}

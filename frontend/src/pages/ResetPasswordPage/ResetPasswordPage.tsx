@@ -1,25 +1,25 @@
-import { type FC } from 'react'
-import AuthSwitcher from '../../features/auth/ui/AuthSwitcher/AuthSwitcher';
-import { Flex, Layout } from 'antd';
+import type { FC } from 'react';
 import Sidebar from '../../widgets/Sidebar/ui/Sidebar';
+import { Flex, Layout } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import FooterBar from '../../widgets/FooterBar/ui/FooterBar';
+import ResetPasswordForm from '../../features/auth/ui/ResetPasswordForm/ResetPasswordForm';
 
-const AuthPage: FC = () => {
+const ResetPasswordPage: FC = () => {
    return (
       <Layout className='mainLayout'>
          <Sidebar />
          <Layout>
             <Content className='content'>
                <Flex vertical gap='large'>
-                  <h2 className='title'>Авторизация</h2>
-                  <AuthSwitcher />
+                  <h2 className='title'>Сброс пароля</h2>
+                  <ResetPasswordForm />
                </Flex>
             </Content>
             <FooterBar />
          </Layout>
       </Layout>
    )
-}
+};
 
-export default AuthPage;
+export default ResetPasswordPage;

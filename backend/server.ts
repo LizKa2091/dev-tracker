@@ -113,6 +113,51 @@ app.post('/logout', authenticateToken, (req: Request, res: Response): void => {
    res.json({ message: 'Успешный выход' });
 });
 
+const passwordResetTokens: Record<string, string> = {};
+
+function generateResetToken() {
+   return Math.random().toString(36).substring(2) + Date.now().toString(36);
+};
+
+app.post('/forgot-password', (req: Request, res: Response) => {
+   const { email } = req.body;
+
+   if (!email || !users[email]) {
+      res.status(400).json({ message: 'Пользователь с таким email не найден' });
+      return;
+   }
+
+   const resetToken = generateResetToken();
+   passwordResetTokens[resetToken] = email;
+
+   res.json({ 
+      message: 'Токен для сброса пароля создан',
+      resetToken 
+   });
+});
+
+app.post('/reset-password', (req: Request, res: Response) => {
+   const { token, newPassword } = req.body;
+
+   if (!token || !newPassword) {
+      res.status(400).json({ message: 'Токен и новый пароль обязательны' });
+      return;
+   }
+
+   const userEmail = passwordResetTokens[token];
+
+   if (!userEmail || !users[userEmail]) {
+      res.status(400).json({ message: 'Неверный или просроченный токен' });
+      return;
+   }
+
+   users[userEmail].password = newPassword;
+
+   delete passwordResetTokens[token];
+
+   res.json({ message: 'Пароль успешно сброшен' });
+});
+
 function getLevelAndProgress(xp: number) {
    let level = 1;
    let xpForNextLevel = 100;

@@ -7,17 +7,15 @@ const { Content } = Layout;
 
 const NewNotePage: FC = () => {
    return (
-      <>
-         <Layout>
-            <Sidebar />
-            <Content className='content'>
-               <Flex vertical gap='large'>
-                  <h2 className='title'>Новая запись</h2>
-                  <NewNote />
-               </Flex>
-            </Content>
-         </Layout>
-      </>
+      <Layout className='mainLayout'>
+         <Sidebar />
+         <Content className='content'>
+            <Flex vertical gap='large'>
+               <h2 className='title'>Новая запись</h2>
+               <NewNote />
+            </Flex>
+         </Content>
+      </Layout>
    )
 }
 

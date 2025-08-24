@@ -20,7 +20,16 @@ interface IVerifyAuthStatusResponse {
    message: string;
    token: string;
    user: userData;
-}
+};
+
+interface IForgotPasswordResponse {
+   message: string;
+   resetToken?: string;
+};
+
+interface IResetPasswordResponse {
+   message: string;
+};
 
 export const useRegisterUser = () => {
    return useMutation<IRequestResponseMessage, Error, {email: string, password: string, name: string}>({
@@ -66,6 +75,28 @@ export const useVerifyAuthStatus = (token: string | null) => {
          return data;
       },
       enabled: !!token,
+      retry: 1
+   })
+};
+
+export const useForgotPassword = () => {
+   return useMutation<IForgotPasswordResponse, Error, {email: string}>({
+      mutationKey: ['forgotPass'],
+      mutationFn: async ({ email }) => {
+         const { data } = await apiAxios.post<IForgotPasswordResponse>('/forgot-password', { email });
+         return data;
+      },
+      retry: 1
+   })
+};
+
+export const useResetPassword = () => {
+   return useMutation<IResetPasswordResponse, Error, { token: string, newPassword: string }>({
+      mutationKey: ['resetPass'],
+      mutationFn: async ({ token, newPassword }) => {
+         const { data } = await apiAxios.post<IResetPasswordResponse>('/reset-password', { token, newPassword });
+         return data;
+      },
       retry: 1
    })
 };

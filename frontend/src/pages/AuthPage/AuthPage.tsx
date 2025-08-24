@@ -1,5 +1,5 @@
 import { type FC } from 'react'
-import AuthSwitcher from '../../features/auth/ui/AuthSwitcher';
+import AuthSwitcher from '../../features/auth/ui/AuthSwitcher/AuthSwitcher';
 import { Flex, Layout } from 'antd';
 import Sidebar from '../../widgets/Sidebar/ui/Sidebar';
 import { Content } from 'antd/es/layout/layout';

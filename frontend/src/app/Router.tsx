@@ -8,6 +8,7 @@ import AuthedUserRoute from '../shared/lib/router/AuthedUserRoute';
 import GuestRoute from '../shared/lib/router/GuestRoute';
 import HomeRoute from '../pages/HomePage/HomeRoute';
 import ResetPasswordPage from '../pages/ResetPasswordPage/ResetPasswordPage';
+import NotFoundPage from '../pages/NotFoundPage/NotFoundPage';
 
 const Router: FC = () => {
    return (
@@ -38,6 +39,7 @@ const Router: FC = () => {
                      <ResetPasswordPage />
                   </GuestRoute>
             } />
+            <Route path='*' element={<NotFoundPage />} />
          </Routes>
       </BrowserRouter>
    )

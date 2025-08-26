@@ -10,9 +10,10 @@ interface IMarkdownTextarea {
    onChange: (value: string) => void;
    ref?: Ref<HTMLTextAreaElement>;
    onFormattedChange?: (formatted: string) => void;
+   disabled?: boolean;
 }
 
-const MarkdownTextarea: FC<IMarkdownTextarea> = ({ value = '', onChange, ref, onFormattedChange }) => {
+const MarkdownTextarea: FC<IMarkdownTextarea> = ({ value = '', onChange, ref, onFormattedChange, disabled }) => {
    const [userInput, setUserInput] = useState<string>(value);
    const [formattedInput, setFormattedInput] = useState<string>('');
    const [isFocused, setIsFocused] = useState<boolean>(false);
@@ -35,7 +36,16 @@ const MarkdownTextarea: FC<IMarkdownTextarea> = ({ value = '', onChange, ref, on
       <Tooltip title='Поддерживается форматирование кода. Просто оберните код в одиночные обратные кавычки (`) или 3 обратные кавычки (```)' placement="bottom">
          <div>
             {isFocused || !formattedInput.includes('<code') ? (
-               <TextArea ref={ref} rows={4} value={isFocused ? userInput : formattedInput} onChange={((e) => setUserInput(e.target.value))} onFocus={() => setIsFocused(true)} onBlur={() => setIsFocused(false)} />
+               <TextArea
+                  name='description'
+                  ref={ref}
+                  rows={4}
+                  value={isFocused ? userInput : formattedInput}
+                  onChange={((e) => setUserInput(e.target.value))}
+                  onFocus={() => setIsFocused(true)}
+                  onBlur={() => setIsFocused(false)}
+                  disabled={disabled}
+               />
             ) : (
                <div dangerouslySetInnerHTML={{ __html: formattedInput }} onClick={() => setIsFocused(true)} className={styles.inActiveTextarea} />
             )}

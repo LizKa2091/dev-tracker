@@ -11,9 +11,10 @@ import styles from './NoteItem.module.scss';
 interface INoteItemProps {
    noteItemData: INoteItem;
    handleDeleteNote: (noteKey: string) => void;
+   disabled?: boolean;
 };
 
-const NoteItem: FC<INoteItemProps> = ({ noteItemData, handleDeleteNote }) => {
+const NoteItem: FC<INoteItemProps> = ({ noteItemData, handleDeleteNote, disabled }) => {
    const { token } = AuthExports.useAuthContext();
    const [currNote, setCurrNote] = useState<INoteItem>(noteItemData);
    const [isConfirmed, setIsConfirmed] = useState<boolean | null>(null);
@@ -63,9 +64,9 @@ const NoteItem: FC<INoteItemProps> = ({ noteItemData, handleDeleteNote }) => {
                {isCompleted ? (
                   <p className={styles.completed}>Выполнено</p>
                ) : (
-                  <Button onClick={() => handleChangeStatus(currNote.key)} className={styles.markButton}>Пометить как выполненное</Button>
+                  <Button onClick={() => handleChangeStatus(currNote.key)} disabled={disabled} className={styles.markButton}>Пометить как выполненное</Button>
                )}
-               <Button danger onClick={handleButtonDelete} icon={<DeleteOutlined />} className={styles.delButton}>
+               <Button danger onClick={handleButtonDelete} icon={<DeleteOutlined />} disabled={disabled} className={styles.delButton}>
                   {isConfirmed === null ? 'Удалить' : isConfirmed === false ? 'Вы уверены?' : ''}
                </Button>
             </Space>

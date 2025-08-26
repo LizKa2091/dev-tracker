@@ -2,6 +2,8 @@ import { Button, Flex, Space } from 'antd';
 import { useEffect, useState, type FC } from 'react'
 import { type INoteItem } from '../../noteTypes';
 import { deleteNote, loadRecentNotes } from '../../model/noteStorage';
+import { demoNoteData } from '../../DemoNoteData';
+import AuthExports from '../../../../shared/context/AuthContext';
 import NoteItem from '../../../../shared/note-item/ui/NoteItem/NoteItem';
 
 interface IRecentNotesProps {
@@ -9,16 +11,27 @@ interface IRecentNotesProps {
 }
 
 const RecentNotes: FC<IRecentNotesProps> = ({ isNoteSaved }) => {
+   const { token } = AuthExports.useAuthContext();
    const [itemsAmount, setItemsAmount] = useState<number>(5);
    const [notesData, setNotesData] = useState<INoteItem[] | null>(null);
    const [notesLimit, setNotesLimit] = useState<number>(0);
 
    useEffect(() => {
-      const notesResponse = loadRecentNotes(itemsAmount);
+      if (token) {
+         const notesResponse = loadRecentNotes(itemsAmount);
       
-      setNotesData(notesResponse.notes);
-      setNotesLimit(notesResponse.limit);
-   }, [itemsAmount, isNoteSaved]);
+         setNotesData(notesResponse.notes);
+         setNotesLimit(notesResponse.limit);
+      }
+      else {
+         if (!token) {
+            setItemsAmount(1);
+            setNotesData(demoNoteData);
+            setNotesLimit(1);
+         }
+      }
+      
+   }, [itemsAmount, isNoteSaved, token]);
 
    const handleDeleteNote = (noteKey: string): void => {
       const updatedNotes = deleteNote(noteKey);
@@ -38,7 +51,7 @@ const RecentNotes: FC<IRecentNotesProps> = ({ isNoteSaved }) => {
          <h3>Последние записи</h3>
          <Space direction='vertical' size='middle'>
             {notesData.map((item: INoteItem) => 
-               <NoteItem noteItemData={item} key={item.key} handleDeleteNote={handleDeleteNote} />
+               <NoteItem noteItemData={item} key={item.key} handleDeleteNote={handleDeleteNote} disabled={!token} />
             )}
          </Space>
          {notesLimit > itemsAmount &&

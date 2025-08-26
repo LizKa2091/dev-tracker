@@ -58,7 +58,7 @@ const NewNoteForm: FC<INewNoteFormProps> = ({ isNoteSaved, setIsNoteSaved }) => 
    };
 
    return (
-      <Flex align='center' className={styles.container}>
+      <Flex vertical align='center' className={styles.container}>
          <Form onFinish={onFinish} className={styles.form}>
             <Form.Item label='Название' required validateStatus={errors.title ? 'error' : ''} help={errors.title && 'Обязательное поле'} className={styles.formItem}>
                <Controller name='title' control={control} rules={{ required: true }} render={({ field }) => 
@@ -86,11 +86,13 @@ const NewNoteForm: FC<INewNoteFormProps> = ({ isNoteSaved, setIsNoteSaved }) => 
                   )}
                />
             </Form.Item>
-            <Button color="default" variant="solid" htmlType='submit' disabled={!token}>Создать</Button>
+            <Flex justify='center' align='center' vertical gap='middle'>
+               <Button color="default" variant="solid" htmlType='submit' disabled={!token}>Создать</Button>
+               {isNoteSaved && 
+                  <span className='success-request'>Запись успешно сохранена</span>
+               }
+            </Flex>   
          </Form>
-         {isNoteSaved && 
-            <span className='success-response'>Запись успешно сохранена</span>
-         }
       </Flex>
       
    )

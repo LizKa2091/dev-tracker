@@ -1,5 +1,14 @@
+import type { AxiosError } from 'axios';
 import type { AxiosResponse } from 'axios';
 import axios, { isAxiosError } from 'axios';
+
+interface IRefreshResponse {
+   token: string;
+};
+
+interface IAxiosErrorResponse {
+   message: string;
+}
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5001';
 const safeErrMessage = 'Ошибка на сервере';
@@ -8,13 +17,26 @@ const defaultTokenApiAxios = axios.create({
    baseURL: baseUrl
 });
 
-export const apiAxios = axios.create({
-   baseURL: baseUrl
+const apiAxios = axios.create({
+   baseURL: baseUrl,
+   withCredentials: true
 });
 
 const avatarAxios = axios.create({
    baseURL: baseUrl
-})
+});
+
+const handleAxiosError = (err: unknown): never => {
+   if (isAxiosError(err)) {
+      const axiosErr = err as AxiosError<IAxiosErrorResponse>;
+      throw new Error(axiosErr.response?.data.message || safeErrMessage);
+   }
+   if (err instanceof Error) {
+      throw new Error(err.message || safeErrMessage);
+   }
+
+   throw new Error(safeErrMessage);
+};
 
 defaultTokenApiAxios.interceptors.request.use(
    (config) => {
@@ -34,30 +56,30 @@ defaultTokenApiAxios.interceptors.response.use(
 
       return res;
    },
-   (err) => {
-      if (isAxiosError(err)) {
-         throw new Error(err.response?.data.message || safeErrMessage);
-      }
-      else if (err instanceof Error) {
-         throw new Error(err.message || safeErrMessage);
-      }
+   async (err) => {
+      if (err.response?.status === 401 && !err.config._retry) {
+         err.config._retry = true;
 
-      throw new Error(safeErrMessage);
+         try {
+            const { data } = await apiAxios.post<IRefreshResponse>('/refresh');
+            localStorage.setItem('token', data.token);
+
+            err.config.headers = { ...err.config.headers, Authorization: `Bearer ${data.token}` };
+            return defaultTokenApiAxios(err.config);
+         }
+         catch (error) {
+            localStorage.removeItem('token');
+            
+            handleAxiosError(error);
+         }
+      }
+      handleAxiosError(err);
    }
 );
 
 apiAxios.interceptors.response.use(
    (res: AxiosResponse) => res,
-   (err) => {
-      if (isAxiosError(err)) {
-         throw new Error(err.response?.data.message || safeErrMessage);
-      }
-      else if (err instanceof Error) {
-         throw new Error(err.message || safeErrMessage);
-      }
-
-      throw new Error(safeErrMessage);
-   }
+   (err) => handleAxiosError(err)
 );
 
 avatarAxios.interceptors.request.use(
@@ -82,16 +104,7 @@ avatarAxios.interceptors.request.use(
 
 avatarAxios.interceptors.response.use(
    (res: AxiosResponse) => res,
-   (err) => {
-      if (isAxiosError(err)) {
-         throw new Error(err.response?.data.message || safeErrMessage);
-      }
-      else if (err instanceof Error) {
-         throw new Error(err.message || safeErrMessage);
-      }
-
-      throw new Error(safeErrMessage);
-   }
+   (err) => handleAxiosError(err)
 );
 
-export { defaultTokenApiAxios, avatarAxios };
+export { defaultTokenApiAxios, apiAxios, avatarAxios };

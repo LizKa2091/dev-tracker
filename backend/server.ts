@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
+import cookieParser from 'cookie-parser';
 
 dotenv.config();
 
@@ -22,8 +23,10 @@ declare global {
 
 app.use(cors({
    origin: 'http://localhost:5173',
+   credentials: true
 }));
 
+app.use(cookieParser());
 app.use(bodyParser.json());
 
 interface User {
@@ -33,13 +36,17 @@ interface User {
    xp: number;
    profilePic?: string;
    difficulty: 'default' | 'hard';
+   refreshToken?: string;
 }
 
 const users: Record<string, User> = {};
 const blacklistedTokens = new Set<string>();
 
-if (!process.env.JWT_SECRET) {
-   throw new Error('JWT_SECRET is not defined in .env');
+const ACCESS_SECRET = process.env.JWT_SECRET!;
+const REFRESH_SECRET = process.env.JWT_REFRESH_SECRET!;
+
+if (!ACCESS_SECRET || !REFRESH_SECRET) {
+   throw new Error('JWT_SECRET or REFRESH_SECRET is not defined in .env');
 }
 
 const authenticateToken = (req: Request, res: Response, next: NextFunction): void => {
@@ -93,22 +100,91 @@ app.post('/login', (req: Request, res: Response): void => {
       return;
    }
 
-   const token = jwt.sign(
+   const accessToken = jwt.sign(
       { email: user.email, name: user.name },
-      process.env.JWT_SECRET!,
-      { expiresIn: '1h' }
+      ACCESS_SECRET,
+      { expiresIn: '15m' }
    );
 
-   res.json({ token });
+   const refreshToken = jwt.sign(
+      { email: user.email },
+      REFRESH_SECRET!,
+      { expiresIn: '7d' }
+   );
+
+   users[email].refreshToken = refreshToken;
+
+   res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: false,
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      path: '/',
+   });
+
+   res.json({ token: accessToken, message: 'Успешный вход' });
+});
+
+app.post('/refresh', (req: Request, res: Response): void => {
+   const tokenFromCookie = req.cookies?.refreshToken;
+
+   if (!tokenFromCookie) {
+      res.status(401).json({ message: 'Нет refreshToken' });
+      return;
+   }
+
+   jwt.verify(tokenFromCookie, process.env.JWT_SECRET!, (err: jwt.VerifyErrors | null, decoded: JwtPayload | string | undefined) => {
+      if (err || !decoded || typeof decoded === 'string') {
+         res.status(403).json({ message: 'Неверный refreshToken' });
+         return;
+      }
+
+      const { email } = decoded as JwtPayload;
+      const user = users[email];
+
+      if (!user || user.refreshToken !== tokenFromCookie) {
+         res.status(403).json({ message: 'refreshToken не совпадает' });
+         return;
+      }
+
+      const newRefresh = jwt.sign({ email }, REFRESH_SECRET, { expiresIn: '7d' });
+      user.refreshToken = newRefresh;
+
+      const newAccess = jwt.sign(
+         { email: user.email, name: user.name },
+         ACCESS_SECRET,
+         { expiresIn: '15m' }
+      );
+
+      res.cookie('refreshToken', newRefresh, {
+         httpOnly: true,
+         sameSite: 'lax',
+         secure: false,
+         maxAge: 7 * 24 * 60 * 60 * 1000,
+         path: '/',
+      });
+
+      res.json({ token: newAccess });
+   });
 });
 
 app.post('/logout', authenticateToken, (req: Request, res: Response): void => {
    const authHeader = req.headers['authorization'];
    const token = authHeader && authHeader.split(' ')[1];
 
-   if (token) {
-      blacklistedTokens.add(token);
+   if (token) blacklistedTokens.add(token);
+
+   const email = req.user?.email;
+   if (email && users[email]) {
+      users[email].refreshToken = undefined;
    }
+
+   res.clearCookie('refreshToken', {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: false,
+      path: '/',
+   });
 
    res.json({ message: 'Успешный выход' });
 });

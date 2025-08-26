@@ -1,10 +1,11 @@
+import dayjs, { Dayjs } from 'dayjs';
 import { CheckOutlined, CloseOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, Flex, Input } from 'antd';
+import { Button, DatePicker, Flex, Input } from 'antd';
 import { useState, type FC } from 'react';
-import styles from './EditField.module.scss';
 import type { INoteItem } from '../../../../features/notes/noteTypes';
 import { updateNote } from '../../../../features/notes/model/noteStorage';
 import MarkdownTextarea from '../../../markdown-textarea/ui/ui/MarkdownTextarea';
+import styles from './EditField.module.scss';
 
 interface IEditFieldProps {
    value: string;
@@ -16,10 +17,17 @@ interface IEditFieldProps {
 const EditField: FC<IEditFieldProps> = ({ value, field, note, onSave }) => {
    const [isEditing, setIsEditing] = useState<boolean>(false);
    const [tempVal, setTempVal] = useState<string>(value);
+   const [tempDate, setTempDate] = useState<Dayjs | null>(field === 'date' && value ? dayjs(value) : null);
    const [formattedVal, setFormattedVal] = useState<string>(note.formattedDescription || '');
 
    const handleSave = (): void => {
-      if (tempVal.trim() !== value || (field === 'description' && formattedVal !== note.formattedDescription)) {
+      if (field === 'date') {
+         const updatedNoteData = { ...note, date: tempDate ? tempDate.toISOString() : ''};
+
+         updateNote(updatedNoteData);
+         onSave(updatedNoteData);
+      }
+      else if (tempVal.trim() !== value || (field === 'description' && formattedVal !== note.formattedDescription)) {
          const updatedNoteData = field === 'description' ? { ...note, description: tempVal.trim(), formattedDescription: formattedVal } :
          { ...note, [field]: tempVal.trim() };
          
@@ -44,10 +52,13 @@ const EditField: FC<IEditFieldProps> = ({ value, field, note, onSave }) => {
    return (
       <Flex>
          {field === 'description' ? (
-               <MarkdownTextarea value={tempVal} onChange={(val: string) => setTempVal(val)} onFormattedChange={(formVal) => setFormattedVal(formVal)} />
+            <MarkdownTextarea value={tempVal} onChange={(val: string) => setTempVal(val)} onFormattedChange={(formVal) => setFormattedVal(formVal)} />
          ) : (
-               <Input size='small' value={tempVal} onChange={(e) => setTempVal(e.target.value)} />
-         )}
+               field === 'date' ? (
+                  <DatePicker value={tempDate} onChange={date => setTempDate(date)} />
+                     ) : (
+                        <Input size='small' value={tempVal} onChange={(e) => setTempVal(e.target.value)} />
+         ))}
          <Button size='small' icon={<CheckOutlined />} onClick={handleSave} />
          <Button size='small' icon={<CloseOutlined />} onClick={handleCancel} />
       </Flex>

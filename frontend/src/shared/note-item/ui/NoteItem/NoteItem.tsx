@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { useEffect, useState, type FC } from 'react'
 import type { INoteItem } from '../../../../features/notes/noteTypes';
 import { Badge, Button, Card, Flex, Space, Tag } from 'antd';
@@ -75,15 +76,18 @@ const NoteItem: FC<INoteItemProps> = ({ noteItemData, handleDeleteNote, disabled
       >
          <Space direction='vertical'>
             {currNote.formattedDescription ? (
-               <div dangerouslySetInnerHTML={{ __html: currNote.formattedDescription }} />
+               <Flex align='center' gap='small'>
+                  <div dangerouslySetInnerHTML={{ __html: currNote.formattedDescription }} />
+                  <EditField value={currNote.description || ''} field='description' note={currNote} onSave={handleUpdateNote} />
+               </Flex>
             ) : (
-               <Flex gap='small'>
+               <Flex align='center' gap='small'>
                   <p className={styles.cardDetail}>{currNote.description || 'Нет описания'}</p>
                   <EditField value={currNote.description || ''} field='description' note={currNote} onSave={handleUpdateNote} />
                </Flex>
             )}
-            <Flex gap='small'>
-               <p className={styles.cardDetail}>Выполнить до: {currNote.date}</p>
+            <Flex align='center' gap='small'>
+               <p className={styles.cardDetail}>Выполнить до: {dayjs(currNote.date).format('DD.MM.YYYY')}</p>
                <EditField value={String(currNote.date)} field='date' note={currNote} onSave={handleUpdateNote} />
             </Flex>
             <Space>

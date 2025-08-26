@@ -1,3 +1,4 @@
+import type { Dayjs } from "dayjs";
 import type { ITagItem } from "../settings/ui/Tags/tagTypes";
 
 export interface INoteItem {
@@ -15,7 +16,7 @@ export type NewNoteFormData = {
    title: string;
    type: string;
    tags?: ITagItem[];
-   date: string;
+   date: Dayjs;
    description?: string;
 };
 

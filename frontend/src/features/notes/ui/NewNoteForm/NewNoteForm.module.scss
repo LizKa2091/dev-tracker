@@ -1,4 +1,7 @@
 .form {
+   min-width: 474px;
+   width: fit-content;
+
    &Item {
       color: $main-text-white;
 
@@ -15,6 +18,23 @@
          .ant-select-selection-item {
             color: $black-text !important;
          }
+      }
+   }
+}
+.container {
+   border: 2px solid $main-bg-black;
+   border-radius: 16px;
+   background-color: $settings-item-bg;
+   padding: 15px;
+   width: fit-content;
+}
+.dateDisabled {
+   :global {
+      .ant-picker-input > input::placeholder {
+         color: $textarea-number-color;
+      }
+      .ant-picker-input > .ant-picker-suffix {
+         color: $textarea-number-color;
       }
    }
 }

@@ -6,13 +6,14 @@ interface ITagSelectProps {
    value?: ITagItem[];
    onChange?: (value: ITagItem[]) => void;
    userTags?: ITagItem[];
+   disabled: boolean;
 };
 
-const TagSelect: FC<ITagSelectProps> = ({ value = [], onChange, userTags = [] }) => {
+const TagSelect: FC<ITagSelectProps> = ({ value = [], onChange, userTags = [], disabled }) => {
    const selectedValues = value.map(tag => tag.value);
 
    return (
-      <Select mode='tags'
+      <Select mode='tags' disabled={disabled}
          value={selectedValues}
          options={userTags?.map(tag => ({ label: tag.label, value: tag.value })) || []}
          onChange={(selected: string[]) => {

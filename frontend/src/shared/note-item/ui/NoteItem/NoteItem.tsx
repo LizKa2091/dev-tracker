@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { useEffect, useState, type FC } from 'react'
 import type { INoteItem } from '../../../../features/notes/noteTypes';
 import { Badge, Button, Card, Flex, Space, Tag } from 'antd';
@@ -11,9 +12,10 @@ import styles from './NoteItem.module.scss';
 interface INoteItemProps {
    noteItemData: INoteItem;
    handleDeleteNote: (noteKey: string) => void;
+   disabled?: boolean;
 };
 
-const NoteItem: FC<INoteItemProps> = ({ noteItemData, handleDeleteNote }) => {
+const NoteItem: FC<INoteItemProps> = ({ noteItemData, handleDeleteNote, disabled }) => {
    const { token } = AuthExports.useAuthContext();
    const [currNote, setCurrNote] = useState<INoteItem>(noteItemData);
    const [isConfirmed, setIsConfirmed] = useState<boolean | null>(null);
@@ -63,9 +65,9 @@ const NoteItem: FC<INoteItemProps> = ({ noteItemData, handleDeleteNote }) => {
                {isCompleted ? (
                   <p className={styles.completed}>Выполнено</p>
                ) : (
-                  <Button onClick={() => handleChangeStatus(currNote.key)} className={styles.markButton}>Пометить как выполненное</Button>
+                  <Button onClick={() => handleChangeStatus(currNote.key)} disabled={disabled} className={styles.markButton}>Пометить как выполненное</Button>
                )}
-               <Button danger onClick={handleButtonDelete} icon={<DeleteOutlined />} className={styles.delButton}>
+               <Button danger onClick={handleButtonDelete} icon={<DeleteOutlined />} disabled={disabled} className={styles.delButton}>
                   {isConfirmed === null ? 'Удалить' : isConfirmed === false ? 'Вы уверены?' : ''}
                </Button>
             </Space>
@@ -74,15 +76,18 @@ const NoteItem: FC<INoteItemProps> = ({ noteItemData, handleDeleteNote }) => {
       >
          <Space direction='vertical'>
             {currNote.formattedDescription ? (
-               <div dangerouslySetInnerHTML={{ __html: currNote.formattedDescription }} />
+               <Flex align='center' gap='small'>
+                  <div dangerouslySetInnerHTML={{ __html: currNote.formattedDescription }} />
+                  <EditField value={currNote.description || ''} field='description' note={currNote} onSave={handleUpdateNote} />
+               </Flex>
             ) : (
-               <Flex gap='small'>
+               <Flex align='center' gap='small'>
                   <p className={styles.cardDetail}>{currNote.description || 'Нет описания'}</p>
                   <EditField value={currNote.description || ''} field='description' note={currNote} onSave={handleUpdateNote} />
                </Flex>
             )}
-            <Flex gap='small'>
-               <p className={styles.cardDetail}>Выполнить до: {currNote.date}</p>
+            <Flex align='center' gap='small'>
+               <p className={styles.cardDetail}>Выполнить до: {dayjs(currNote.date).format('DD.MM.YYYY')}</p>
                <EditField value={String(currNote.date)} field='date' note={currNote} onSave={handleUpdateNote} />
             </Flex>
             <Space>

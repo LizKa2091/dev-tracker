@@ -7,6 +7,7 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import cookieParser from 'cookie-parser';
+import axios from 'axios';
 
 dotenv.config();
 
@@ -473,6 +474,44 @@ app.post('/xp/remove', authenticateToken, (req: Request, res: Response): void =>
       xp: users[userEmail].xp,
       ...getLevelAndProgress(users[userEmail].xp)
    });
+});
+
+interface IGitHubTokenResponse {
+  access_token: string;
+  scope: string;
+  token_type: string;
+};
+
+app.get('/auth/github', (req: Request, res: Response) => {
+   const redirectUrl = `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&scope=read:user%20repo&redirect_uri=http://localhost:5001/auth/github/callback`;
+   res.redirect(redirectUrl);
+});
+
+app.get('/auth/github/callback', async (req: Request, res: Response) => {
+   const code = req.query.code as string;
+
+   if (!code) {
+      return res.status(400).json({ message: 'Code не передан' });
+   }
+
+   try {
+      const tokenResponse = await axios.post<IGitHubTokenResponse>(
+         'https://github.com/login/oauth/access_token',
+         {
+            client_id: process.env.GITHUB_CLIENT_ID,
+            client_secret: process.env.GITHUB_CLIENT_SECRET,
+            code,
+         },
+         { headers: { Accept: 'application/json' } }
+      );
+
+      res.json({ token: tokenResponse.data, message: 'Успешная авторизация' });
+
+   } 
+   catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Не удалось получить access_token' });
+   }
 });
 
 app.use('/uploads', express.static(path.resolve('uploads')));

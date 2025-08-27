@@ -9,6 +9,7 @@ import GuestRoute from '../shared/lib/router/GuestRoute';
 import HomeRoute from '../pages/HomePage/HomeRoute';
 import ResetPasswordPage from '../pages/ResetPasswordPage/ResetPasswordPage';
 import NotFoundPage from '../pages/NotFoundPage/NotFoundPage';
+import GithubHandlingPage from '../pages/GithubHandlingPage/GithubHandlingPage';
 
 const Router: FC = () => {
    return (
@@ -38,6 +39,11 @@ const Router: FC = () => {
                   <GuestRoute>
                      <ResetPasswordPage />
                   </GuestRoute>
+            } />
+            <Route path='/github/success' element={
+                  <AuthedUserRoute>
+                     <GithubHandlingPage />
+                  </AuthedUserRoute>
             } />
             <Route path='*' element={<NotFoundPage />} />
          </Routes>

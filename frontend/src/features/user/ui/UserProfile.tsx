@@ -5,6 +5,7 @@ import { UserOutlined } from '@ant-design/icons';
 import AuthExports from '../../../shared/context/AuthContext';
 import { calcProgress, calcXpForLevel } from '../lib/calcXp';
 import styles from './UserProfile.module.scss';
+import GitHubLoginButton from '../../github-auth/ui/GitHubLoginButton/GitHubLoginButton';
 
 const UserProfile: FC = () => {
    const { token } = AuthExports.useAuthContext();
@@ -16,6 +17,7 @@ const UserProfile: FC = () => {
             <Avatar size={48} src={data?.profilePic ? data?.profilePic : <UserOutlined />} />
             <p className={styles.nickname}>{isLoading ? 'Загрузка...' : data?.name || 'Гость' }</p>
          </Flex>
+         <GitHubLoginButton />
          <Flex justify='space-between' vertical gap='small'>
             <p className={styles.xp}>XP: {isLoading ? 'Загрузка...' : data?.xp || 0 }</p>
             {data && 

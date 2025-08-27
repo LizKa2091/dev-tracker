@@ -505,12 +505,11 @@ app.get('/auth/github/callback', async (req: Request, res: Response) => {
          { headers: { Accept: 'application/json' } }
       );
 
-      res.json({ token: tokenResponse.data, message: 'Успешная авторизация' });
-
+      res.redirect(`http://localhost:5173/github/success?token=${tokenResponse.data.access_token}`);
    } 
    catch (error) {
       console.error(error);
-      res.status(500).json({ message: 'Не удалось получить access_token' });
+      res.redirect(`http://localhost:5173/github/error`);
    }
 });
 

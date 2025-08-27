@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { GithubOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
-import AuthExports from '../../../shared/context/AuthContext';
+import AuthExports from '../../../../shared/context/AuthContext';
 import styles from './GitHubLoginButton.module.scss';
 
 const GitHubLoginButton: FC = () => {

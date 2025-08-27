@@ -5,7 +5,7 @@ import { UserOutlined } from '@ant-design/icons';
 import AuthExports from '../../../shared/context/AuthContext';
 import { calcProgress, calcXpForLevel } from '../lib/calcXp';
 import styles from './UserProfile.module.scss';
-import GitHubLoginButton from '../../github-auth/ui/GitHubLoginButton';
+import GitHubLoginButton from '../../github-auth/ui/GitHubLoginButton/GitHubLoginButton';
 
 const UserProfile: FC = () => {
    const { token } = AuthExports.useAuthContext();

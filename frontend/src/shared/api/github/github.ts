@@ -27,7 +27,7 @@ githubAxios.interceptors.response.use(
    (err) => {
       if (isAxiosError(err)) {
          const axiosErr = err as AxiosError;
-         throw new Error(axiosErr)
+         throw new Error(axiosErr.message || safeErrMessage)
       }
       if (err instanceof Error) {
          throw new Error(err.message || safeErrMessage);

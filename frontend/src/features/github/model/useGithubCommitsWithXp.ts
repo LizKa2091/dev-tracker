@@ -3,21 +3,11 @@ import { useXpAction } from "../../../shared/note-item/model/useXpAction";
 import type { IGithubStorageCommit } from "../githubTypes";
 import { githubGetRepCommits, githubSaveCommits } from "../lib/githubStorage";
 import { githubCommitsCompare } from "../lib/githubCommitsCompare";
+import { useCommitNotifications } from "../../../shared/notifications/lib/useCommitNotification";
 
 export const useGithubCommitsWithXp = (token: string | null, repositoryTitle: string, commits: IGithubStorageCommit[]) => {
    const { addXp } = useXpAction(token);
-
-   const handleNewCommit = async (commit: IGithubStorageCommit) => {
-      try {
-         await addXp();
-         // snackbar success message
-         console.log('начислен опыт за коммит', commit.message);
-      }
-      catch (err) {
-         // snackbar error message
-         console.error('произошла ошибка при начислении xp:', err);
-      }
-   }
+   const { notifyCommit } = useCommitNotifications();
 
    useEffect(() => {
       if (!token || !commits.length) return;
@@ -28,7 +18,15 @@ export const useGithubCommitsWithXp = (token: string | null, repositoryTitle: st
       if (newCommits.length > 0) {
          githubSaveCommits(repositoryTitle, commits);
 
-         newCommits.forEach(handleNewCommit)
+         newCommits.forEach(async (commit) => {
+            try {
+               await addXp();
+               notifyCommit(repositoryTitle, commit.message);
+            }
+            catch (err) {
+               console.error('произошла ошибка при начислении опыта за коммит', err);
+            }
+         })
       }
-   }, [token, commits, repositoryTitle])
+   }, [token, commits, repositoryTitle, addXp, notifyCommit])
 }

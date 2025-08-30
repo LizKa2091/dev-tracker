@@ -9,15 +9,15 @@ import { useCommitNotifications } from "../../../shared/notifications/lib/useCom
 import { githubGetRepCommits, githubSaveCommits } from "../lib/githubStorage";
 import { githubCommitsCompare } from "../lib/githubCommitsCompare";
 
-export const useGithubSync = () => {
+export const useGithubSync = (githubToken: string | null) => {
    const { token } = AuthExports.useAuthContext();
-   const githubToken = localStorage.getItem('githubToken');
 
    const { addXp } = useXpAction(token);
    const { notifyCommit } = useCommitNotifications();
 
    useEffect(() => {
       if (!githubToken || !token) return;
+      console.log('got tokens')
 
       const syncUserCommits = async () => {
          try {
@@ -38,11 +38,14 @@ export const useGithubSync = () => {
                const prevCommits = githubGetRepCommits(rep.name);
                const newCommits = githubCommitsCompare(prevCommits, commits);
 
+               console.log(prevCommits, newCommits)
+
                if (newCommits.length > 0) {
                   githubSaveCommits(rep.name, commits);
 
                   for (const commit of newCommits) {
                      try {
+                        console.log('started trying commit for:', commit, rep.name);
                         await addXp();
                         notifyCommit(rep.name, commit.message);
                      }
@@ -59,5 +62,5 @@ export const useGithubSync = () => {
       }
 
       syncUserCommits();
-   }, [token, githubToken, addXp, notifyCommit])
+   }, [token, addXp, notifyCommit])
 }

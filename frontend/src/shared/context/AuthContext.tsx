@@ -38,6 +38,7 @@ const AuthContextProvider: FC<IAuthProvider> = ({ children })=> {
       localStorage.removeItem('token');
       localStorage.removeItem('notes');
       localStorage.removeItem('userTags');
+      localStorage.removeItem('githubToken');
       setToken(null);
       setIsAuthed(false);
    };

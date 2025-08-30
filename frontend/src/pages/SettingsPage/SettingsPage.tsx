@@ -4,6 +4,7 @@ import Sidebar from '../../widgets/Sidebar/ui/Sidebar';
 import ProfileSettings from '../../features/settings/ui/Profile/ProfileSettings/ProfileSettings';
 import TagsSettings from '../../features/settings/ui/Tags/TagSettings/TagsSettings';
 import SecuritySettings from '../../features/settings/ui/SecuritySettings/SecuritySettings';
+import Notifications from '../../shared/notifications/ui/Notifications/Notifications';
 
 const { Content } = Layout;
 
@@ -19,6 +20,7 @@ const SettingsPage: FC = () => {
                <SecuritySettings />
             </Flex>
          </Content>
+         <Notifications />
       </Layout>
    )
 }

@@ -4,6 +4,7 @@ import Sidebar from '../../widgets/Sidebar/ui/Sidebar';
 import { Content } from 'antd/es/layout/layout';
 import DeadlineChart from '../../features/deadlines/ui/DeadlineChart';
 import { Link } from 'react-router-dom';
+import Notifications from '../../shared/notifications/ui/Notifications/Notifications';
 
 const LandingPage: FC = () => {
    return (
@@ -25,6 +26,7 @@ const LandingPage: FC = () => {
                </Flex>
             </Flex>
          </Content>
+         <Notifications />
       </Layout>
    )
 }

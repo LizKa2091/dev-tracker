@@ -5,5 +5,5 @@ export interface INotification {
    message: string;
    repName: string;
    date: string;
-   xp?: number;
+   xp: number;
 }

@@ -19,6 +19,7 @@ const Notifications: FC = () => {
                message={notif.message} 
                repName={notif.repName} 
                date={notif.date}
+               xp={notif.xp}
                handleClose={removeNotification} 
             />
          )}

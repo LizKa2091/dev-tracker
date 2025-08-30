@@ -1,5 +1,6 @@
 import { Alert, Flex } from 'antd';
 import type { FC } from 'react';
+import styles from './NotificationItem.module.scss';
 
 interface INotificationItemProps {
    id: number;
@@ -15,9 +16,9 @@ const NotificationItem: FC<INotificationItemProps> = ({ id, message, repName, da
       <Alert message={message} type='success' closable onClose={() => handleClose(id)} description={
          <Flex vertical>
             {xp > 0 ? (
-                  <p>+{xp} XP</p>
+                  <p className={styles.xpPlus}>+{xp} XP</p>
                ) : (
-                  <p>-{xp} XP</p>
+                  <p className={styles.xpMinus}>-{xp} XP</p>
                )
             }
             <p>Репозиторий: {repName}</p>

@@ -1,8 +1,9 @@
-import type { FC } from 'react'
-import NotificationItem from './NotificationItem';
-import type { INotification } from '../notificationTypes';
-import { useCommitNotifications } from '../lib/useCommitNotification';
+import type { FC } from 'react';
 import { Flex } from 'antd';
+import NotificationItem from '../NotificationItem/NotificationItem';
+import type { INotification } from '../../notificationTypes';
+import { useCommitNotifications } from '../../lib/useCommitNotification';
+import styles from './Notifications.module.scss';
 
 const Notifications: FC = () => {
    const { notificationsData, removeNotification } = useCommitNotifications();
@@ -10,7 +11,7 @@ const Notifications: FC = () => {
    if (!notificationsData.length) return null;
 
    return (
-      <Flex>
+      <Flex vertical gap='middle' className={styles.container}>
          {notificationsData.map((notif: INotification) => 
             <NotificationItem 
                key={notif.id} 

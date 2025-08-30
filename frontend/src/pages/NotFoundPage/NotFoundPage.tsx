@@ -2,6 +2,7 @@ import { type FC } from 'react';
 import { Flex, Layout } from 'antd';
 import Sidebar from '../../widgets/Sidebar/ui/Sidebar';
 import { Link } from 'react-router-dom';
+import Notifications from '../../shared/notifications/ui/Notifications/Notifications';
 
 const { Content } = Layout;
 
@@ -15,6 +16,7 @@ const NotFoundPage: FC = () => {
                <Link to='/'>Вернуться домой</Link>
             </Flex>
          </Content>
+         <Notifications />
       </Layout>
    )
 }

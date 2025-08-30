@@ -4,6 +4,7 @@ import { Flex, Layout } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import FooterBar from '../../widgets/FooterBar/ui/FooterBar';
 import ResetPasswordForm from '../../features/auth/ui/ResetPasswordForm/ResetPasswordForm';
+import Notifications from '../../shared/notifications/ui/Notifications/Notifications';
 
 const ResetPasswordPage: FC = () => {
    return (
@@ -18,6 +19,7 @@ const ResetPasswordPage: FC = () => {
             </Content>
             <FooterBar />
          </Layout>
+         <Notifications />
       </Layout>
    )
 };

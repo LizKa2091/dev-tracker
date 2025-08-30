@@ -11,12 +11,13 @@ interface INotificationItemProps {
 };
 
 const NotificationItem: FC<INotificationItemProps> = ({ id, message, repName, date, xp, handleClose }) => {
+   console.log(message, 'вот', date)
    return (
       <Alert message={message} type='success' closable onClose={() => handleClose(id)} description={
          <Flex vertical>
             {xp && <p>+{xp} XP</p>}
             <p>Репозиторий: {repName}</p>
-            <p>Дата: {date}</p>
+            {date && <p>Дата: {date}</p>}
          </Flex>
       } />
    )

@@ -2,6 +2,7 @@ import type { FC } from 'react';
 import { Flex, Layout } from 'antd';
 import Sidebar from '../../widgets/Sidebar/ui/Sidebar';
 import DeadlineChart from '../../features/deadlines/ui/DeadlineChart';
+import Notifications from '../../shared/notifications/ui/Notifications/Notifications';
 
 const { Content } = Layout;
 
@@ -15,6 +16,7 @@ const HomePage: FC = () => {
                <DeadlineChart />
             </Flex>
          </Content>
+         <Notifications />
       </Layout>
    )
 }

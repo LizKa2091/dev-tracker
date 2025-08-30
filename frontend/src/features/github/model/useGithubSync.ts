@@ -45,10 +45,8 @@ export const useGithubSync = (githubToken: string | null) => {
 
                   for (const commit of newCommits) {
                      try {
-                        console.log('started trying commit for:', commit, rep.name);
                         await addXp();
-                        notifyCommit(rep.name, commit.author.date, 15);
-                        // TODO: calc xp based on difficulty settings instead of 15
+                        notifyCommit(rep.name, commit.author.date);
                      }
                      catch (err) {
                         console.error('произошла ошибка при начислении опыта за коммит', err)
@@ -63,5 +61,5 @@ export const useGithubSync = (githubToken: string | null) => {
       }
 
       syncUserCommits();
-   }, [token, addXp, notifyCommit])
+   }, [token, addXp, notifyCommit, githubToken])
 }

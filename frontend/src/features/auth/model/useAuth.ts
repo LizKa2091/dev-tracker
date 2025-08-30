@@ -9,17 +9,18 @@ interface ILoginRequestResponse {
    token: string;
 };
 
-type userData = {
+export type userData = {
    email: string;
    name: string;
    xp: number;
    profilePic: string;
 }
 
-interface IVerifyAuthStatusResponse {
+export interface IVerifyAuthStatusResponse {
    message: string;
    token: string;
    user: userData;
+   difficulty: 'default' | 'hard';
 };
 
 interface IForgotPasswordResponse {

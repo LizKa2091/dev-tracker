@@ -1,12 +1,13 @@
 import dayjs from 'dayjs';
 import { useEffect, useState, type FC } from 'react'
 import type { INoteItem } from '../../../../features/notes/noteTypes';
-import { Badge, Button, Card, Flex, Progress, Space, Tag } from 'antd';
+import { Badge, Button, Card, Flex, Space, Tag } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { changeNoteStatus } from '../../model/changeNoteStatus';
 import { useXpAction } from '../../model/useXpAction';
 import EditField from '../EditField/EditField';
 import AuthExports from '../../../context/AuthContext';
+import UndoProgress from '../UndoProgress/UndoProgress';
 import styles from './NoteItem.module.scss';
 
 interface INoteItemProps {
@@ -21,8 +22,6 @@ const NoteItem: FC<INoteItemProps> = ({ noteItemData, handleDeleteNote, disabled
    const [isConfirmed, setIsConfirmed] = useState<boolean | null>(null);
    const [isCompleted, setIsCompleted] = useState<boolean>(noteItemData.status === 'completed');
    const [displayUndo, setDisplayUndo] = useState<boolean>(false);
-   const [currPercent, setCurrPercent] = useState<number>(0);
-   const [undoTimer, setUndoTimer] = useState<NodeJS.Timeout | null>(null);
 
    const { addXp } = useXpAction(token);
 
@@ -31,12 +30,6 @@ const NoteItem: FC<INoteItemProps> = ({ noteItemData, handleDeleteNote, disabled
          handleDeleteNote(noteItemData.key);
       }
    }, [isConfirmed, handleDeleteNote, noteItemData.key]);
-
-   useEffect(() => {
-      return () => {
-         if (undoTimer) clearInterval(undoTimer);
-      }
-   }, [undoTimer]);
 
    const handleButtonDelete = (): void => {
       if (isConfirmed === null) {
@@ -53,38 +46,20 @@ const NoteItem: FC<INoteItemProps> = ({ noteItemData, handleDeleteNote, disabled
       if (newStatus === 'completed') {
          setIsCompleted(true);
          setDisplayUndo(true);
-
-         const startTime = Date.now();
-
-         const timerId = setInterval(() => {
-            const progress: number = Math.min((Date.now() - startTime) / 3000 * 100, 100);
-
-            setCurrPercent(progress);
-
-            if (progress >= 100) {
-               clearInterval(timerId);
-               setUndoTimer(null);
-               addXp();
-               setDisplayUndo(false);
-            }
-         }, 50);
-         
-         setUndoTimer(timerId);
       }
       else {
          setIsCompleted(false);
       }
    };
 
-   const handleUndo = () => {
-      if (undoTimer) {
-         clearInterval(undoTimer);
-         setUndoTimer(null);
-      }
+   const handleCompleteUndo = () => {
+      addXp();
+      setDisplayUndo(false);
+   };
 
+   const handleCancelUndo = () => {
       changeNoteStatus(currNote.key);
       setIsCompleted(false);
-      setCurrPercent(0);
       setDisplayUndo(false);
    };
 
@@ -104,10 +79,7 @@ const NoteItem: FC<INoteItemProps> = ({ noteItemData, handleDeleteNote, disabled
                <Tag color='blue'>{currNote.type}</Tag>
 
                {isCompleted && displayUndo ? (
-                  <Flex vertical justify='center' align='center' onClick={handleUndo} className={styles.undo}>
-                     <p>Отменить</p>
-                     <Progress percent={currPercent} showInfo={false} size='small' />
-                  </Flex>
+                  <UndoProgress duration={3000} onComplete={handleCompleteUndo} onCancel={handleCancelUndo} />
                ) : (
                   isCompleted ? (
                      <p className={styles.completed}>Выполнено</p>

@@ -38,6 +38,25 @@
       }
    }
 }
+.undo {
+   border: 1px solid $undo-border;
+   border-radius: 6px;
+   min-width: 125px;
+
+   p {
+      font-size: 0.8rem;
+      color: $undo-button-text;
+      margin-bottom: -10px;
+   }
+   &:hover {
+      cursor: pointer;
+   }
+   :global {
+      .ant-progress {
+         height: 15px;
+      }
+   }
+}
 code {
    span {
       display: block;

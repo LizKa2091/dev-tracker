@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, type FC, type ReactNode } from 'react';
-import { useRegisterUser, useLoginUser, useLogoutUser, useVerifyAuthStatus } from '../../features/auth/model/useAuth';
+import { useRegisterUser, useLoginUser, useLogoutUser, useVerifyAuthStatus, type IVerifyAuthStatusResponse } from '../../features/auth/model/useAuth';
 
 interface IAuthContext {
    isAuthed: boolean | null;
@@ -7,7 +7,7 @@ interface IAuthContext {
    register: (email: string, password: string, name: string) => Promise<IRequestResponseMessage | Error>;
    login: (email: string, password: string) => Promise<ILoginRequestResponse | Error>;
    logout: () => Promise<IRequestResponseMessage | Error>;
-   checkLoginStatus: () => void;
+   checkLoginStatus: () => Promise<IVerifyAuthStatusResponse>;
 };
 
 interface IAuthProvider {
@@ -84,7 +84,7 @@ const AuthContextProvider: FC<IAuthProvider> = ({ children })=> {
       }
    };
 
-   const checkLoginStatus = async () => {
+   const checkLoginStatus = async (): Promise<IVerifyAuthStatusResponse> => {
       if (!token) {
          clearAuthData();
 
@@ -93,10 +93,10 @@ const AuthContextProvider: FC<IAuthProvider> = ({ children })=> {
       
       const result = await refecthAuth();
 
-      if (result.error) {
+      if (result.error || !result.data) {
          clearAuthData();
 
-         return result.error;
+         throw new Error(result.error?.message ?? 'Произошла ошибка при авторизации');
       }
 
       setIsAuthed(true);

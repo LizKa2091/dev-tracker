@@ -134,7 +134,7 @@ app.post('/refresh', (req: Request, res: Response): void => {
       return;
    }
 
-   jwt.verify(tokenFromCookie, process.env.JWT_SECRET!, (err: jwt.VerifyErrors | null, decoded: JwtPayload | string | undefined) => {
+   jwt.verify(tokenFromCookie, REFRESH_SECRET, (err: jwt.VerifyErrors | null, decoded: JwtPayload | string | undefined) => {
       if (err || !decoded || typeof decoded === 'string') {
          res.status(403).json({ message: 'Неверный refreshToken' });
          return;

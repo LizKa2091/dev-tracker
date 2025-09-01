@@ -7,6 +7,7 @@ import { changeNoteStatus } from '../../model/changeNoteStatus';
 import { useXpAction } from '../../model/useXpAction';
 import EditField from '../EditField/EditField';
 import AuthExports from '../../../context/AuthContext';
+import UndoProgress from '../UndoProgress/UndoProgress';
 import styles from './NoteItem.module.scss';
 
 interface INoteItemProps {
@@ -20,6 +21,7 @@ const NoteItem: FC<INoteItemProps> = ({ noteItemData, handleDeleteNote, disabled
    const [currNote, setCurrNote] = useState<INoteItem>(noteItemData);
    const [isConfirmed, setIsConfirmed] = useState<boolean | null>(null);
    const [isCompleted, setIsCompleted] = useState<boolean>(noteItemData.status === 'completed');
+   const [displayUndo, setDisplayUndo] = useState<boolean>(false);
 
    const { addXp } = useXpAction(token);
 
@@ -27,7 +29,7 @@ const NoteItem: FC<INoteItemProps> = ({ noteItemData, handleDeleteNote, disabled
       if (isConfirmed) {
          handleDeleteNote(noteItemData.key);
       }
-   }, [isConfirmed, handleDeleteNote, noteItemData.key])
+   }, [isConfirmed, handleDeleteNote, noteItemData.key]);
 
    const handleButtonDelete = (): void => {
       if (isConfirmed === null) {
@@ -43,9 +45,22 @@ const NoteItem: FC<INoteItemProps> = ({ noteItemData, handleDeleteNote, disabled
 
       if (newStatus === 'completed') {
          setIsCompleted(true);
-         addXp();
+         setDisplayUndo(true);
       }
-      else setIsCompleted(false);
+      else {
+         setIsCompleted(false);
+      }
+   };
+
+   const handleCompleteUndo = () => {
+      addXp();
+      setDisplayUndo(false);
+   };
+
+   const handleCancelUndo = () => {
+      changeNoteStatus(currNote.key);
+      setIsCompleted(false);
+      setDisplayUndo(false);
    };
 
    const handleUpdateNote = (updatedNoteData: INoteItem): void => {
@@ -54,19 +69,24 @@ const NoteItem: FC<INoteItemProps> = ({ noteItemData, handleDeleteNote, disabled
 
    return (
       <Card title={
-         <Flex align='center' gap='small'>
-            {currNote.title}
-            <EditField value={currNote.title} field='title' note={currNote} onSave={handleUpdateNote} />
-         </Flex>
-      }
+            <Flex align='center' gap='small'>
+               {currNote.title}
+               <EditField value={currNote.title} field='title' note={currNote} onSave={handleUpdateNote} />
+            </Flex>
+         }
          extra={
             <Space className={styles.spaceExtra}>
                <Tag color='blue'>{currNote.type}</Tag>
-               {isCompleted ? (
-                  <p className={styles.completed}>Выполнено</p>
+
+               {isCompleted && displayUndo ? (
+                  <UndoProgress duration={3000} onComplete={handleCompleteUndo} onCancel={handleCancelUndo} />
+               ) : (
+                  isCompleted ? (
+                     <p className={styles.completed}>Выполнено</p>
                ) : (
                   <Button onClick={() => handleChangeStatus(currNote.key)} disabled={disabled} className={styles.markButton}>Пометить как выполненное</Button>
-               )}
+               ))}
+
                <Button danger onClick={handleButtonDelete} icon={<DeleteOutlined />} disabled={disabled} className={styles.delButton}>
                   {isConfirmed === null ? 'Удалить' : isConfirmed === false ? 'Вы уверены?' : ''}
                </Button>

@@ -1,4 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
 type actionValues = 'add' | 'remove';
 
@@ -25,12 +26,17 @@ const xpAction = async (action: actionValues, token: string): Promise<IXpActionR
 };
 
 export const useXpAction = (token: string | null) => {
+   const queryClient = useQueryClient();
+
    const mutation = useMutation<IXpActionResponse, Error, actionValues>({
       mutationKey: ['xpAction', token],
       mutationFn: async (action) => {
          if (!token) throw new Error('не предоставлен токен');
 
          return await xpAction(action, token)
+      },
+      onSuccess: () => {
+         queryClient.invalidateQueries({ queryKey: ['userData', token] });
       },
       retry: 1
    });

@@ -26,7 +26,7 @@ export const filterByDate = (segment: string): INoteItem[] => {
    const savedNotes = localStorage.getItem('notes');
    if (!savedNotes) return [];
 
-   const filteredNotes: INoteItem[] = JSON.parse(savedNotes).notes.filter((note: INoteItem) => dayjs(note.date).isAfter(destinDay));
+   const filteredNotes: INoteItem[] = JSON.parse(savedNotes).notes.filter((note: INoteItem) => dayjs(note.createdDate).isAfter(destinDay));
 
    return filteredNotes;
 };

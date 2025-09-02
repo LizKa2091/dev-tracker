@@ -3,11 +3,12 @@ import { useEffect, useState, type FC } from 'react';
 import { getIncomingDeadline } from '../model/getIncomingDeadline';
 import type { INoteItem } from '../../notes/noteTypes';
 import AuthExports from '../../../shared/context/AuthContext';
-import { Card, Flex } from 'antd';
+import { Button, Card, Flex } from 'antd';
 import styles from './IncomingDeadline.module.scss';
 
 const IncomingDeadline: FC = () => {
    const [currDeadline, setCurrDeadline] = useState<INoteItem | null>(null);
+   const [isHidden, setIsHidden] = useState<boolean>(false);
    const { isAuthed } = AuthExports.useAuthContext();
 
    useEffect(() => {
@@ -21,9 +22,12 @@ const IncomingDeadline: FC = () => {
    return (
       <Flex vertical justify='center' align='center' gap='small'>
          <p>Приближающийся дедлайн</p>
-         <Card title={currDeadline.title} size='small' className={styles.card}>
-            <p>Срок: {dayjs(currDeadline.dueToDate).format('YYYY-MM-DD')}</p>
-         </Card>
+         {!isHidden && 
+            <Card title={currDeadline.title} size='small' className={styles.card}>
+               <p>Срок: {dayjs(currDeadline.dueToDate).format('YYYY-MM-DD')}</p>
+            </Card>
+         }
+         <Button color="default" variant="solid" onClick={() => setIsHidden(prev => !prev)}>{isHidden ? 'Показать' : 'Спрятать'}</Button>
       </Flex>
    )
 }

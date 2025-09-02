@@ -4,6 +4,7 @@ import { HistoryOutlined, FormOutlined, BarChartOutlined, SettingOutlined, Logou
 import { Link, useNavigate } from 'react-router-dom';
 import AuthExports from '../../../shared/context/AuthContext';
 import UserProfile from '../../../features/user/ui/UserProfile';
+import IncomingDeadline from '../../../features/incoming-deadline/ui/IncomingDeadline';
 import styles from './Sidebar.module.scss';
 
 const { Sider } = Layout;
@@ -44,6 +45,9 @@ const Sidebar: FC = () => {
                   <Button type='text' icon={<LoginOutlined />}>Войти</Button>
                </Link>
             )}
+            <Flex justify='center' align='center'>
+               <IncomingDeadline />
+            </Flex>
          </Flex>
       </Sider>
    )

@@ -17,11 +17,11 @@ interface IEditFieldProps {
 const EditField: FC<IEditFieldProps> = ({ value, field, note, onSave }) => {
    const [isEditing, setIsEditing] = useState<boolean>(false);
    const [tempVal, setTempVal] = useState<string>(value);
-   const [tempDate, setTempDate] = useState<Dayjs | null>(field === 'date' && value ? dayjs(value) : null);
+   const [tempDate, setTempDate] = useState<Dayjs | null>(field === 'dueToDate' && value ? dayjs(value) : null);
    const [formattedVal, setFormattedVal] = useState<string>(note.formattedDescription || '');
 
    const handleSave = (): void => {
-      if (field === 'date') {
+      if (field === 'dueToDate') {
          const updatedNoteData = { ...note, date: tempDate ? tempDate.toISOString() : ''};
 
          updateNote(updatedNoteData);
@@ -54,7 +54,7 @@ const EditField: FC<IEditFieldProps> = ({ value, field, note, onSave }) => {
          {field === 'description' ? (
             <MarkdownTextarea value={tempVal} onChange={(val: string) => setTempVal(val)} onFormattedChange={(formVal) => setFormattedVal(formVal)} />
          ) : (
-               field === 'date' ? (
+               field === 'dueToDate' ? (
                   <DatePicker value={tempDate} onChange={date => setTempDate(date)} />
                      ) : (
                         <Input size='small' value={tempVal} onChange={(e) => setTempVal(e.target.value)} />

@@ -47,7 +47,7 @@ const NewNoteForm: FC<INewNoteFormProps> = ({ isNoteSaved, setIsNoteSaved }) => 
       const key = data.date + new Date().getMilliseconds().toString();
       const currTime = dayjs();
 
-      const savedNotes = saveNote({ title: data.title, type: data.type, tags: data.tags || [], dueToDate: data.date.toISOString(), createdDate: currTime.format(), description: data.description, key, formattedDescription: formattedDescription || '', status: 'active' });
+      const savedNotes = saveNote({ title: data.title, type: data.type, tags: data.tags || [], dueToDate: data.date.format(), createdDate: currTime.format(), description: data.description, key, formattedDescription: formattedDescription || '', status: 'active' });
 
       if (savedNotes) setIsNoteSaved(true);
       else setIsNoteSaved(false);

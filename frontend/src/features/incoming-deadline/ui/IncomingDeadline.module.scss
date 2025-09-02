@@ -1,0 +1,9 @@
+.card {
+   border: 2px solid $incoming-deadline-border;
+   width: 75%;
+
+   p {
+      color: $card-text-black;
+      font-size: 0.8rem;
+   }
+}

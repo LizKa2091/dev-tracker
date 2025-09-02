@@ -37,6 +37,7 @@ const UserTimeline: FC = () => {
 
    return (
       <Flex vertical gap='large'>
+         <h3>Недавно созданные задачи</h3>
          <Flex vertical gap='small' className={styles.segmentedContainer}>
             <p>Показывать за:</p>
             <Segmented options={segmentedOptions} value={currSegment} onChange={handleSegmentChange} />

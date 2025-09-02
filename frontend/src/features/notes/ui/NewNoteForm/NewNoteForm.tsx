@@ -9,6 +9,7 @@ import { loadUserTags } from '../../../settings/model/tagActions';
 import { type ITagItem } from '../../../settings/ui/Tags/tagTypes';
 import AuthExports from '../../../../shared/context/AuthContext';
 import TagSelect from '../TagSelect/TagSelect';
+import dayjs from 'dayjs';
 import styles from './NewNoteForm.module.scss';
 
 interface INewNoteFormProps {
@@ -44,8 +45,9 @@ const NewNoteForm: FC<INewNoteFormProps> = ({ isNoteSaved, setIsNoteSaved }) => 
 
    const onSubmit = (data: NewNoteFormData): void => {
       const key = data.date + new Date().getMilliseconds().toString();
+      const currTime = dayjs();
 
-      const savedNotes = saveNote({...data, tags: data.tags || [], key, formattedDescription: formattedDescription || '', status: 'active'});
+      const savedNotes = saveNote({ title: data.title, type: data.type, tags: data.tags || [], dueToDate: data.date.format(), createdDate: currTime.format(), description: data.description, key, formattedDescription: formattedDescription || '', status: 'active' });
 
       if (savedNotes) setIsNoteSaved(true);
       else setIsNoteSaved(false);

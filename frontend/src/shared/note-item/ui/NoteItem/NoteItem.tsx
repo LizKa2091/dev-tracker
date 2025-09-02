@@ -107,8 +107,8 @@ const NoteItem: FC<INoteItemProps> = ({ noteItemData, handleDeleteNote, disabled
                </Flex>
             )}
             <Flex align='center' gap='small'>
-               <p className={styles.cardDetail}>Выполнить до: {dayjs(currNote.date).format('DD.MM.YYYY')}</p>
-               <EditField value={String(currNote.date)} field='date' note={currNote} onSave={handleUpdateNote} />
+               <p className={styles.cardDetail}>Выполнить до: {dayjs(currNote.dueToDate).format('DD.MM.YYYY')}</p>
+               <EditField value={String(currNote.dueToDate)} field='dueToDate' note={currNote} onSave={handleUpdateNote} />
             </Flex>
             <Space>
                {currNote.tags?.map(tag => 

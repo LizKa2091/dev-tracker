@@ -5,7 +5,8 @@ export interface INoteItem {
    title: string;
    type: string;
    tags: ITagItem[];
-   date: string;
+   dueToDate: string;
+   createdDate: string;
    description?: string;
    key: string;
    formattedDescription?: string;

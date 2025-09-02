@@ -16,7 +16,7 @@ export const formatNotes = (notesData: INoteItem[]): IChartDataItem[] => {
    }
 
    notesData.forEach(note => {
-      const noteDate = dayjs(note.date);
+      const noteDate = dayjs(note.dueToDate);
       
       if (noteDate.isBefore(fourteenDaysAgo) || noteDate.isAfter(today)) return;
 

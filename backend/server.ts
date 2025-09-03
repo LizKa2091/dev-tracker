@@ -497,7 +497,7 @@ app.post('/health/add', authenticateToken, (req: Request, res: Response): void =
          healthToAdd = 3;
    }
 
-   users[userEmail].health += healthToAdd;
+   users[userEmail].health = Math.min(users[userEmail].health + healthToAdd, 50);
 
    res.json({
       message: `Добавлено ${healthToAdd} здоровья`,

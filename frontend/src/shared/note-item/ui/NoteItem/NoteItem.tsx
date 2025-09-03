@@ -5,6 +5,7 @@ import { Badge, Button, Card, Flex, Space, Tag } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { changeNoteStatus } from '../../model/changeNoteStatus';
 import { useXpAction } from '../../model/useXpAction';
+import { useHealthAction } from '../../model/useHealthAction';
 import EditField from '../EditField/EditField';
 import AuthExports from '../../../context/AuthContext';
 import UndoProgress from '../UndoProgress/UndoProgress';
@@ -24,6 +25,7 @@ const NoteItem: FC<INoteItemProps> = ({ noteItemData, handleDeleteNote, disabled
    const [displayUndo, setDisplayUndo] = useState<boolean>(false);
 
    const { addXp } = useXpAction(token);
+   const { mutate: healthAction } = useHealthAction(token);
 
    useEffect(() => {
       if (isConfirmed) {
@@ -54,6 +56,8 @@ const NoteItem: FC<INoteItemProps> = ({ noteItemData, handleDeleteNote, disabled
 
    const handleCompleteUndo = () => {
       addXp();
+      healthAction('add');
+      
       setDisplayUndo(false);
    };
 

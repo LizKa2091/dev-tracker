@@ -541,6 +541,27 @@ app.post('/health/remove', authenticateToken, (req: Request, res: Response): voi
    res.json(response);
 });
 
+app.post('me/restart', authenticateToken, (req: Request, res: Response): void => {
+   const userEmail = req.user?.email;
+
+   if (!userEmail || !users[userEmail]) {
+      res.status(404).json({ message: 'Пользователь не найден' });
+      return;
+   }
+
+   users[userEmail].xp = 0;
+   users[userEmail].health = 50;
+   users[userEmail].difficulty = 'default';
+
+   res.json({
+      message: 'Игрок пересоздан',
+      xp: users[userEmail].xp,
+      health: users[userEmail].health,
+      difficulty: users[userEmail].difficulty,
+      ...getLevelAndProgress(0)
+   })
+});
+
 interface IGitHubTokenResponse {
   access_token: string;
   scope: string;

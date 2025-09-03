@@ -37,6 +37,7 @@ interface User {
    xp: number;
    profilePic?: string;
    difficulty: 'default' | 'hard';
+   health: number;
    refreshToken?: string;
 }
 
@@ -88,7 +89,7 @@ app.post('/register', (req: Request, res: Response): void => {
       return;
    }
 
-   users[email] = { email, password, name, xp: 0, difficulty: 'default' };
+   users[email] = { email, password, name, xp: 0, difficulty: 'default', health: 50 };
    res.status(201).json({ message: 'Пользователь зарегистрирован' });
 });
 
@@ -271,6 +272,7 @@ app.get('/me', authenticateToken, (req: Request, res: Response): void => {
       xp: user.xp,
       profilePic: user.profilePic ? `http://localhost:5001/${user.profilePic}` : null,
       difficulty: user.difficulty,
+      health: user.health,
       ...levelData
    });
 });
@@ -317,6 +319,7 @@ app.patch('/me', authenticateToken, (req: Request, res: Response): void => {
          name: updatedUser.name,
          xp: updatedUser.xp,
          profilePic: user.profilePic ? `${req.protocol}://${req.get('host')}/${user.profilePic}` : null, 
+         health: updatedUser.health,
          ...getLevelAndProgress(updatedUser.xp)
       }
    });
@@ -467,13 +470,96 @@ app.post('/xp/remove', authenticateToken, (req: Request, res: Response): void =>
          xpToRemove = 15;
    }
 
-   users[userEmail].xp = Math.max(0, users[userEmail].xp - xpToRemove);
+   users[userEmail].health = Math.max(0, users[userEmail].xp - xpToRemove);
 
    res.json({
       message: `Вычтено ${xpToRemove} XP`,
       xp: users[userEmail].xp,
       ...getLevelAndProgress(users[userEmail].xp)
    });
+});
+
+app.post('/health/add', authenticateToken, (req: Request, res: Response): void => {
+   const userEmail = req.user?.email;
+
+   if (!userEmail || !users[userEmail]) {
+      res.status(404).json({ message: 'Пользователь не найден' });
+      return;
+   }
+
+   let healthToAdd: number = 0;
+
+   switch (users[userEmail].difficulty) {
+      case 'hard':
+         healthToAdd = 1;
+         break;
+      default:
+         healthToAdd = 3;
+   }
+
+   users[userEmail].health = Math.min(users[userEmail].health + healthToAdd, 50);
+
+   res.json({
+      message: `Добавлено ${healthToAdd} здоровья`,
+      health: users[userEmail].health,
+      delta: healthToAdd
+   });
+});
+
+app.post('/health/remove', authenticateToken, (req: Request, res: Response): void => {
+   const userEmail = req.user?.email;
+
+   if (!userEmail || !users[userEmail]) {
+      res.status(404).json({ message: 'Пользователь не найден' });
+      return;
+   }
+
+   let healthToRemove: number = 0;
+
+   switch (users[userEmail].difficulty) {
+      case 'hard':
+         healthToRemove = 3;
+         break;
+      default:
+         healthToRemove = 2;
+   }
+
+   users[userEmail].health -= healthToRemove;
+
+   const response: any = {
+      message: `Вычтено ${healthToRemove} здоровья`,
+      health: users[userEmail].health,
+      delta: -healthToRemove,
+      dead: false
+   };
+
+   if (users[userEmail].health <= 0) {
+      response.dead = true;
+      users[userEmail].health = 0;
+   }
+
+   res.json(response);
+});
+
+app.post('me/restart', authenticateToken, (req: Request, res: Response): void => {
+   const userEmail = req.user?.email;
+
+   if (!userEmail || !users[userEmail]) {
+      res.status(404).json({ message: 'Пользователь не найден' });
+      return;
+   }
+
+   users[userEmail].xp = 0;
+   users[userEmail].health = 50;
+   users[userEmail].difficulty = 'default';
+
+   res.json({
+      message: 'Игрок пересоздан',
+      xp: users[userEmail].xp,
+      health: users[userEmail].health,
+      difficulty: users[userEmail].difficulty,
+      ...getLevelAndProgress(0)
+   })
 });
 
 interface IGitHubTokenResponse {

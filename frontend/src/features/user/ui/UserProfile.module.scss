@@ -8,3 +8,14 @@
       color: $extra-text-gray;
    }
 }
+.progressContainer {
+   font-size: 0.8rem;
+   color: $extra-text-gray;
+
+   .heart {
+      color: $heart-icon;
+   }
+   .xp {
+      color: $xp-icon;
+   }
+}

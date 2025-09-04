@@ -16,11 +16,14 @@ const NotificationsContext = createContext<INotificationsContext | undefined>(un
 const NotificationsContextProvider: FC<INotificationsContextProvider> = ({ children }) => {
    const [notificationsData, setNotificationsData] = useState<INotification[]>([]);
 
+   let nextNotifId: number = 0;
+
    const addNotification = (notification: Omit<INotification, 'id'>): void => {
-      setNotificationsData(prev => {
-         const lastItemId = prev.length ? prev[prev.length-1].id : 0;
-         return [...prev, { ...notification, id: lastItemId+1 }]
-      });
+      nextNotifId++;
+      setNotificationsData(prev => [
+         ...prev,
+         { ...notification, id: Date.now() + nextNotifId }
+      ]);
    };
 
    const removeNotification = (id: number): void => {

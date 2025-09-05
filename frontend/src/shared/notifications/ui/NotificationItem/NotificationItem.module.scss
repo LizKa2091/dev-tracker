@@ -1,8 +1,19 @@
-.xp {
-   &Plus {
-      color: $add-xp;
+.container {
+   .xp {
+      &Plus {
+         color: $add-xp;
+      }
+      &Minus {
+         color: $lose-xp;
+      }
    }
-   &Minus {
-      color: $lose-xp;
+
+   .health {
+      &Plus {
+         color: $add-health;
+      }
+      &Minus {
+         color: $remove-health;
+      }
    }
-}
+}  

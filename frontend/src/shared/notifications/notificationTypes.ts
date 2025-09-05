@@ -3,7 +3,9 @@ export type NotificationType = 'commit' | 'success' | 'fail' | 'gainXp' | 'loseX
 export interface INotification {
    id: number;
    message: string;
-   repName: string;
+   repName?: string;
+   noteTitle?: string;
    date: string;
-   xp: number;
+   xp?: number | undefined;
+   health?: number| undefined;
 }

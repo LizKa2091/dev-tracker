@@ -2,9 +2,25 @@
    position: absolute;
    top: 1%;
    right: 1%;
+   overflow-y: auto;
    height: fit-content;
+   max-height: calc(100dvh - 1%);
+   padding-right: 5px;
 
    p {
       color: inherit;
+   }
+
+   &::-webkit-scrollbar {
+      width: 8px;
+   }
+
+   &::-webkit-scrollbar-track {
+      background: transparent;
+   }
+
+   &::-webkit-scrollbar-thumb {
+      background-color: $notifications-scroll-bg;
+      border-radius: 4px;
    }
 }

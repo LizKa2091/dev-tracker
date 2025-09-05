@@ -4,10 +4,12 @@ import AuthExports from "../../../shared/context/AuthContext";
 import NotificationsExports from "../../../shared/notifications/model/NotificationsContext";
 import type { INoteItem } from "../../notes/noteTypes";
 import { loadShownDeadlines, saveShownDeadlines } from "../model/loadShownDeadlines";
+import { useHealthAction } from "../../../shared/note-item/model/useHealthAction";
 
 export const useMissedDeadlinesNotifications = () => {
    const { addNotification, removeNotification } = NotificationsExports.useNotifications();
-   const { checkLoginStatus } = AuthExports.useAuthContext();
+   const { checkLoginStatus, token } = AuthExports.useAuthContext();
+   const { mutate: healthAction } = useHealthAction(token);
 
    const [difficulty, setDifficulty] = useState<'default' | 'hard' | null>(null);
    const shownDeadlinesRef = useRef<Set<string>>(loadShownDeadlines());
@@ -43,11 +45,13 @@ export const useMissedDeadlinesNotifications = () => {
                date: deadline.dueToDate,
                health: healthToLose
             });
+
+            healthAction('remove');
             shownDeadlinesRef.current.add(deadline.key);
             saveShownDeadlines(shownDeadlinesRef.current);
          }
       });
-   }, [difficulty, addNotification]);
+   }, [difficulty, addNotification, healthAction]);
 
    return { removeNotification };
 };

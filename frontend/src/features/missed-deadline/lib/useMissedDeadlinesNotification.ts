@@ -3,13 +3,14 @@ import { getMissedDeadlines } from "../model/getMissedDeadlines";
 import AuthExports from "../../../shared/context/AuthContext";
 import NotificationsExports from "../../../shared/notifications/model/NotificationsContext";
 import type { INoteItem } from "../../notes/noteTypes";
+import { loadShownDeadlines, saveShownDeadlines } from "../model/loadShownDeadlines";
 
 export const useMissedDeadlinesNotifications = () => {
    const { addNotification, removeNotification } = NotificationsExports.useNotifications();
    const { checkLoginStatus } = AuthExports.useAuthContext();
-   const notifyRef = useRef<Set<string>>(new Set());
 
    const [difficulty, setDifficulty] = useState<'default' | 'hard' | null>(null);
+   const shownDeadlinesRef = useRef<Set<string>>(loadShownDeadlines());
 
    useEffect(() => {
       const getDifficulty = async (): Promise<void> => {
@@ -35,14 +36,15 @@ export const useMissedDeadlinesNotifications = () => {
       const healthToLose: number = difficulty === 'hard' ? -3 : -2;
 
       missedDeadlines.forEach((deadline: INoteItem) => {
-         if (!notifyRef.current.has(deadline.title)) {
+         if (!shownDeadlinesRef.current.has(deadline.key)) {
             addNotification({
                noteTitle: deadline.title,
                message: 'Просрочен дедлайн',
                date: deadline.dueToDate,
                health: healthToLose
             });
-            notifyRef.current.add(deadline.title);
+            shownDeadlinesRef.current.add(deadline.key);
+            saveShownDeadlines(shownDeadlinesRef.current);
          }
       });
    }, [difficulty, addNotification]);

@@ -3,7 +3,7 @@ import NotificationsExports from "../model/NotificationsContext";
 import AuthExports from "../../context/AuthContext";
 
 export const useCommitNotifications = () => {
-   const { addNotification, removeNotification, notificationsData } = NotificationsExports.useNotifications();
+   const { addNotification, removeNotification } = NotificationsExports.useNotifications();
    const { checkLoginStatus } = AuthExports.useAuthContext();
 
    const [difficulty, setDifficulty] = useState<'default' | 'hard' | null>(null);
@@ -29,5 +29,5 @@ export const useCommitNotifications = () => {
       addNotification({ repName, message: `Новый коммит в ${repName}`, date, xp: xpToGain })
    };
 
-   return { notificationsData, notifyCommit, removeNotification };
+   return { notifyCommit, removeNotification };
 }

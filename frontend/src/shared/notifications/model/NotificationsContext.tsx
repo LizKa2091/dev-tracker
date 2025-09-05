@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, type FC, type ReactNode } from "react";
+import { createContext, useContext, useRef, useState, type FC, type ReactNode } from "react";
 import type { INotification } from "../notificationTypes";
 
 interface INotificationsContext {
@@ -16,11 +16,14 @@ const NotificationsContext = createContext<INotificationsContext | undefined>(un
 const NotificationsContextProvider: FC<INotificationsContextProvider> = ({ children }) => {
    const [notificationsData, setNotificationsData] = useState<INotification[]>([]);
 
+   const nextNotifId = useRef(0);
+
    const addNotification = (notification: Omit<INotification, 'id'>): void => {
-      setNotificationsData(prev => {
-         const lastItemId = prev.length ? prev[prev.length-1].id : 0;
-         return [...prev, { ...notification, id: lastItemId+1 }]
-      });
+      nextNotifId.current++;
+      setNotificationsData(prev => [
+         ...prev,
+         { ...notification, id: Date.now() + nextNotifId.current }
+      ]);
    };
 
    const removeNotification = (id: number): void => {

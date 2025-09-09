@@ -1,0 +1,14 @@
+.card {
+   background-color: $github-item-bg;
+   border-color: $github-item-border;
+   color: $github-item-text;
+
+   &Title {
+      color: $github-item-text;
+   }
+   :global {
+      .ant-card-extra {
+         color: $github-item-text;
+      }
+   }
+}

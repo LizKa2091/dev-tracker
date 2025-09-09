@@ -6,6 +6,7 @@ import { DeleteOutlined } from '@ant-design/icons';
 import { changeNoteStatus } from '../../model/changeNoteStatus';
 import { useXpAction } from '../../model/useXpAction';
 import { useHealthAction } from '../../model/useHealthAction';
+import { useCompletedNoteNotification } from '../../../notifications/lib/useCompletedNoteNotification';
 import EditField from '../EditField/EditField';
 import AuthExports from '../../../context/AuthContext';
 import UndoProgress from '../UndoProgress/UndoProgress';
@@ -23,6 +24,8 @@ const NoteItem: FC<INoteItemProps> = ({ noteItemData, handleDeleteNote, disabled
    const [isConfirmed, setIsConfirmed] = useState<boolean | null>(null);
    const [isCompleted, setIsCompleted] = useState<boolean>(noteItemData.status === 'completed');
    const [displayUndo, setDisplayUndo] = useState<boolean>(false);
+
+   const { notifyCompletedNote } = useCompletedNoteNotification();
 
    const { addXp } = useXpAction(token);
    const { mutate: healthAction } = useHealthAction(token);
@@ -57,6 +60,7 @@ const NoteItem: FC<INoteItemProps> = ({ noteItemData, handleDeleteNote, disabled
    const handleCompleteUndo = () => {
       addXp();
       healthAction('add');
+      notifyCompletedNote(currNote.title, currNote.dueToDate);
       
       setDisplayUndo(false);
    };

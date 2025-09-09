@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 
 dayjs().format()
 
-export const filterByDate = (segment: string): INoteItem[] => {
+export const filterNotesByDate = (segment: string): INoteItem[] => {
    let destinDay: dayjs.Dayjs;
 
    switch (segment) {

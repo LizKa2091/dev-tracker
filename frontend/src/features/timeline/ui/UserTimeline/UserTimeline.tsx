@@ -1,5 +1,5 @@
 import { useEffect, useState, type FC } from 'react';
-import { Flex, Segmented } from 'antd';
+import { Button, Flex, Segmented } from 'antd';
 import { deleteNote } from '../../../notes/model/noteStorage';
 import { filterNotesByDate } from '../../model/filterNotesByDate';
 import type { ISegmentedOption } from '../../timelineTypes';
@@ -18,6 +18,7 @@ const segmentedOptions: ISegmentedOption[] = [
 const UserTimeline: FC = () => {
    const [currSegment, setCurrSegment] = useState<string>('day');
    const [timelineNotes, setTimelineNotes] = useState<INoteItem[]>([]);
+   const [isGithubActive, setIsGithubActive] = useState<boolean>(true);
    
    useEffect(() => {
       setTimelineNotes(filterNotesByDate(currSegment));
@@ -36,14 +37,21 @@ const UserTimeline: FC = () => {
       setCurrSegment(value);
    };
 
+   const handleGithubButton = () => {
+      setIsGithubActive(prev => !prev);
+   };
+
    return (
-      <Flex vertical gap='large'>
+      <Flex vertical gap='large' className={styles.mainContainer}>
          <h3>Недавно созданные задачи</h3>
          <Flex vertical gap='small' className={styles.segmentedContainer}>
             <p>Показывать за:</p>
             <Segmented options={segmentedOptions} value={currSegment} onChange={handleSegmentChange} />
          </Flex>
-         <GithubTimeline segment={currSegment} />
+         <Button color="default" variant="solid" onClick={handleGithubButton}>{isGithubActive ? 'Скрыть Github коммиты' : 'Показать Github коммиты'}</Button>
+         {isGithubActive && 
+            <GithubTimeline segment={currSegment} />
+         }
          {timelineNotes.map((note: INoteItem) => 
             <NoteItem key={note.key} noteItemData={note} handleDeleteNote={handleDeleteNote} />
          )}

@@ -1,18 +1,31 @@
 import type { FC } from 'react';
-import { githubLoadCommits } from '../../../github/lib/githubStorage';
-import GithubTimelineItem from '../GithubTimelineItem/GithubTimelineItem';
+import { Card, Flex } from 'antd';
+import { GithubOutlined } from '@ant-design/icons';
+import { filterCommitsByDate } from '../../model/filterCommitsByDate';
+import styles from './GithubTimeline.module.scss';
 
-const GithubTimeline: FC = () => {
-   const savedReps = githubLoadCommits().repositories;
+interface IGithubTimelineProps {
+   segment: string;
+};
+
+const GithubTimeline: FC<IGithubTimelineProps> = ({ segment }) => {
+   const repsToDisplay = filterCommitsByDate(segment);
       
-   if (!savedReps.length) {
+   if (!repsToDisplay.length) {
       return null;
    }
 
    return (
-      savedReps.map(repository =>
+      repsToDisplay.map(repository =>
          repository.commits.map(commit => 
-            <GithubTimelineItem repName={repository.repositoryTitle} message={commit.message} date={commit.author.date} />
+            <Card title={
+                  <Flex gap='middle' className={styles.cardTitle}><GithubOutlined />Коммит в репозитории: {repository.repositoryTitle}</Flex>
+               }
+               extra={commit.author.date.split('T')[0]}
+               className={styles.card}
+            >
+               {commit.message}
+            </Card>
          )
       )
    )

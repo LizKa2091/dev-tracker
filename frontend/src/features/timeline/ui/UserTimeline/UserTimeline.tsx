@@ -43,7 +43,7 @@ const UserTimeline: FC = () => {
             <p>Показывать за:</p>
             <Segmented options={segmentedOptions} value={currSegment} onChange={handleSegmentChange} />
          </Flex>
-         <GithubTimeline />
+         <GithubTimeline segment={currSegment} />
          {timelineNotes.map((note: INoteItem) => 
             <NoteItem key={note.key} noteItemData={note} handleDeleteNote={handleDeleteNote} />
          )}

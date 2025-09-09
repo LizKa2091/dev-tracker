@@ -1,7 +1,7 @@
 import { useEffect, useState, type FC } from 'react';
 import { Flex, Segmented } from 'antd';
 import { deleteNote } from '../../../notes/model/noteStorage';
-import { filterByDate } from '../../model/filterByDate';
+import { filterNotesByDate } from '../../model/filterNotesByDate';
 import type { ISegmentedOption } from '../../timelineTypes';
 import type { INoteItem } from '../../../notes/noteTypes';
 import NoteItem from '../../../../shared/note-item/ui/NoteItem/NoteItem';
@@ -20,7 +20,7 @@ const UserTimeline: FC = () => {
    const [timelineNotes, setTimelineNotes] = useState<INoteItem[]>([]);
    
    useEffect(() => {
-      setTimelineNotes(filterByDate(currSegment));
+      setTimelineNotes(filterNotesByDate(currSegment));
    }, [currSegment]);
 
    const handleDeleteNote = (noteKey: string): void => {

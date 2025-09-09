@@ -6,12 +6,14 @@ import { useMissedDeadlinesNotifications } from '../../../../features/missed-dea
 import { useCommitNotifications } from '../../lib/useCommitNotification';
 import NotificationsExports from '../../model/NotificationsContext';
 import styles from './Notifications.module.scss';
+import { useCompletedNoteNotification } from '../../lib/useCompletedNoteNotification';
 
 const Notifications: FC = () => {
    const { notificationsData, removeNotification } = NotificationsExports.useNotifications();
 
    useMissedDeadlinesNotifications();
    useCommitNotifications();
+   useCompletedNoteNotification();
 
    if (!notificationsData.length) return null;
 

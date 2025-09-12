@@ -10,6 +10,7 @@ import HomeRoute from '../pages/HomePage/HomeRoute';
 import ResetPasswordPage from '../pages/ResetPasswordPage/ResetPasswordPage';
 import NotFoundPage from '../pages/NotFoundPage/NotFoundPage';
 import GithubHandlingPage from '../pages/GithubHandlingPage/GithubHandlingPage';
+import ShopPage from '../pages/ShopPage/ShopPage';
 
 const Router: FC = () => {
    return (
@@ -40,6 +41,7 @@ const Router: FC = () => {
                      <ResetPasswordPage />
                   </GuestRoute>
             } />
+            <Route path='/shop' element={<ShopPage />} />
             <Route path='/github/success' element={
                   <AuthedUserRoute>
                      <GithubHandlingPage />

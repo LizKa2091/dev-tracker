@@ -28,6 +28,7 @@ app.use(cors({
    credentials: true
 }));
 
+app.use('/assets', express.static(path.resolve(__dirname, 'public/assets')))
 app.use(cookieParser());
 app.use(bodyParser.json());
 
@@ -626,7 +627,13 @@ app.use('/uploads', express.static(path.resolve('uploads')));
 // SHOP
 // ==================
 
-app.get('/shop/items', (req: Request, res: Response) => {
+app.get('/shop/items', authenticateToken, (req: Request, res: Response) => {
+   const userEmail = req.user?.email;
+   
+   if (!userEmail || !users[userEmail]) {
+      return res.status(404).json({ message: 'Пользователь не найден' });
+   }
+   
    res.json(shopItems);
 });
 

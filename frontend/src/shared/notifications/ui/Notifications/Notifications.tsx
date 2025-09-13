@@ -28,10 +28,12 @@ const Notifications: FC = () => {
                message={notif.message} 
                repName={notif.repName || ''}
                noteTitle={notif.noteTitle || ''}
-               date={notif.date}
+               notificationTitle={notif.notificationTitle || ''}
+               date={notif.date || ''}
                xp={notif.xp || undefined}
                health={notif.health || undefined}
-               handleClose={removeNotification} 
+               type={notif.type || 'info'}
+               handleClose={removeNotification}
             />
          )}
       </Flex>

@@ -8,6 +8,7 @@ import path from 'path';
 import fs from 'fs';
 import cookieParser from 'cookie-parser';
 import axios from 'axios';
+import { shopItems } from './static/shopItems';
 
 dotenv.config();
 
@@ -27,6 +28,7 @@ app.use(cors({
    credentials: true
 }));
 
+app.use('/assets', express.static(path.resolve(__dirname, 'public/assets')))
 app.use(cookieParser());
 app.use(bodyParser.json());
 
@@ -50,6 +52,10 @@ const REFRESH_SECRET = process.env.JWT_REFRESH_SECRET!;
 if (!ACCESS_SECRET || !REFRESH_SECRET) {
    throw new Error('JWT_SECRET or REFRESH_SECRET is not defined in .env');
 }
+
+// ============
+// USER PROFILE
+// ===========
 
 const authenticateToken = (req: Request, res: Response, next: NextFunction): void => {
    const authHeader = req.headers['authorization'];
@@ -373,6 +379,10 @@ app.patch('/me/difficulty', authenticateToken, (req: Request, res: Response): vo
    });
 });
 
+// ================
+// USER AVATAR
+// ================
+
 const uploadDir = path.resolve('uploads');
 if (!fs.existsSync(uploadDir)) {
    fs.mkdirSync(uploadDir);
@@ -426,6 +436,10 @@ app.post('/me/avatar', authenticateToken, upload.single('avatar'), (req: Request
    });
 });
 
+// ============
+// USER XP
+// ============
+
 app.post('/xp/add', authenticateToken, (req: Request, res: Response): void => {
    const userEmail = req.user?.email;
 
@@ -478,6 +492,10 @@ app.post('/xp/remove', authenticateToken, (req: Request, res: Response): void =>
       ...getLevelAndProgress(users[userEmail].xp)
    });
 });
+
+// ==============
+// USER HEALTH
+// ==============
 
 app.post('/health/add', authenticateToken, (req: Request, res: Response): void => {
    const userEmail = req.user?.email;
@@ -562,6 +580,10 @@ app.post('me/restart', authenticateToken, (req: Request, res: Response): void =>
    })
 });
 
+// =================
+// GITHUB AUTH
+// =================
+
 interface IGitHubTokenResponse {
   access_token: string;
   scope: string;
@@ -600,6 +622,46 @@ app.get('/auth/github/callback', async (req: Request, res: Response) => {
 });
 
 app.use('/uploads', express.static(path.resolve('uploads')));
+
+// ==================
+// SHOP
+// ==================
+
+app.get('/shop/items', authenticateToken, (req: Request, res: Response) => {
+   const userEmail = req.user?.email;
+   
+   if (!userEmail || !users[userEmail]) {
+      return res.status(404).json({ message: 'Пользователь не найден' });
+   }
+   
+   res.json(shopItems);
+});
+
+app.post('/shop/buy', authenticateToken, (req: Request, res: Response) => {
+   const { itemId } = req.body;
+   const userEmail = req.user?.email;
+   const item = shopItems.find(item => item.id === itemId);
+
+   if (!item) {
+      return res.status(404).json({ message: 'Предмет не найден' });
+   }
+
+   if (!userEmail || !users[userEmail]) {
+      return res.status(404).json({ message: 'Пользователь не найден' });
+   }
+
+   if (users[userEmail].xp < item.cost) {
+      return res.status(400).json({ message: 'Недостаточно очков для покупки' });
+   }
+
+   users[userEmail].xp -= item.cost;
+
+   if (item.effect.hp) {
+      users[userEmail].health = Math.min(50, users[userEmail].health + item.effect.hp);
+   }
+
+   res.json({ message: 'Успешная покупка' });
+})
 
 app.get('/', (req: Request, res: Response): void => {
    res.send('Сервер авторизации работает!');

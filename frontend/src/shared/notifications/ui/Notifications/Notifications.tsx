@@ -7,6 +7,7 @@ import { useCommitNotifications } from '../../lib/useCommitNotification';
 import NotificationsExports from '../../model/NotificationsContext';
 import styles from './Notifications.module.scss';
 import { useCompletedNoteNotification } from '../../lib/useCompletedNoteNotification';
+import { usePurchaseNotification } from '../../../../features/shop-buy-item/model/usePurchaseNotification';
 
 const Notifications: FC = () => {
    const { notificationsData, removeNotification } = NotificationsExports.useNotifications();
@@ -14,6 +15,7 @@ const Notifications: FC = () => {
    useMissedDeadlinesNotifications();
    useCommitNotifications();
    useCompletedNoteNotification();
+   usePurchaseNotification();
 
    if (!notificationsData.length) return null;
 
@@ -26,10 +28,12 @@ const Notifications: FC = () => {
                message={notif.message} 
                repName={notif.repName || ''}
                noteTitle={notif.noteTitle || ''}
-               date={notif.date}
+               notificationTitle={notif.notificationTitle || ''}
+               date={notif.date || ''}
                xp={notif.xp || undefined}
                health={notif.health || undefined}
-               handleClose={removeNotification} 
+               type={notif.type || 'info'}
+               handleClose={removeNotification}
             />
          )}
       </Flex>

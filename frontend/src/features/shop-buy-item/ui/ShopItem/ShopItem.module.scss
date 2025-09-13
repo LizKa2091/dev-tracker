@@ -1,0 +1,23 @@
+.itemContainer {
+   width: 100%;
+
+   img {
+      width: 45%;
+      height: 50%;
+      max-width: 45px;
+      max-height: 55px;
+   }
+}
+
+.mainContainer {
+   border: 3px solid $main-bg-black;
+   border-radius: 12px;
+   background-color: $main-bg-black;
+   padding: 5px;
+   cursor: pointer;
+}
+
+.price {
+   font-weight: 700;
+   color: $shop-item-price-text;
+}

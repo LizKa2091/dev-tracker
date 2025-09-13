@@ -17,7 +17,7 @@ const ShopItem: FC<IShopItemProps> = ({ id, name, cost, description, image, effe
          <Tooltip title={description}>
             <Flex align='center' vertical gap='middle' className={styles.itemContainer}>
                <p>{name}</p>
-               <img src={`${import.meta.env.VITE_SERVER_API_URL}${image}`} alt={name} />
+               <img src={`${import.meta.env.VITE_API_BASE_URL}${image}`} alt={name} />
                <p className={styles.price}>{cost}</p>
             </Flex>
          </Tooltip>

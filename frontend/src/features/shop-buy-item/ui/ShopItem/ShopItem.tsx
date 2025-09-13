@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 import { Flex, Tooltip } from 'antd';
 import { useBuyItem } from '../../model/useBuyItem';
+import { usePurchaseNotification } from '../../model/usePurchaseNotification';
 import styles from './ShopItem.module.scss';
 
 interface IShopItemProps {
@@ -13,12 +14,24 @@ interface IShopItemProps {
 };
 
 const ShopItem: FC<IShopItemProps> = ({ id, name, cost, description, image, effect }) => {
-   const { mutate: buyItem, isPending } = useBuyItem();
+   const { mutateAsync: buyItem, isPending } = useBuyItem();
+   const { notifyPurchase } = usePurchaseNotification();
 
    const handleBuyItem = async () => {
       if (isPending) return;
 
-      buyItem({ itemId: id });
+      try {
+         const result = await buyItem({ itemId: id });
+         notifyPurchase('Успешная покупка', result.message);
+      }
+      catch (err) {
+         if (err instanceof Error) {
+            notifyPurchase('Ошибка', err.message);
+         }
+         else {
+            notifyPurchase('Ошибка', 'Не удалось совершить покупку');
+         }
+      }
    };
 
    return (

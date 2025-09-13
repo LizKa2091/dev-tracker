@@ -650,6 +650,10 @@ app.post('/shop/buy', authenticateToken, (req: Request, res: Response) => {
       return res.status(404).json({ message: 'Пользователь не найден' });
    }
 
+   if (users[userEmail].xp < item.cost) {
+      return res.status(400).json({ message: 'Недостаточно очков для покупки' });
+   }
+
    users[userEmail].xp -= item.cost;
 
    if (item.effect.hp) {

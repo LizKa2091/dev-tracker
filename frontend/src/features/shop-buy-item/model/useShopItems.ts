@@ -3,7 +3,7 @@ import { defaultTokenApiAxios } from "../../../shared/api/axios";
 import type { IShopItem } from './../shopTypes';
 
 export const useShopItems = () => {
-   return useQuery({
+   return useQuery<IShopItem[], Error>({
       queryKey: ['shopItems'],
       queryFn: async () => {
          const { data } = await defaultTokenApiAxios.get<IShopItem[]>('/shop/items');

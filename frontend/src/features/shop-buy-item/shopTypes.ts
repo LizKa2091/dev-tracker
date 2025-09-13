@@ -6,3 +6,7 @@ export interface IShopItem {
    image: string,
    effect: any,
 };
+
+export interface IBuyItemResponse {
+   message: string;
+};

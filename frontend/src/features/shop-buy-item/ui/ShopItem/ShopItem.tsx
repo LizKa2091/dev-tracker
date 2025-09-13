@@ -22,14 +22,14 @@ const ShopItem: FC<IShopItemProps> = ({ id, name, cost, description, image, effe
 
       try {
          const result = await buyItem({ itemId: id });
-         notifyPurchase('Успешная покупка', result.message);
+         notifyPurchase('Успешная покупка', result.message, 'success');
       }
       catch (err) {
          if (err instanceof Error) {
-            notifyPurchase('Ошибка', err.message);
+            notifyPurchase('Ошибка', err.message, 'error');
          }
          else {
-            notifyPurchase('Ошибка', 'Не удалось совершить покупку');
+            notifyPurchase('Ошибка', 'Не удалось совершить покупку', 'error');
          }
       }
    };

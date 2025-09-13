@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import AuthExports from "../../../shared/context/AuthContext";
 import NotificationsExports from "../../../shared/notifications/model/NotificationsContext";
-import dayjs from "dayjs";
+import type { NotificationType } from "../../../shared/notifications/notificationTypes";
 
 export const usePurchaseNotification = () => {
    const { addNotification, removeNotification } = NotificationsExports.useNotifications();
@@ -13,10 +13,10 @@ export const usePurchaseNotification = () => {
       }
    }, [isAuthed]);
 
-   const notifyPurchase = (title: string, message: string) => {
+   const notifyPurchase = (title: string, message: string, type: NotificationType) => {
       if (!isAuthed) return;
 
-      addNotification({ noteTitle: title, message, date: dayjs(new Date()).toISOString() });
+      addNotification({ notificationTitle: title, message, type });
    }
 
    return { notifyPurchase, removeNotification };

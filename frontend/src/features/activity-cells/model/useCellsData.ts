@@ -1,19 +1,9 @@
 import dayjs from "dayjs";
-import { useUserData } from '../../user/model/useUserData';
-import AuthExports from "../../../shared/context/AuthContext";
-import { githubLoadCommits } from "../../github/lib/githubStorage";
 import { useEffect, useState } from "react";
-
-interface ICellsData {
-   totalCells: number;
-   years: number[];
-   cellItems: ICellItemData[]
-};
-
-interface ICellItemData {
-   day: string;
-   activities: number;
-};
+import { useUserData } from '../../user/model/useUserData';
+import { githubLoadCommits } from "../../github/lib/githubStorage";
+import AuthExports from "../../../shared/context/AuthContext";
+import type { ICellsData } from "../activityCellTypes";
 
 export const useCellsData = () => {
    const { token } = AuthExports.useAuthContext();

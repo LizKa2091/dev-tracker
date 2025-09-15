@@ -8,7 +8,7 @@ const Shop: FC = () => {
    
    return (
       <Flex>
-         {shopItems?.map(item =>
+         {shopItems?.shopItems.map(item =>
             <ShopItem key={item.id} {...item} />
          )}
       </Flex>

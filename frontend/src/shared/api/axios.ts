@@ -26,6 +26,10 @@ const avatarAxios = axios.create({
    baseURL: baseUrl
 });
 
+const shopItemsAxios = axios.create({
+   baseURL: baseUrl
+})
+
 const handleAxiosError = (err: unknown): never => {
    if (isAxiosError(err)) {
       const axiosErr = err as AxiosError<IAxiosErrorResponse>;
@@ -107,4 +111,9 @@ avatarAxios.interceptors.response.use(
    (err) => handleAxiosError(err)
 );
 
-export { defaultTokenApiAxios, apiAxios, avatarAxios };
+shopItemsAxios.interceptors.response.use(
+   (res: AxiosResponse) => res,
+   (err) => handleAxiosError(err)
+)
+
+export { defaultTokenApiAxios, apiAxios, avatarAxios, shopItemsAxios };

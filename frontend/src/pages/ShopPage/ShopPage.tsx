@@ -13,6 +13,7 @@ const ShopPage: FC = () => {
          <Content className='content'>
             <Flex vertical gap='large'>
                <h2 className='title'>Магазин</h2>
+               <h3>Нажмите на товар для покупки за XP. Чтобы увидеть описание, наведите курсором мыши на товар</h3>
                <Shop />
             </Flex>
          </Content>

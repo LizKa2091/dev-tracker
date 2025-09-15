@@ -627,14 +627,8 @@ app.use('/uploads', express.static(path.resolve('uploads')));
 // SHOP
 // ==================
 
-app.get('/shop/items', authenticateToken, (req: Request, res: Response) => {
-   const userEmail = req.user?.email;
-   
-   if (!userEmail || !users[userEmail]) {
-      return res.status(404).json({ message: 'Пользователь не найден' });
-   }
-   
-   res.json(shopItems);
+app.get('/shop/items', (req: Request, res: Response) => {
+   res.json({ shopItems });
 });
 
 app.post('/shop/buy', authenticateToken, (req: Request, res: Response) => {

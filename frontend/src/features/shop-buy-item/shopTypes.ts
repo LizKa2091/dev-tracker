@@ -7,6 +7,10 @@ export interface IShopItem {
    effect: any,
 };
 
+export interface IShopItemsResponse {
+   shopItems: IShopItem[];
+}
+
 export interface IBuyItemResponse {
    message: string;
 };

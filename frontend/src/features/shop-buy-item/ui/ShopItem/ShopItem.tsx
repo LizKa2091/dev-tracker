@@ -5,19 +5,25 @@ import { usePurchaseNotification } from '../../model/usePurchaseNotification';
 import styles from './ShopItem.module.scss';
 
 interface IShopItemProps {
-   id: string,
-   name: string,
-   cost: number,
-   description: string,
-   image: string,
+   id: string;
+   name: string;
+   cost: number;
+   description: string;
+   image: string;
+   isAuthed: boolean | null;
 };
 
-const ShopItem: FC<IShopItemProps> = ({ id, name, cost, description, image }) => {
+const ShopItem: FC<IShopItemProps> = ({ id, name, cost, description, image, isAuthed }) => {
    const { mutateAsync: buyItem, isPending, isError } = useBuyItem();
    const { notifyPurchase } = usePurchaseNotification();
 
    const handleBuyItem = async () => {
       if (isPending || isError) return;
+
+      if (!isAuthed) {
+         notifyPurchase('Нет доступа', 'Пожалуйста, авторизуйтесь для покупки', 'error');
+         return;
+      }
 
       try {
          const result = await buyItem({ itemId: id });

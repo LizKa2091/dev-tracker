@@ -11,6 +11,7 @@ import ResetPasswordPage from '../pages/ResetPasswordPage/ResetPasswordPage';
 import NotFoundPage from '../pages/NotFoundPage/NotFoundPage';
 import GithubHandlingPage from '../pages/GithubHandlingPage/GithubHandlingPage';
 import ShopPage from '../pages/ShopPage/ShopPage';
+import StatsPage from '../pages/StatsPage/StatsPage';
 
 const Router: FC = () => {
    return (
@@ -24,6 +25,11 @@ const Router: FC = () => {
                } 
             />
             <Route path='/new-note' element={<NewNotePage />} />
+            <Route path='/stats' element={
+               <AuthedUserRoute>
+                  <StatsPage />
+               </AuthedUserRoute>
+            } />
             <Route path='/settings' element={
                   <AuthedUserRoute>
                      <SettingsPage />

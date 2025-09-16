@@ -2,6 +2,7 @@ import { Flex, Layout } from 'antd';
 import type { FC } from 'react';
 import Sidebar from '../../widgets/Sidebar/ui/Sidebar';
 import Notifications from '../../shared/notifications/ui/Notifications/Notifications';
+import ActivityCells from '../../features/activity-cells/ui/ActivityCells/ActivityCells';
 
 const { Content } = Layout;
 
@@ -12,6 +13,7 @@ const StatsPage: FC = () => {
          <Content className='content'>
             <Flex vertical gap='large'>
                <h2 className='title'>Статистика</h2>
+               <ActivityCells />
             </Flex>
          </Content>
          <Notifications />

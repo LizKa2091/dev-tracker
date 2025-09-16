@@ -8,16 +8,16 @@ import styles from './ActivityCells.module.scss';
 
 const ActivityCells: FC = () => {
    const { cellItems } = useCellsData();
-   const { weeks } = useCellsGrid(cellItems);
+   const { weeks, maxActivities } = useCellsGrid(cellItems);
 
    return (
       <Flex vertical gap='large' className={styles.mainContainer}>
          <h3>2025</h3>
          <p>{cellItems.reduce((acc, item) => acc + item.activities, 0)} выполненных заданий</p>
-         <Flex className={styles.calendar}>
+         <Flex gap='small' className={styles.calendar}>
             <Flex vertical>
                {weekDays.map(day => (
-                  <Flex key={day}>
+                  <Flex key={day} className={styles.weekLabel}>
                      {day}
                   </Flex>
                ))}
@@ -27,7 +27,13 @@ const ActivityCells: FC = () => {
                   <Flex key={wi} vertical gap="small" className={styles.weekColumn}>
                      {week.days.map((item, di) =>
                         item ? (
-                           <ActivityCellItem key={item.day} activities={item.activities} day={item.day} isHidden={item.isHidden} />
+                           <ActivityCellItem 
+                              key={item.day} 
+                              day={item.day} 
+                              isHidden={item.isHidden} 
+                              activities={item.activities} 
+                              maxActivities={maxActivities || 0} 
+                           />
                         ) : (
                            <div key={di} className={styles.emptyCell} />
                         )

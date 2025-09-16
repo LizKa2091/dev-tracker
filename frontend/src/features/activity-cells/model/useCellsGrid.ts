@@ -22,8 +22,10 @@ export const useCellsGrid = (cellItems: ICellItemData[], year: number = 2025) =>
    let current = gridStart.clone();
    let currentWeek: IGridCell[] = [];
 
+   const maxActivities = Math.max(...cellItems.map(cell => cell.activities), 0);
+
    while (current.isBefore(gridEnd) || current.isSame(gridEnd, 'day')) {
-      const destinDay = cellItems.find(c => dayjs(c.day).isSame(current, 'day'));
+      const destinDay = cellItems.find(cell => dayjs(cell.day).isSame(current, 'day'));
       
       const isPrevYear = current.year() < year || current.isBefore(startOfYear, 'day');
       const isFuture = current.isAfter(today, 'day');
@@ -44,5 +46,5 @@ export const useCellsGrid = (cellItems: ICellItemData[], year: number = 2025) =>
       current = current.add(1, "day");
    }
 
-   return { weeks };
+   return { weeks, maxActivities };
 };

@@ -1,0 +1,12 @@
+.container {
+   border: 1px solid $activity-level-5;
+   border-radius: 5px;
+   background-color: $activity-level-5;
+   width: 15px;
+   height: 15px;
+}
+
+.hidden {
+   border-color: $activity-hidden;
+   background-color: $activity-hidden;
+}

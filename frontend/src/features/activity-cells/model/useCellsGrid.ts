@@ -1,20 +1,38 @@
 import dayjs from 'dayjs';
-import type { ICellItemData } from './../activityCellTypes';
+import type { ICellItemData, IGridCell } from './../activityCellTypes';
 
-export const useCellsGrid = (cellItems: ICellItemData[]) => {
+interface IWeekItem {
+   days: IGridCell[];
+   monthLabel?: string
+};
+
+export const useCellsGrid = (cellItems: ICellItemData[], year: number = 2025) => {
    if (cellItems.length === 0) return { weeks: [] };
 
-   const startDate = dayjs(cellItems[0].day).startOf('week');
-   const endDate = dayjs(cellItems.at(-1)!.day).endOf('week');
+   const today = dayjs();
+   const startOfYear = dayjs(`${year}-01-01`);
 
-   const weeks = [];
-   let current = startDate.clone();
-   let currentWeek = [];
+   const diffToMonday = (startOfYear.day() + 6) % 7;
+   const gridStart = startOfYear.subtract(diffToMonday, 'day');
 
-   while (current.isBefore(endDate) || current.isSame(endDate, 'day')) {
+   const diffToSunday = today.day() === 0 ? 0 : 7 - today.day();
+   const gridEnd = today.add(diffToSunday, 'day');
+
+   const weeks: IWeekItem[] = [];
+   let current = gridStart.clone();
+   let currentWeek: IGridCell[] = [];
+
+   while (current.isBefore(gridEnd) || current.isSame(gridEnd, 'day')) {
       const destinDay = cellItems.find(c => dayjs(c.day).isSame(current, 'day'));
+      
+      const isPrevYear = current.year() < year || current.isBefore(startOfYear, 'day');
+      const isFuture = current.isAfter(today, 'day');
 
-      currentWeek.push(destinDay ?? null);
+      currentWeek.push({
+         day: current.format("YYYY-MM-DD"),
+         activities: destinDay?.activities ?? 0,
+         isHidden: isPrevYear || isFuture
+      });
 
       if (current.day() === 0) {
          const monthLabel = currentWeek.some(c => c && dayjs(c.day).date() <= 7) ? current.format("MMM") : undefined;

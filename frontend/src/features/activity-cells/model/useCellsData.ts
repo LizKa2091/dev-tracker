@@ -4,6 +4,7 @@ import { useUserData } from '../../user/model/useUserData';
 import { githubLoadCommits } from "../../github/lib/githubStorage";
 import AuthExports from "../../../shared/context/AuthContext";
 import type { ICellsData } from "../activityCellTypes";
+import type { INoteItem } from "../../notes/noteTypes";
 
 export const useCellsData = () => {
    const { token } = AuthExports.useAuthContext();
@@ -26,7 +27,7 @@ export const useCellsData = () => {
          years.push(i);
       }
 
-      const commitMap = new Map<string, number>();
+      const activitiesMap = new Map<string, number>();
 
       const savedCommits = githubLoadCommits();
 
@@ -36,11 +37,27 @@ export const useCellsData = () => {
             const registerDay = registerDate.startOf('day');
 
             if (!commitDay.isBefore(registerDay)) {
-               const key = commitDay.toISOString();
-               commitMap.set(key, (commitMap.get(key) || 0) + 1);
+               const key = commitDay.toDate().toISOString();
+               activitiesMap.set(key, (activitiesMap.get(key) || 0) + 1);
             }
          });
       });
+
+      const savedNotes: string | null = localStorage.getItem('notes');
+      if (savedNotes) {
+         const parsedNotes: INoteItem[] = JSON.parse(savedNotes).notes;
+
+         parsedNotes.forEach(note => {
+            if (note.status === 'completed' && note.completedDate) {
+               const noteDay = dayjs(note.completedDate).startOf('day');
+
+               if (!noteDay.isBefore(registerDate.startOf('day'))) {
+                  const key = noteDay.toDate().toISOString();
+                  activitiesMap.set(key, (activitiesMap.get(key) || 0) + 1);
+               }
+            }
+         })
+      }
 
       const startDate = dayjs().startOf('year');
 
@@ -48,10 +65,10 @@ export const useCellsData = () => {
 
       const cellItems = Array.from({ length: totalCells }, (_, i) => {
          const day = startDate.add(i, 'day');
-         const key = day.toISOString();
+         const key = day.toDate().toISOString();
          const registerDay = registerDate.startOf('day');
 
-         const activities = commitMap.get(key) || 0;
+         const activities = activitiesMap.get(key) || 0;
 
          return { day: key, activities: day.isBefore(registerDay) ? 0 : activities };
       });

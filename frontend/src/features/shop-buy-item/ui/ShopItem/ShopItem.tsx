@@ -21,20 +21,20 @@ const ShopItem: FC<IShopItemProps> = ({ id, name, cost, description, image, isAu
       if (isPending || isError) return;
 
       if (!isAuthed) {
-         notifyPurchase('Нет доступа', 'Пожалуйста, авторизуйтесь для покупки', 'error');
+         notifyPurchase('Пожалуйста, авторизуйтесь для покупки', 'error');
          return;
       }
 
       try {
          const result = await buyItem({ itemId: id });
-         notifyPurchase('Успешная покупка', result.message, 'success');
+         notifyPurchase(result.message, 'success');
       }
       catch (err) {
          if (err instanceof Error) {
-            notifyPurchase('Ошибка', err.message, 'error');
+            notifyPurchase(err.message, 'error');
          }
          else {
-            notifyPurchase('Ошибка', 'Не удалось совершить покупку', 'error');
+            notifyPurchase('Не удалось совершить покупку', 'error');
          }
       }
    };

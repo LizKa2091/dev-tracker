@@ -28,7 +28,7 @@ export const useCompletedNoteNotification = () => {
 
       const xpToGain: number = difficulty === 'hard' ? 12 : 20;
 
-      addNotification({ noteTitle, message: 'Выполнено задание', date, xp: xpToGain });
+      addNotification({ noteTitle, message: 'Выполнено задание', type: 'success', date, xp: xpToGain });
    }
 
    return { notifyCompletedNote, removeNotification };

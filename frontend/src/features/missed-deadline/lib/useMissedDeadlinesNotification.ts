@@ -43,7 +43,8 @@ export const useMissedDeadlinesNotifications = () => {
                noteTitle: deadline.title,
                message: 'Просрочен дедлайн',
                date: deadline.dueToDate,
-               health: healthToLose
+               health: healthToLose,
+               type: 'error'
             });
 
             healthAction('remove');

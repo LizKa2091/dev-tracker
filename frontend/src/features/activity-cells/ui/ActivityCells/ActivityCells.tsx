@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import type { FC } from 'react';
 import { Flex } from 'antd';
 import { useCellsData } from '../../model/useCellsData';
@@ -12,7 +13,7 @@ const ActivityCells: FC = () => {
 
    return (
       <Flex vertical gap='large' className={styles.mainContainer}>
-         <h3>2025</h3>
+         <h3>За {dayjs().year()} год</h3>
          <p>{cellItems.reduce((acc, item) => acc + item.activities, 0)} выполненных заданий</p>
          <Flex gap='small' className={styles.calendar}>
             <Flex vertical>

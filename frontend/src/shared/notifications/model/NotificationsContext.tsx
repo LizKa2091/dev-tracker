@@ -20,10 +20,15 @@ const NotificationsContextProvider: FC<INotificationsContextProvider> = ({ child
 
    const addNotification = (notification: Omit<INotification, 'id'>): void => {
       nextNotifId.current++;
+      const notificationId = Date.now() + nextNotifId.current
       setNotificationsData(prev => [
          ...prev,
-         { ...notification, id: Date.now() + nextNotifId.current }
+         { ...notification, id: notificationId }
       ]);
+
+      setTimeout(() => {
+         removeNotification(notificationId);
+      }, 7000);
    };
 
    const removeNotification = (id: number): void => {

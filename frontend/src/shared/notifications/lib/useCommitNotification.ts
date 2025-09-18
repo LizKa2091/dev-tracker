@@ -26,7 +26,7 @@ export const useCommitNotifications = () => {
    const notifyCommit = (repName: string, date: string) => {
       const xpToGain: number = difficulty === 'hard' ? 12 : 20;
 
-      addNotification({ repName, message: `Новый коммит в ${repName}`, date, xp: xpToGain })
+      addNotification({ repName, message: `Новый коммит в ${repName}`, date, type: 'info', xp: xpToGain })
    };
 
    return { notifyCommit, removeNotification };

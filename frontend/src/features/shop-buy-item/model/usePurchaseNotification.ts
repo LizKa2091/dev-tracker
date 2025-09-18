@@ -4,8 +4,8 @@ import type { NotificationType } from "../../../shared/notifications/notificatio
 export const usePurchaseNotification = () => {
    const { addNotification, removeNotification } = NotificationsExports.useNotifications();
 
-   const notifyPurchase = (title: string, message: string, type: NotificationType) => {
-      addNotification({ notificationTitle: title, message, type });
+   const notifyPurchase = (title: string, type: NotificationType) => {
+      addNotification({ notificationTitle: title, message: '', type });
    }
 
    return { notifyPurchase, removeNotification };

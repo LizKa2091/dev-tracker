@@ -41,6 +41,7 @@ interface User {
    difficulty: 'default' | 'hard';
    health: number;
    refreshToken?: string;
+   registrationDate: string;
 }
 
 const users: Record<string, User> = {};
@@ -95,7 +96,7 @@ app.post('/register', (req: Request, res: Response): void => {
       return;
    }
 
-   users[email] = { email, password, name, xp: 0, difficulty: 'default', health: 50 };
+   users[email] = { email, password, name, xp: 0, difficulty: 'default', health: 50, registrationDate: new Date().toISOString() };
    res.status(201).json({ message: 'Пользователь зарегистрирован' });
 });
 
@@ -279,6 +280,7 @@ app.get('/me', authenticateToken, (req: Request, res: Response): void => {
       profilePic: user.profilePic ? `http://localhost:5001/${user.profilePic}` : null,
       difficulty: user.difficulty,
       health: user.health,
+      registrationDate: user.registrationDate,
       ...levelData
    });
 });

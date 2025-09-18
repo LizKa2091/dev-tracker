@@ -11,6 +11,7 @@ export interface INoteItem {
    key: string;
    formattedDescription?: string;
    status: taskStatus;
+   completedDate?: string;
 }
 
 export type NewNoteFormData = {

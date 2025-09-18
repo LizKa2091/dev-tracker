@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import type { INoteItem } from "../../../features/notes/noteTypes";
 
 export const changeNoteStatus = (noteKey: string): string | void => {
@@ -10,6 +11,7 @@ export const changeNoteStatus = (noteKey: string): string | void => {
    
    const newStatus = currNote[0].status === 'completed' ? 'active' : 'completed';
    currNote[0].status = newStatus;
+   currNote[0].completedDate = dayjs().toISOString();
    
    const notesToSave = { notes: [...noteItems.filter(note => note.key !== noteKey), ...currNote] };
    

@@ -1,0 +1,39 @@
+.container {
+   border: 1px solid $activity-level-5;
+   border-radius: 5px;
+   background-color: $activity-level-5;
+   width: 15px;
+   height: 15px;
+}
+
+.hidden {
+   border-color: $activity-hidden;
+   background-color: $activity-hidden;
+   opacity: 0.55;
+}
+
+.level0 {
+   background-color: $activity-level-0;
+   border-color: $activity-level-0;
+   opacity: 0.85;
+}
+.level1 {
+   background-color: $activity-level-1;
+   border-color: $activity-level-1;
+}
+.level2 {
+   background-color: $activity-level-2;
+   border-color: $activity-level-2;
+}
+.level3 {
+   background-color: $activity-level-3;
+   border-color: $activity-level-3;
+}
+.level4 {
+   background-color: $activity-level-4;
+   border-color: $activity-level-4;
+}
+.level5 {
+   background-color: $activity-level-5;
+   border-color: $activity-level-5;
+}

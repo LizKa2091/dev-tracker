@@ -7,6 +7,7 @@ export interface IUserDataResponse {
    profilePic: string | null;
    difficulty: Difficulty;
    health: number;
+   registrationDate: string;
 };
 
 export type Difficulty = 'default' | 'hard';

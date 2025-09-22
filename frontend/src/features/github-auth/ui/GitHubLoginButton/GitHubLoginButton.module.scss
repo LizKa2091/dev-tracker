@@ -1,3 +1,9 @@
 .button svg {
    fill: #fff;
 }
+
+@media (max-width: 767px) {
+   .button {
+      font-size: 0.75rem;
+   }
+}

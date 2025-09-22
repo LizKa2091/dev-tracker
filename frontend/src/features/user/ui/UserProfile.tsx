@@ -15,7 +15,7 @@ const UserProfile: FC = () => {
    return (
       <Flex vertical gap='middle' className={styles.userInfoContainer}>
          <Flex align='center' gap='middle'>
-            <Avatar size={48} src={data?.profilePic ? data?.profilePic : <UserOutlined />} />
+            <Avatar size={36} src={data?.profilePic ? data?.profilePic : <UserOutlined />} />
             <p className={styles.nickname}>{isLoading ? 'Загрузка...' : data?.name || 'Гость' }</p>
          </Flex>
          <GitHubLoginButton />

@@ -19,3 +19,15 @@
       color: $xp-icon;
    }
 }
+
+@media (max-width: 767px) {
+   .userInfoContainer {
+      padding: 10px 5px;
+   }
+}
+
+@media (max-width: 400px) {
+   .nickname {
+      font-size: 0.9rem;
+   }
+}

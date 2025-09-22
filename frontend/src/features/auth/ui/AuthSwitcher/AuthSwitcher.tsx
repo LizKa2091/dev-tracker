@@ -28,16 +28,16 @@ const AuthSwitcher: FC = () => {
          {authForm()}
 
          {authMode === 'login' &&
-            <Flex gap='middle'>
-               <Button onClick={() => setAuthMode('register')} color="default" variant="filled">Нет аккаунта? Зарегистрироваться</Button>
-               <Button onClick={() => setAuthMode('forgot')} color="default" variant="filled">Восстановить пароль</Button>
+            <Flex gap='middle' className={styles.buttonsContainer}>
+               <Button onClick={() => setAuthMode('register')} color="default" variant="filled" className={styles.button}>Нет аккаунта? Зарегистрироваться</Button>
+               <Button onClick={() => setAuthMode('forgot')} color="default" variant="filled" className={styles.button}>Восстановить пароль</Button>
             </Flex>
          }
          {authMode === 'register' &&
-            <Button onClick={() => setAuthMode('login')} color="default" variant="filled">Уже есть аккаунт? Войти</Button>
+            <Button onClick={() => setAuthMode('login')} color="default" variant="filled" className={styles.button}>Уже есть аккаунт? Войти</Button>
          }
          {authMode === 'forgot' &&
-            <Button onClick={() => setAuthMode('login')} color="default" variant="filled">Вернуться ко входу в аккаунт</Button>
+            <Button onClick={() => setAuthMode('login')} color="default" variant="filled" className={styles.button}>Вернуться ко входу в аккаунт</Button>
          }
       </Flex>
    )

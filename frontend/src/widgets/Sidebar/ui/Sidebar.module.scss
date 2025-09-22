@@ -1,6 +1,22 @@
 .sider {
    background-color: $main-bg-black;
+
+   .ant-menu-item {
+      .ant-menu-title-content {
+         min-width: 0;
+         overflow: hidden;
+
+         a {
+            display: block;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            color: #fff;
+         }
+      }
+   }
 }
+
 .logo {
    font-size: 2rem;
    text-align: center;
@@ -9,16 +25,14 @@
 .menu {
    background-color: $main-bg-black;
 
-   :global {
-      .ant-menu-item {
-         transition: none !important;
+   .ant-menu-item {
+      transition: none !important;
 
-         &:active {
-            background: transparent !important;
-         }
-         &-selected {
-            background-color: $main-bg-black;
-         }
+      &:active {
+         background: transparent !important;
+      }
+      &-selected {
+         background-color: $main-bg-black;
       }
    }
 }
@@ -27,10 +41,8 @@
    background-color: inherit;
    margin: 20px;
 
-   :global {
-      .ant-btn-text:active {
-         background-color: inherit;
-      }
+   .ant-btn-text:active {
+      background-color: inherit;
    }
 }
 .logout {
@@ -38,9 +50,19 @@
    background-color: inherit;
    margin: 20px;
 
-   :global {
-      .ant-btn-text:active {
-         background-color: inherit;
-      }
+   .ant-btn-text:active {
+      background-color: inherit;
+   }
+}
+
+@media (max-width: 767px) {
+   .logo {
+      font-size: 1.5rem;
+   }
+}
+
+@media (max-width: 400px) {
+   .logo {
+      font-size: 1.25rem;
    }
 }

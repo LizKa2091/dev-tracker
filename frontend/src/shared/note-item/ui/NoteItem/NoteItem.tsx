@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import { useEffect, useState, type FC } from 'react'
 import type { INoteItem } from '../../../../features/notes/noteTypes';
 import { Badge, Button, Card, Flex, Space, Tag } from 'antd';
-import { DeleteOutlined } from '@ant-design/icons';
+import { CheckOutlined, DeleteOutlined } from '@ant-design/icons';
 import { changeNoteStatus } from '../../model/changeNoteStatus';
 import { useXpAction } from '../../model/useXpAction';
 import { useHealthAction } from '../../model/useHealthAction';
@@ -77,9 +77,14 @@ const NoteItem: FC<INoteItemProps> = ({ noteItemData, handleDeleteNote, disabled
 
    return (
       <Card title={
-            <Flex align='center' gap='small'>
-               {currNote.title}
-               <EditField value={currNote.title} field='title' note={currNote} onSave={handleUpdateNote} />
+            <Flex align='center' gap='small' className={styles.cardTitle}>
+               <p>{currNote.title}</p>
+               <EditField 
+                  value={currNote.title} 
+                  field='title' 
+                  note={currNote} 
+                  onSave={handleUpdateNote} 
+               />
             </Flex>
          }
          extra={
@@ -92,11 +97,24 @@ const NoteItem: FC<INoteItemProps> = ({ noteItemData, handleDeleteNote, disabled
                   isCompleted ? (
                      <p className={styles.completed}>Выполнено</p>
                ) : (
-                  <Button onClick={() => handleChangeStatus(currNote.key)} disabled={disabled} className={styles.markButton}>Пометить как выполненное</Button>
+                  <Button 
+                     onClick={() => handleChangeStatus(currNote.key)} 
+                     disabled={disabled}
+                     icon={<CheckOutlined />}
+                     className={styles.markButton}
+                  >
+                     <p>Пометить как выполненное</p>
+                  </Button>
                ))}
 
-               <Button danger onClick={handleButtonDelete} icon={<DeleteOutlined />} disabled={disabled} className={styles.delButton}>
-                  {isConfirmed === null ? 'Удалить' : isConfirmed === false ? 'Вы уверены?' : ''}
+               <Button 
+                  danger 
+                  onClick={handleButtonDelete} 
+                  icon={<DeleteOutlined />} 
+                  disabled={disabled} 
+                  className={styles.delButton}
+               >
+                  <p>{isConfirmed === null ? 'Удалить' : isConfirmed === false ? 'Вы уверены?' : ''}</p>
                </Button>
             </Space>
          }
@@ -106,21 +124,41 @@ const NoteItem: FC<INoteItemProps> = ({ noteItemData, handleDeleteNote, disabled
             {currNote.formattedDescription ? (
                <Flex align='center' gap='small'>
                   <div dangerouslySetInnerHTML={{ __html: currNote.formattedDescription }} />
-                  <EditField value={currNote.description || ''} field='description' note={currNote} onSave={handleUpdateNote} />
+                  <EditField 
+                     value={currNote.description || ''} 
+                     field='description' 
+                     note={currNote} 
+                     onSave={handleUpdateNote} 
+                  />
                </Flex>
             ) : (
                <Flex align='center' gap='small'>
                   <p className={styles.cardDetail}>{currNote.description || 'Нет описания'}</p>
-                  <EditField value={currNote.description || ''} field='description' note={currNote} onSave={handleUpdateNote} />
+                  <EditField 
+                     value={currNote.description || ''} 
+                     field='description' 
+                     note={currNote} 
+                     onSave={handleUpdateNote} 
+                  />
                </Flex>
             )}
             <Flex align='center' gap='small'>
                <p className={styles.cardDetail}>Выполнить до: {dayjs(currNote.dueToDate).format('DD.MM.YYYY')}</p>
-               <EditField value={String(currNote.dueToDate)} field='dueToDate' note={currNote} onSave={handleUpdateNote} />
+               <EditField 
+                  value={String(currNote.dueToDate)} 
+                  field='dueToDate' 
+                  note={currNote} 
+                  onSave={handleUpdateNote} 
+               />
             </Flex>
             <Space>
                {currNote.tags?.map(tag => 
-                  <Badge key={tag.key} color={tag.color || '#888'} text={tag.value} className={styles.badge} />
+                  <Badge 
+                     key={tag.key} 
+                     color={tag.color || '#888'} 
+                     text={tag.value} 
+                     className={styles.badge} 
+                  />
                )}
             </Space>
          </Space>
@@ -128,4 +166,4 @@ const NoteItem: FC<INoteItemProps> = ({ noteItemData, handleDeleteNote, disabled
    )
 }
 
-export default NoteItem;
+export default NoteItem

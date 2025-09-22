@@ -11,4 +11,4 @@ const HomeRoute: FC = () => {
    return <LandingPage />
 }
 
-export default HomeRoute;
+export default HomeRoute

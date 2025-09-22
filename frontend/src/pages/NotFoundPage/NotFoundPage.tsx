@@ -1,24 +1,17 @@
 import { type FC } from 'react';
-import { Flex, Layout } from 'antd';
-import Sidebar from '../../widgets/Sidebar/ui/Sidebar';
 import { Link } from 'react-router-dom';
-import Notifications from '../../shared/notifications/ui/Notifications/Notifications';
-
-const { Content } = Layout;
+import { Flex } from 'antd';
+import MainLayout from '../../app/MainLayout';
 
 const NotFoundPage: FC = () => {
    return (
-      <Layout className='mainLayout'>
-         <Sidebar />
-         <Content className='content'>
-            <Flex vertical justify='center' align='center' gap='large'>
-               <h2 className='title'>Страница не найдена</h2>
-               <Link to='/'>Вернуться домой</Link>
-            </Flex>
-         </Content>
-         <Notifications />
-      </Layout>
+      <MainLayout>
+         <Flex vertical justify='center' align='center' gap='large'>
+            <h2 className='title'>Страница не найдена</h2>
+            <Link to='/'>Вернуться домой</Link>
+         </Flex>
+      </MainLayout>
    )
 }
 
-export default NotFoundPage;
+export default NotFoundPage

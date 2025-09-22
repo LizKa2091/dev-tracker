@@ -1,24 +1,17 @@
 import type { FC } from 'react';
-import { Flex, Layout } from 'antd';
-import Sidebar from '../../widgets/Sidebar/ui/Sidebar';
+import { Flex } from 'antd';
+import MainLayout from '../../app/MainLayout';
 import DeadlineChart from '../../features/deadlines/ui/DeadlineChart';
-import Notifications from '../../shared/notifications/ui/Notifications/Notifications';
-
-const { Content } = Layout;
 
 const HomePage: FC = () => {
    return (
-      <Layout className='mainLayout'>
-         <Sidebar />
-         <Content className='content'>
-            <Flex vertical gap='large'>
-               <h2 className='title'>Главная</h2>
-               <DeadlineChart />
-            </Flex>
-         </Content>
-         <Notifications />
-      </Layout>
+      <MainLayout>
+         <Flex vertical gap='large'>
+            <h2 className='title'>Главная</h2>
+            <DeadlineChart />
+         </Flex>
+      </MainLayout>
    )
 }
    
-export default HomePage;
+export default HomePage

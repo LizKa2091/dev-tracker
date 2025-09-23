@@ -20,9 +20,18 @@
    }
 }
 
+.nickname {
+   overflow: hidden;
+   white-space: nowrap;
+   text-overflow: ellipsis;
+}
+
 @media (max-width: 767px) {
    .userInfoContainer {
       padding: 10px 5px;
+   }
+   .nickname {
+      font-size: 0.8rem;
    }
 }
 

@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { useEffect, useState, type FC } from 'react'
 import type { INoteItem } from '../../../../features/notes/noteTypes';
-import { Badge, Button, Card, Flex, Space, Tag } from 'antd';
+import { Badge, Button, Card, Flex, Space, Tag, Grid } from 'antd';
 import { CheckOutlined, DeleteOutlined } from '@ant-design/icons';
 import { changeNoteStatus } from '../../model/changeNoteStatus';
 import { useXpAction } from '../../model/useXpAction';
@@ -11,6 +11,8 @@ import EditField from '../EditField/EditField';
 import AuthExports from '../../../context/AuthContext';
 import UndoProgress from '../UndoProgress/UndoProgress';
 import styles from './NoteItem.module.scss';
+
+const { useBreakpoint } = Grid;
 
 interface INoteItemProps {
    noteItemData: INoteItem;
@@ -24,6 +26,9 @@ const NoteItem: FC<INoteItemProps> = ({ noteItemData, handleDeleteNote, disabled
    const [isConfirmed, setIsConfirmed] = useState<boolean | null>(null);
    const [isCompleted, setIsCompleted] = useState<boolean>(noteItemData.status === 'completed');
    const [displayUndo, setDisplayUndo] = useState<boolean>(false);
+   const screens = useBreakpoint();
+
+   const isMobile = !screens.md;
 
    const { notifyCompletedNote } = useCompletedNoteNotification();
 
@@ -77,6 +82,7 @@ const NoteItem: FC<INoteItemProps> = ({ noteItemData, handleDeleteNote, disabled
 
    return (
       <Card title={
+         <Flex align={isMobile ? 'center' : 'flex-start'} vertical gap='small'>
             <Flex align='center' gap='small' className={styles.cardTitle}>
                <p>{currNote.title}</p>
                <EditField 
@@ -86,37 +92,75 @@ const NoteItem: FC<INoteItemProps> = ({ noteItemData, handleDeleteNote, disabled
                   onSave={handleUpdateNote} 
                />
             </Flex>
+            {isMobile &&
+               <Space className={styles.spaceExtra}>
+                  <Tag color='blue'>{currNote.type}</Tag>
+
+                  {isCompleted && displayUndo ? (
+                     <UndoProgress duration={3000} onComplete={handleCompleteUndo} onCancel={handleCancelUndo} />
+                  ) : (
+                     isCompleted ? (
+                        <p className={styles.completed}>
+                           {isMobile ? <CheckOutlined /> : 'Выполнено'}
+                        </p>
+                  ) : (
+                     <Button 
+                        onClick={() => handleChangeStatus(currNote.key)} 
+                        disabled={disabled}
+                        icon={<CheckOutlined />}
+                        className={styles.markButton}
+                     >
+                        <p>Пометить как выполненное</p>
+                     </Button>
+                  ))}
+
+                  <Button 
+                     danger 
+                     onClick={handleButtonDelete} 
+                     icon={<DeleteOutlined />} 
+                     disabled={disabled} 
+                     className={styles.delButton}
+                  >
+                     <p>{isConfirmed === null ? 'Удалить' : isConfirmed === false ? 'Вы уверены?' : ''}</p>
+                  </Button>
+               </Space>
+            }
+         </Flex>
          }
          extra={
-            <Space className={styles.spaceExtra}>
-               <Tag color='blue'>{currNote.type}</Tag>
+            !isMobile && (
+               <Space className={styles.spaceExtra}>
+                  <Tag color='blue'>{currNote.type}</Tag>
 
-               {isCompleted && displayUndo ? (
-                  <UndoProgress duration={3000} onComplete={handleCompleteUndo} onCancel={handleCancelUndo} />
-               ) : (
-                  isCompleted ? (
-                     <p className={styles.completed}>Выполнено</p>
-               ) : (
+                  {isCompleted && displayUndo ? (
+                     <UndoProgress duration={3000} onComplete={handleCompleteUndo} onCancel={handleCancelUndo} />
+                  ) : (
+                     isCompleted ? (
+                        <p className={styles.completed}>
+                           {isMobile ? <CheckOutlined /> : 'Выполнено'}
+                        </p>
+                  ) : (
+                     <Button 
+                        onClick={() => handleChangeStatus(currNote.key)} 
+                        disabled={disabled}
+                        icon={<CheckOutlined />}
+                        className={styles.markButton}
+                     >
+                        <p>Пометить как выполненное</p>
+                     </Button>
+                  ))}
+
                   <Button 
-                     onClick={() => handleChangeStatus(currNote.key)} 
-                     disabled={disabled}
-                     icon={<CheckOutlined />}
-                     className={styles.markButton}
+                     danger 
+                     onClick={handleButtonDelete} 
+                     icon={<DeleteOutlined />} 
+                     disabled={disabled} 
+                     className={styles.delButton}
                   >
-                     <p>Пометить как выполненное</p>
+                     <p>{isConfirmed === null ? 'Удалить' : isConfirmed === false ? 'Вы уверены?' : ''}</p>
                   </Button>
-               ))}
-
-               <Button 
-                  danger 
-                  onClick={handleButtonDelete} 
-                  icon={<DeleteOutlined />} 
-                  disabled={disabled} 
-                  className={styles.delButton}
-               >
-                  <p>{isConfirmed === null ? 'Удалить' : isConfirmed === false ? 'Вы уверены?' : ''}</p>
-               </Button>
-            </Space>
+               </Space>
+            )
          }
          className={currNote.tags?.length ? styles.card : ''}
       >

@@ -55,3 +55,11 @@ code {
       display: none;
    }
 }
+
+@media (max-width: 767px) {
+   .editableRow {
+      &:has([data-editing='true']) {
+         flex-direction: column;
+      }
+   }
+}

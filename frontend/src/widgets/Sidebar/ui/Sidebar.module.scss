@@ -11,7 +11,7 @@
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
-            color: #fff;
+            color: $sidebar-item-white;
          }
       }
    }
@@ -26,6 +26,7 @@
    background-color: $main-bg-black;
 
    .ant-menu-item {
+      color: $sidebar-item-white;
       transition: none !important;
 
       &:active {

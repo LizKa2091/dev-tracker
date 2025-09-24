@@ -82,7 +82,7 @@ const NoteItem: FC<INoteItemProps> = ({ noteItemData, handleDeleteNote, disabled
 
    return (
       <Card title={
-         <Flex align={isMobile ? 'center' : 'flex-start'} vertical gap='small'>
+         <Flex align={isMobile ? 'center' : 'flex-start'} vertical gap='small' wrap>
             <Flex align='center' gap='small' className={`${styles.cardTitle} ${styles.editableRow}`}>
                <p>{currNote.title}</p>
                <EditField 
@@ -166,7 +166,7 @@ const NoteItem: FC<INoteItemProps> = ({ noteItemData, handleDeleteNote, disabled
       >
          <Space direction='vertical'>
             {currNote.formattedDescription ? (
-               <Flex align='center' gap='small' className={styles.editableRow}>
+               <Flex align='center' gap='small' wrap className={styles.editableRow}>
                   <div dangerouslySetInnerHTML={{ __html: currNote.formattedDescription }} />
                   <EditField 
                      value={currNote.description || ''} 
@@ -176,7 +176,7 @@ const NoteItem: FC<INoteItemProps> = ({ noteItemData, handleDeleteNote, disabled
                   />
                </Flex>
             ) : (
-               <Flex align='center' gap='small' className={styles.editableRow}>
+               <Flex align='center' gap='small' wrap className={styles.editableRow}>
                   <p className={styles.cardDetail}>{currNote.description || 'Нет описания'}</p>
                   <EditField 
                      value={currNote.description || ''} 
@@ -186,7 +186,7 @@ const NoteItem: FC<INoteItemProps> = ({ noteItemData, handleDeleteNote, disabled
                   />
                </Flex>
             )}
-            <Flex align='center' gap='small' className={styles.editableRow}>
+            <Flex align='center' gap='small' wrap className={styles.editableRow}>
                <p className={styles.cardDetail}>Выполнить до: {dayjs(currNote.dueToDate).format('DD.MM.YYYY')}</p>
                <EditField 
                   value={String(currNote.dueToDate)} 

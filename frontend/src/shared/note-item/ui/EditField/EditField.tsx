@@ -60,7 +60,7 @@ const EditField: FC<IEditFieldProps> = ({ value, field, note, onSave }) => {
    }
 
    return (
-      <Flex data-editing='true' className={styles.editContainer}>
+      <Flex vertical={isMobile && field === 'description'} data-editing='true' className={styles.editContainer}>
          {field === 'description' ? (
             <MarkdownTextarea value={tempVal} onChange={(val: string) => setTempVal(val)} onFormattedChange={(formVal) => setFormattedVal(formVal)} />
          ) : (
@@ -69,8 +69,10 @@ const EditField: FC<IEditFieldProps> = ({ value, field, note, onSave }) => {
                      ) : (
                         <Input value={tempVal} onChange={(e) => setTempVal(e.target.value)} />
          ))}
-         <Button size={isMobile ? 'middle' : 'small'} icon={<CheckOutlined />} onClick={handleSave} />
-         <Button size={isMobile ? 'middle' : 'small'} icon={<CloseOutlined />} onClick={handleCancel} />
+         <Flex>
+            <Button size={isMobile ? 'middle' : 'small'} icon={<CheckOutlined />} onClick={handleSave} />
+            <Button size={isMobile ? 'middle' : 'small'} icon={<CloseOutlined />} onClick={handleCancel} />
+         </Flex>
       </Flex>
    )
 }

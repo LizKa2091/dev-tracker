@@ -13,15 +13,15 @@ const ActivityCells: FC = () => {
    const { cellItems } = useCellsData();
    const { weeks, maxActivities } = useCellsGrid(cellItems);
    const screens = useBreakpoint();
-   const isMobile = !screens.md;
+   const isNarrowScreen = !screens.lg;
 
    return (
       <Flex vertical gap='large' className={styles.mainContainer}>
          <h3>За {dayjs().year()} год</h3>
          <p>{cellItems.reduce((acc, item) => acc + item.activities, 0)} выполненных заданий</p>
 
-         {!isMobile ? (
-            <Flex gap='small' className={styles.calendar}>
+         {!isNarrowScreen ? (
+            <Flex gap='small' className={styles.activityContainer}>
                <Flex vertical>
                   {weekDays.map(day => (
                      <Flex key={day} className={styles.weekLabel}>
@@ -29,7 +29,7 @@ const ActivityCells: FC = () => {
                      </Flex>
                   ))}
                </Flex>
-               <Flex gap='small'>
+               <Flex justify='space-beetween' className={styles.cellsContainer}>
                   {weeks.map((week, wi) => (
                      <Flex key={wi} vertical gap="small" className={styles.weekColumn}>
                         {week.days.map((item, di) =>

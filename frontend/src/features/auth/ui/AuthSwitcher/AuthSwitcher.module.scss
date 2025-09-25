@@ -3,7 +3,7 @@
    border: 1px solid $container-bg;
    border-radius: 16px;
    padding: 12px;
-   width: clamp(0px, 100%, 550px);
+   width: clamp(470px, 100%, 550px);
 }
 .button span {
    display: inline-block;
@@ -12,6 +12,7 @@
 
 @media (max-width: 767px) {
    .mainContainer {
+      width: 100%;
       padding: 8px;
    }
    .buttonsContainer {

@@ -16,10 +16,14 @@ const GithubTimeline: FC<IGithubTimelineProps> = ({ segment }) => {
    }
 
    return (
-      repsToDisplay.map(repository =>
+      <Flex vertical gap='large'>
+         {repsToDisplay.map(repository =>
          repository.commits.map(commit => 
             <Card title={
-                  <Flex gap='middle' className={styles.cardTitle}><GithubOutlined />Коммит в репозитории: {repository.repositoryTitle}</Flex>
+                  <Flex gap='middle' className={styles.cardTitle}>
+                     <GithubOutlined />
+                     <p>Коммит в репозитории: {repository.repositoryTitle}</p>
+                  </Flex>
                }
                extra={commit.author.date.split('T')[0]}
                className={styles.card}
@@ -27,7 +31,8 @@ const GithubTimeline: FC<IGithubTimelineProps> = ({ segment }) => {
                {commit.message}
             </Card>
          )
-      )
+      )}
+      </Flex>
    )
 }
 

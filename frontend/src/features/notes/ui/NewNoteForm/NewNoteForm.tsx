@@ -1,15 +1,15 @@
+import dayjs from 'dayjs';
 import { useEffect, useState, type FC } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Form, Input, Button, Select, DatePicker, Flex } from 'antd';
-import type { NewNoteFormData } from '../../noteTypes';
 import { saveNote } from '../../model/noteStorage';
+import { loadUserTags } from '../../../settings/model/tagActions';
 import { typeOptions } from '../../model/constants';
 import MarkdownTextarea from '../../../../shared/markdown-textarea/ui/ui/MarkdownTextarea';
-import { loadUserTags } from '../../../settings/model/tagActions';
-import { type ITagItem } from '../../../settings/ui/Tags/tagTypes';
 import AuthExports from '../../../../shared/context/AuthContext';
 import TagSelect from '../TagSelect/TagSelect';
-import dayjs from 'dayjs';
+import type { NewNoteFormData } from '../../noteTypes';
+import { type ITagItem } from '../../../settings/ui/Tags/tagTypes';
 import styles from './NewNoteForm.module.scss';
 
 interface INewNoteFormProps {
@@ -22,6 +22,7 @@ const NewNoteForm: FC<INewNoteFormProps> = ({ isNoteSaved, setIsNoteSaved }) => 
    const [userTags, setUserTags] = useState<ITagItem[]>();
    const [formattedDescription, setFormattedDescription] = useState<string>('');
    const { handleSubmit, control, formState: { errors }, trigger } = useForm<NewNoteFormData>();
+
 
    useEffect(() => {
       if (token) {
@@ -60,7 +61,7 @@ const NewNoteForm: FC<INewNoteFormProps> = ({ isNoteSaved, setIsNoteSaved }) => 
    };
 
    return (
-      <Flex vertical align='center' className={styles.container}>
+      <Flex vertical align='center' className={styles.mainContainer}>
          <Form onFinish={onFinish} className={styles.form}>
             <Form.Item label='Название' required validateStatus={errors.title ? 'error' : ''} help={errors.title && 'Обязательное поле'} className={styles.formItem}>
                <Controller name='title' control={control} rules={{ required: true }} render={({ field }) => 

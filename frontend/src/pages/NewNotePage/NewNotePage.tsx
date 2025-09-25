@@ -1,24 +1,17 @@
 import { type FC } from 'react';
-import { Flex, Layout } from 'antd';
-import Sidebar from '../../widgets/Sidebar/ui/Sidebar';
+import { Flex } from 'antd';
+import MainLayout from '../../app/MainLayout';
 import NewNote from '../../features/notes/ui/NewNote/NewNote';
-import Notifications from '../../shared/notifications/ui/Notifications/Notifications';
-
-const { Content } = Layout;
 
 const NewNotePage: FC = () => {
    return (
-      <Layout className='mainLayout'>
-         <Sidebar />
-         <Content className='content'>
-            <Flex vertical gap='large'>
-               <h2 className='title'>Новая запись</h2>
-               <NewNote />
-            </Flex>
-         </Content>
-         <Notifications />
-      </Layout>
+      <MainLayout>
+         <Flex vertical gap='large'>
+            <h2 className='title'>Новая запись</h2>
+            <NewNote />
+         </Flex>
+      </MainLayout>
    )
 }
 
-export default NewNotePage;
+export default NewNotePage

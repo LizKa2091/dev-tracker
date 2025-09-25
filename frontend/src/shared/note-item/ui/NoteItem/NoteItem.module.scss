@@ -2,17 +2,19 @@
    &Detail {
       color: $card-text-black;
    }
-   :global {
-      .ant-card-body {
-         padding: 15px 24px 0;
-      }
+   &Title p {
+      color: $card-text-black;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+   }
+   .ant-card-body {
+      padding: 15px 24px 0;
    }
 }
-.editButton {
-   :global {
-      .ant-btn span {
-         color: $card-text-black;
-      }
+.markButton {
+   p, span {
+      color: $mark-completed-button;
    }
 }
 .spaceExtra {
@@ -22,20 +24,8 @@
    .completed {
       color: $completed-status;
    }
-   :global {
-      .anticon-edit {
-         color: $mark-completed-button;
-      }
-   }
-}
-.spaceExtra {
-   :global {
-      .ant-btn span {
-         color: $button-delete-red;
-      }
-      .ant-btn-icon span {
-         color: $button-delete-red;
-      }
+   .delButton span, .delButton p {
+      color: $button-delete-red; 
    }
 }
 code {
@@ -58,4 +48,18 @@ code {
 }
 .badge {
    margin-bottom: 10px;
+}
+
+@media (max-width: 1023px) {
+   .markButton p, .delButton p {
+      display: none;
+   }
+}
+
+@media (max-width: 767px) {
+   .editableRow {
+      &:has([data-editing='true']) {
+         flex-direction: column;
+      }
+   }
 }

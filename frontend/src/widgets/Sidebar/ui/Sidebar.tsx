@@ -1,7 +1,7 @@
 import type { FC } from 'react';
-import { Button, Flex, Layout, Menu } from 'antd';
-import { HistoryOutlined, FormOutlined, BarChartOutlined, SettingOutlined, LogoutOutlined, LoginOutlined, ShopFilled, ShopOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from 'react-router-dom';
+import { Button, Flex, Grid, Layout, Menu } from 'antd';
+import { HistoryOutlined, FormOutlined, BarChartOutlined, SettingOutlined, LogoutOutlined, LoginOutlined, ShopOutlined } from "@ant-design/icons";
 import AuthExports from '../../../shared/context/AuthContext';
 import UserProfile from '../../../features/user/ui/UserProfile';
 import IncomingDeadline from '../../../features/incoming-deadline/ui/IncomingDeadline';
@@ -9,6 +9,7 @@ import styles from './Sidebar.module.scss';
 
 const { Sider } = Layout;
 const { useAuthContext } = AuthExports;
+const { useBreakpoint } = Grid;
 
 const menuItems = [
    { key: 'timeline', path: '/timeline', icon: <HistoryOutlined style={{ color: '#ffffff' }} />, label: <Link to='/timeline'>Таймлайн</Link> },
@@ -22,6 +23,7 @@ const Sidebar: FC = () => {
    const { token } = AuthExports.useAuthContext();
    const { logout } = useAuthContext();
    const navigate = useNavigate();
+   const screens = useBreakpoint();
 
    const handleLogout = (): void => {
       if (token) {
@@ -29,10 +31,12 @@ const Sidebar: FC = () => {
 
          navigate('/');
       }
-   };
+   }
+
+   const isMobile = !screens.md;
 
    return (
-      <Sider className={styles.sider}>
+      <Sider width={isMobile ? 140 : 200} collapsedWidth={0} breakpoint='md' className={styles.sider}>
          <Flex vertical className={styles.siderContainer}>
             <h1 className={styles.logo}>
                <Link to='/'>DevTracker</Link>
@@ -54,4 +58,4 @@ const Sidebar: FC = () => {
    )
 }
 
-export default Sidebar;
+export default Sidebar

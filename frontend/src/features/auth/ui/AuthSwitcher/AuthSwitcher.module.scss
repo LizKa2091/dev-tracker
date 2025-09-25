@@ -3,6 +3,19 @@
    border: 1px solid $container-bg;
    border-radius: 16px;
    padding: 12px;
-   width: fit-content;
-   min-width: 500px;
+   width: clamp(470px, 100%, 550px);
+}
+.button span {
+   display: inline-block;
+   white-space: normal;
+}
+
+@media (max-width: 767px) {
+   .mainContainer {
+      width: 100%;
+      padding: 8px;
+   }
+   .buttonsContainer {
+      flex-direction: column;
+   }
 }

@@ -5,8 +5,10 @@
    min-height: 100dvh;
 }
 .content {
+   display: flex;
    background-color: $content-bg-blue;
    padding: 20px 50px;
+   min-height: 100vh;
 
    .title {
       font-size: 1.75rem;

@@ -1,11 +1,13 @@
 import dayjs, { Dayjs } from 'dayjs';
-import { CheckOutlined, CloseOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, DatePicker, Flex, Input } from 'antd';
+import { Button, DatePicker, Flex, Input, Grid } from 'antd';
 import { useState, type FC } from 'react';
-import type { INoteItem } from '../../../../features/notes/noteTypes';
+import { CheckOutlined, CloseOutlined, EditOutlined } from '@ant-design/icons';
 import { updateNote } from '../../../../features/notes/model/noteStorage';
 import MarkdownTextarea from '../../../markdown-textarea/ui/ui/MarkdownTextarea';
+import type { INoteItem } from '../../../../features/notes/noteTypes';
 import styles from './EditField.module.scss';
+
+const { useBreakpoint } = Grid;
 
 interface IEditFieldProps {
    value: string;
@@ -19,6 +21,9 @@ const EditField: FC<IEditFieldProps> = ({ value, field, note, onSave }) => {
    const [tempVal, setTempVal] = useState<string>(value);
    const [tempDate, setTempDate] = useState<Dayjs | null>(field === 'dueToDate' && value ? dayjs(value) : null);
    const [formattedVal, setFormattedVal] = useState<string>(note.formattedDescription || '');
+
+   const screens = useBreakpoint();
+   const isMobile = !screens.md;
 
    const handleSave = (): void => {
       if (field === 'dueToDate') {
@@ -45,24 +50,31 @@ const EditField: FC<IEditFieldProps> = ({ value, field, note, onSave }) => {
 
    if (!isEditing) {
       return (
-         <Button size='small' icon={<EditOutlined />} onClick={() => setIsEditing(true)} className={styles.editButton} />
+         <Button 
+            size={isMobile ? 'middle' : 'small'} 
+            icon={<EditOutlined />} 
+            onClick={() => setIsEditing(true)} 
+            className={styles.editButton} 
+         />
       )
    }
 
    return (
-      <Flex>
+      <Flex vertical={isMobile && field === 'description'} data-editing='true' className={styles.editContainer}>
          {field === 'description' ? (
             <MarkdownTextarea value={tempVal} onChange={(val: string) => setTempVal(val)} onFormattedChange={(formVal) => setFormattedVal(formVal)} />
          ) : (
                field === 'dueToDate' ? (
                   <DatePicker value={tempDate} onChange={date => setTempDate(date)} />
                      ) : (
-                        <Input size='small' value={tempVal} onChange={(e) => setTempVal(e.target.value)} />
+                        <Input value={tempVal} onChange={(e) => setTempVal(e.target.value)} />
          ))}
-         <Button size='small' icon={<CheckOutlined />} onClick={handleSave} />
-         <Button size='small' icon={<CloseOutlined />} onClick={handleCancel} />
+         <Flex>
+            <Button size={isMobile ? 'middle' : 'small'} icon={<CheckOutlined />} onClick={handleSave} />
+            <Button size={isMobile ? 'middle' : 'small'} icon={<CloseOutlined />} onClick={handleCancel} />
+         </Flex>
       </Flex>
    )
 }
 
-export default EditField;
+export default EditField

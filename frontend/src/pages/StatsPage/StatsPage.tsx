@@ -1,24 +1,18 @@
-import { Flex, Layout } from 'antd';
+import { Flex } from 'antd';
 import type { FC } from 'react';
-import Sidebar from '../../widgets/Sidebar/ui/Sidebar';
-import Notifications from '../../shared/notifications/ui/Notifications/Notifications';
+import MainLayout from '../../app/MainLayout';
 import ActivityCells from '../../features/activity-cells/ui/ActivityCells/ActivityCells';
-
-const { Content } = Layout;
+import styles from './StatsPage.module.scss';
 
 const StatsPage: FC = () => {
    return (
-      <Layout className='mainLayout'>
-         <Sidebar />
-         <Content className='content'>
-            <Flex vertical gap='large'>
-               <h2 className='title'>Статистика</h2>
-               <ActivityCells />
-            </Flex>
-         </Content>
-         <Notifications />
-      </Layout>
+      <MainLayout>
+         <Flex vertical gap='large' className={styles.container}>
+            <h2 className='title'>Статистика</h2>
+            <ActivityCells />
+         </Flex>
+      </MainLayout>
    )
 }
 
-export default StatsPage;
+export default StatsPage

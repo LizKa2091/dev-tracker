@@ -1,5 +1,5 @@
+import { useState, type FC } from 'react';
 import { Button, Flex } from 'antd';
-import { useState, type FC } from 'react'
 import LoginForm from '../LoginForm/LoginForm';
 import RegisterForm from '../RegisterForm/RegisterForm';
 import ForgotPassForm from '../ForgotPassForm/ForgotPassForm';
@@ -21,26 +21,54 @@ const AuthSwitcher: FC = () => {
          default:
             return null;
       }
-   }
+   };
 
    return (
-      <Flex vertical gap='large' className={styles.mainContainer}>
+      <Flex vertical gap="large" className={styles.mainContainer}>
          {authForm()}
 
-         {authMode === 'login' &&
-            <Flex gap='middle'>
-               <Button onClick={() => setAuthMode('register')} color="default" variant="filled">Нет аккаунта? Зарегистрироваться</Button>
-               <Button onClick={() => setAuthMode('forgot')} color="default" variant="filled">Восстановить пароль</Button>
+         {authMode === 'login' && (
+            <Flex gap="middle" className={styles.buttonsContainer}>
+               <Button
+                  onClick={() => setAuthMode('register')}
+                  color="default"
+                  variant="filled"
+                  className={styles.button}
+               >
+                  Нет аккаунта? Зарегистрироваться
+               </Button>
+               <Button
+                  onClick={() => setAuthMode('forgot')}
+                  color="default"
+                  variant="filled"
+                  className={styles.button}
+               >
+                  Восстановить пароль
+               </Button>
             </Flex>
-         }
-         {authMode === 'register' &&
-            <Button onClick={() => setAuthMode('login')} color="default" variant="filled">Уже есть аккаунт? Войти</Button>
-         }
-         {authMode === 'forgot' &&
-            <Button onClick={() => setAuthMode('login')} color="default" variant="filled">Вернуться ко входу в аккаунт</Button>
-         }
+         )}
+         {authMode === 'register' && (
+            <Button
+               onClick={() => setAuthMode('login')}
+               color="default"
+               variant="filled"
+               className={styles.button}
+            >
+               Уже есть аккаунт? Войти
+            </Button>
+         )}
+         {authMode === 'forgot' && (
+            <Button
+               onClick={() => setAuthMode('login')}
+               color="default"
+               variant="filled"
+               className={styles.button}
+            >
+               Вернуться ко входу в аккаунт
+            </Button>
+         )}
       </Flex>
-   )
-}
+   );
+};
 
-export default AuthSwitcher
+export default AuthSwitcher;

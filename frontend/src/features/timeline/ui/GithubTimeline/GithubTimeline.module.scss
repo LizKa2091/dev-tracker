@@ -2,13 +2,29 @@
    background-color: $github-item-bg;
    border-color: $github-item-border;
    color: $github-item-text;
+   width: 100%;
+   max-width: 100%;
 
    &Title {
       color: $github-item-text;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
    }
    :global {
       .ant-card-extra {
          color: $github-item-text;
+      }
+      .ant-card-head-wrapper {
+         gap: 5px;
+      }
+      .ant-card-head-title p {
+         white-space: normal;
+         overflow: visible;
+      }
+      .ant-card-body {
+         white-space: normal;
+         overflow: visible;
       }
    }
 }

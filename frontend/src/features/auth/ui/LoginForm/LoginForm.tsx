@@ -1,9 +1,9 @@
 import { useLayoutEffect, useState, type FC } from 'react'
-import { Controller, useForm } from 'react-hook-form';
-import { type ILoginFormData } from '../../authTypes';
-import { Button, Flex, Form, Input } from 'antd';
-import AuthExports from '../../../../shared/context/AuthContext';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { Controller, useForm } from 'react-hook-form';
+import { Button, Flex, Form, Input } from 'antd';
+import { type ILoginFormData } from '../../authTypes';
+import AuthExports from '../../../../shared/context/AuthContext';
 import { initTags } from '../../../notes/model/initTags';
 import styles from './LoginForm.module.scss';
 

@@ -1,6 +1,5 @@
 .form {
-   min-width: 474px;
-   width: fit-content;
+   width: 100%;
 
    &Item {
       color: $main-text-white;
@@ -21,12 +20,13 @@
       }
    }
 }
-.container {
+.mainContainer {
    border: 2px solid $main-bg-black;
    border-radius: 16px;
    background-color: $settings-item-bg;
    padding: 15px;
-   width: fit-content;
+   width: 100%;
+   max-width: 650px;
 }
 .dateDisabled {
    :global {

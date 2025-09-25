@@ -19,16 +19,22 @@ declare global {
    namespace Express {
       interface Request {
          user?: JwtPayload;
+         file?: Express.Multer.File;
+         files?:
+            | { [fieldname: string]: Express.Multer.File[] }
+            | Express.Multer.File[];
       }
    }
 }
 
-app.use(cors({
-   origin: 'http://localhost:5173',
-   credentials: true
-}));
+app.use(
+   cors({
+      origin: 'http://localhost:5173',
+      credentials: true
+   })
+);
 
-app.use('/assets', express.static(path.resolve(__dirname, 'public/assets')))
+app.use('/assets', express.static(path.resolve(__dirname, 'public/assets')));
 app.use(cookieParser());
 app.use(bodyParser.json());
 
@@ -58,7 +64,11 @@ if (!ACCESS_SECRET || !REFRESH_SECRET) {
 // USER PROFILE
 // ===========
 
-const authenticateToken = (req: Request, res: Response, next: NextFunction): void => {
+const authenticateToken = (
+   req: Request,
+   res: Response,
+   next: NextFunction
+): void => {
    const authHeader = req.headers['authorization'];
    const token = authHeader && authHeader.split(' ')[1];
 
@@ -72,15 +82,19 @@ const authenticateToken = (req: Request, res: Response, next: NextFunction): voi
       return;
    }
 
-   jwt.verify(token, process.env.JWT_SECRET!, (err: VerifyErrors | null, decoded: string | JwtPayload | undefined) => {
-      if (err || !decoded || typeof decoded === 'string') {
-         res.status(403).json({ message: 'Неверный токен' });
-         return;
-      }
+   jwt.verify(
+      token,
+      process.env.JWT_SECRET!,
+      (err: VerifyErrors | null, decoded: string | JwtPayload | undefined) => {
+         if (err || !decoded || typeof decoded === 'string') {
+            res.status(403).json({ message: 'Неверный токен' });
+            return;
+         }
 
-      req.user = decoded;
-      next();
-   });
+         req.user = decoded;
+         next();
+      }
+   );
 };
 
 app.post('/register', (req: Request, res: Response): void => {
@@ -96,7 +110,15 @@ app.post('/register', (req: Request, res: Response): void => {
       return;
    }
 
-   users[email] = { email, password, name, xp: 0, difficulty: 'default', health: 50, registrationDate: new Date().toISOString() };
+   users[email] = {
+      email,
+      password,
+      name,
+      xp: 0,
+      difficulty: 'default',
+      health: 50,
+      registrationDate: new Date().toISOString()
+   };
    res.status(201).json({ message: 'Пользователь зарегистрирован' });
 });
 
@@ -115,11 +137,9 @@ app.post('/login', (req: Request, res: Response): void => {
       { expiresIn: '15m' }
    );
 
-   const refreshToken = jwt.sign(
-      { email: user.email },
-      REFRESH_SECRET!,
-      { expiresIn: '7d' }
-   );
+   const refreshToken = jwt.sign({ email: user.email }, REFRESH_SECRET!, {
+      expiresIn: '7d'
+   });
 
    users[email].refreshToken = refreshToken;
 
@@ -128,7 +148,7 @@ app.post('/login', (req: Request, res: Response): void => {
       secure: false,
       sameSite: 'lax',
       maxAge: 7 * 24 * 60 * 60 * 1000,
-      path: '/',
+      path: '/'
    });
 
    res.json({ token: accessToken, message: 'Успешный вход' });
@@ -142,39 +162,48 @@ app.post('/refresh', (req: Request, res: Response): void => {
       return;
    }
 
-   jwt.verify(tokenFromCookie, REFRESH_SECRET, (err: jwt.VerifyErrors | null, decoded: JwtPayload | string | undefined) => {
-      if (err || !decoded || typeof decoded === 'string') {
-         res.status(403).json({ message: 'Неверный refreshToken' });
-         return;
+   jwt.verify(
+      tokenFromCookie,
+      REFRESH_SECRET,
+      (
+         err: jwt.VerifyErrors | null,
+         decoded: JwtPayload | string | undefined
+      ) => {
+         if (err || !decoded || typeof decoded === 'string') {
+            res.status(403).json({ message: 'Неверный refreshToken' });
+            return;
+         }
+
+         const { email } = decoded as JwtPayload;
+         const user = users[email];
+
+         if (!user || user.refreshToken !== tokenFromCookie) {
+            res.status(403).json({ message: 'refreshToken не совпадает' });
+            return;
+         }
+
+         const newRefresh = jwt.sign({ email }, REFRESH_SECRET, {
+            expiresIn: '7d'
+         });
+         user.refreshToken = newRefresh;
+
+         const newAccess = jwt.sign(
+            { email: user.email, name: user.name },
+            ACCESS_SECRET,
+            { expiresIn: '15m' }
+         );
+
+         res.cookie('refreshToken', newRefresh, {
+            httpOnly: true,
+            sameSite: 'lax',
+            secure: false,
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+            path: '/'
+         });
+
+         res.json({ token: newAccess });
       }
-
-      const { email } = decoded as JwtPayload;
-      const user = users[email];
-
-      if (!user || user.refreshToken !== tokenFromCookie) {
-         res.status(403).json({ message: 'refreshToken не совпадает' });
-         return;
-      }
-
-      const newRefresh = jwt.sign({ email }, REFRESH_SECRET, { expiresIn: '7d' });
-      user.refreshToken = newRefresh;
-
-      const newAccess = jwt.sign(
-         { email: user.email, name: user.name },
-         ACCESS_SECRET,
-         { expiresIn: '15m' }
-      );
-
-      res.cookie('refreshToken', newRefresh, {
-         httpOnly: true,
-         sameSite: 'lax',
-         secure: false,
-         maxAge: 7 * 24 * 60 * 60 * 1000,
-         path: '/',
-      });
-
-      res.json({ token: newAccess });
-   });
+   );
 });
 
 app.post('/logout', authenticateToken, (req: Request, res: Response): void => {
@@ -192,7 +221,7 @@ app.post('/logout', authenticateToken, (req: Request, res: Response): void => {
       httpOnly: true,
       sameSite: 'lax',
       secure: false,
-      path: '/',
+      path: '/'
    });
 
    res.json({ message: 'Успешный выход' });
@@ -202,7 +231,7 @@ const passwordResetTokens: Record<string, string> = {};
 
 function generateResetToken() {
    return Math.random().toString(36).substring(2) + Date.now().toString(36);
-};
+}
 
 app.post('/forgot-password', (req: Request, res: Response) => {
    const { email } = req.body;
@@ -215,9 +244,9 @@ app.post('/forgot-password', (req: Request, res: Response) => {
    const resetToken = generateResetToken();
    passwordResetTokens[resetToken] = email;
 
-   res.json({ 
+   res.json({
       message: 'Токен для сброса пароля создан',
-      resetToken 
+      resetToken
    });
 });
 
@@ -277,7 +306,9 @@ app.get('/me', authenticateToken, (req: Request, res: Response): void => {
       email: user.email,
       name: user.name,
       xp: user.xp,
-      profilePic: user.profilePic ? `http://localhost:5001/${user.profilePic}` : null,
+      profilePic: user.profilePic
+         ? `http://localhost:5001/${user.profilePic}`
+         : null,
       difficulty: user.difficulty,
       health: user.health,
       registrationDate: user.registrationDate,
@@ -326,60 +357,70 @@ app.patch('/me', authenticateToken, (req: Request, res: Response): void => {
          email: updatedUser.email,
          name: updatedUser.name,
          xp: updatedUser.xp,
-         profilePic: user.profilePic ? `${req.protocol}://${req.get('host')}/${user.profilePic}` : null, 
+         profilePic: user.profilePic
+            ? `${req.protocol}://${req.get('host')}/${user.profilePic}`
+            : null,
          health: updatedUser.health,
          ...getLevelAndProgress(updatedUser.xp)
       }
    });
 });
 
-app.post('/me/change-password', authenticateToken, (req: Request, res: Response): void => {
-   const userEmail = req.user?.email;
-   const { oldPassword, newPassword } = req.body;
+app.post(
+   '/me/change-password',
+   authenticateToken,
+   (req: Request, res: Response): void => {
+      const userEmail = req.user?.email;
+      const { oldPassword, newPassword } = req.body;
 
-   if (!userEmail || !users[userEmail]) {
-      res.status(404).json({ message: 'Пользователь не найден' });
-      return;
+      if (!userEmail || !users[userEmail]) {
+         res.status(404).json({ message: 'Пользователь не найден' });
+         return;
+      }
+
+      const user = users[userEmail];
+
+      if (!oldPassword || !newPassword) {
+         res.status(400).json({ message: 'Старый и новый пароли обязательны' });
+         return;
+      }
+
+      if (user.password !== oldPassword) {
+         res.status(400).json({ message: 'Неверный старый пароль' });
+         return;
+      }
+
+      users[userEmail].password = newPassword;
+
+      res.json({ message: 'Пароль успешно изменён' });
    }
+);
 
-   const user = users[userEmail];
+app.patch(
+   '/me/difficulty',
+   authenticateToken,
+   (req: Request, res: Response): void => {
+      const userEmail = req.user?.email;
+      const { difficulty } = req.body;
 
-   if (!oldPassword || !newPassword) {
-      res.status(400).json({ message: 'Старый и новый пароли обязательны' });
-      return;
+      if (!userEmail || !users[userEmail]) {
+         res.status(404).json({ message: 'Пользователь не найден' });
+         return;
+      }
+
+      if (!['default', 'hard'].includes(difficulty)) {
+         res.status(400).json({ message: 'Недопустимый режим сложности' });
+         return;
+      }
+
+      users[userEmail].difficulty = difficulty as 'default' | 'hard';
+
+      res.json({
+         message: 'Режим сложности обновлён',
+         difficulty: users[userEmail].difficulty
+      });
    }
-
-   if (user.password !== oldPassword) {
-      res.status(400).json({ message: 'Неверный старый пароль' });
-      return;
-   }
-
-   users[userEmail].password = newPassword;
-
-   res.json({ message: 'Пароль успешно изменён' });
-});
-
-app.patch('/me/difficulty', authenticateToken, (req: Request, res: Response): void => {
-   const userEmail = req.user?.email;
-   const { difficulty } = req.body;
-
-   if (!userEmail || !users[userEmail]) {
-      res.status(404).json({ message: 'Пользователь не найден' });
-      return;
-   }
-
-   if (!['default', 'hard'].includes(difficulty)) {
-      res.status(400).json({ message: 'Недопустимый режим сложности' });
-      return;
-   }
-
-   users[userEmail].difficulty = difficulty as 'default' | 'hard';
-
-   res.json({
-      message: 'Режим сложности обновлён',
-      difficulty: users[userEmail].difficulty
-   });
-});
+);
 
 // ================
 // USER AVATAR
@@ -391,52 +432,73 @@ if (!fs.existsSync(uploadDir)) {
 }
 
 const storage = multer.diskStorage({
-   destination: (req, file, cb) => {
+   destination: (
+      req: Request,
+      file: Express.Multer.File,
+      cb: (error: Error | null, destination: string) => void
+   ) => {
       cb(null, uploadDir);
    },
-   filename: (req, file, cb) => {
+   filename: (
+      req: Request,
+      file: Express.Multer.File,
+      cb: (error: Error | null, filename: string) => void
+   ) => {
       const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-      cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+      cb(
+         null,
+         file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname)
+      );
    }
 });
 
-const fileFilter = (req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
+const fileFilter = (
+   req: Request,
+   file: Express.Multer.File,
+   cb: multer.FileFilterCallback
+) => {
    const allowedTypes = /jpeg|jpg|png/;
-   const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+   const extname = allowedTypes.test(
+      path.extname(file.originalname).toLowerCase()
+   );
    const mimetype = allowedTypes.test(file.mimetype);
 
    if (extname && mimetype) {
       cb(null, true);
-   } 
-   else {
+   } else {
       cb(new Error('Только изображения формата jpeg, jpg или png!'));
    }
 };
 
 const upload = multer({ storage, fileFilter });
 
-app.post('/me/avatar', authenticateToken, upload.single('avatar'), (req: Request, res: Response): void => {
-   const userEmail = req.user?.email;
+app.post(
+   '/me/avatar',
+   authenticateToken,
+   upload.single('avatar'),
+   (req: Request, res: Response): void => {
+      const userEmail = req.user?.email;
 
-   if (!userEmail || !users[userEmail]) {
-      res.status(404).json({ message: 'Пользователь не найден' });
-      return;
+      if (!userEmail || !users[userEmail]) {
+         res.status(404).json({ message: 'Пользователь не найден' });
+         return;
+      }
+
+      if (!req.file) {
+         res.status(400).json({ message: 'Файл не загружен' });
+         return;
+      }
+
+      const relativePath = `uploads/${req.file.filename}`;
+
+      users[userEmail].profilePic = relativePath;
+
+      res.json({
+         message: 'Аватар обновлен',
+         profilePic: `${req.protocol}://${req.get('host')}/${relativePath}`
+      });
    }
-
-   if (!req.file) {
-      res.status(400).json({ message: 'Файл не загружен' });
-      return;
-   }
-
-   const relativePath = `uploads/${req.file.filename}`;
-
-   users[userEmail].profilePic = relativePath;
-
-   res.json({ 
-      message: 'Аватар обновлен',
-      profilePic: `${req.protocol}://${req.get('host')}/${relativePath}`
-   });
-});
+);
 
 // ============
 // USER XP
@@ -469,128 +531,147 @@ app.post('/xp/add', authenticateToken, (req: Request, res: Response): void => {
    });
 });
 
-app.post('/xp/remove', authenticateToken, (req: Request, res: Response): void => {
-   const userEmail = req.user?.email;
+app.post(
+   '/xp/remove',
+   authenticateToken,
+   (req: Request, res: Response): void => {
+      const userEmail = req.user?.email;
 
-   if (!userEmail || !users[userEmail]) {
-      res.status(404).json({ message: 'Пользователь не найден' });
-      return;
+      if (!userEmail || !users[userEmail]) {
+         res.status(404).json({ message: 'Пользователь не найден' });
+         return;
+      }
+
+      let xpToRemove = 0;
+      switch (users[userEmail].difficulty) {
+         case 'hard':
+            xpToRemove = 25;
+            break;
+         default:
+            xpToRemove = 15;
+      }
+
+      users[userEmail].health = Math.max(0, users[userEmail].xp - xpToRemove);
+
+      res.json({
+         message: `Вычтено ${xpToRemove} XP`,
+         xp: users[userEmail].xp,
+         ...getLevelAndProgress(users[userEmail].xp)
+      });
    }
-
-   let xpToRemove = 0;
-   switch (users[userEmail].difficulty) {
-      case 'hard':
-         xpToRemove = 25;
-         break;
-      default:
-         xpToRemove = 15;
-   }
-
-   users[userEmail].health = Math.max(0, users[userEmail].xp - xpToRemove);
-
-   res.json({
-      message: `Вычтено ${xpToRemove} XP`,
-      xp: users[userEmail].xp,
-      ...getLevelAndProgress(users[userEmail].xp)
-   });
-});
+);
 
 // ==============
 // USER HEALTH
 // ==============
 
-app.post('/health/add', authenticateToken, (req: Request, res: Response): void => {
-   const userEmail = req.user?.email;
+app.post(
+   '/health/add',
+   authenticateToken,
+   (req: Request, res: Response): void => {
+      const userEmail = req.user?.email;
 
-   if (!userEmail || !users[userEmail]) {
-      res.status(404).json({ message: 'Пользователь не найден' });
-      return;
+      if (!userEmail || !users[userEmail]) {
+         res.status(404).json({ message: 'Пользователь не найден' });
+         return;
+      }
+
+      let healthToAdd: number = 0;
+
+      switch (users[userEmail].difficulty) {
+         case 'hard':
+            healthToAdd = 1;
+            break;
+         default:
+            healthToAdd = 3;
+      }
+
+      users[userEmail].health = Math.min(
+         users[userEmail].health + healthToAdd,
+         50
+      );
+
+      res.json({
+         message: `Добавлено ${healthToAdd} здоровья`,
+         health: users[userEmail].health,
+         delta: healthToAdd
+      });
    }
+);
 
-   let healthToAdd: number = 0;
+app.post(
+   '/health/remove',
+   authenticateToken,
+   (req: Request, res: Response): void => {
+      const userEmail = req.user?.email;
 
-   switch (users[userEmail].difficulty) {
-      case 'hard':
-         healthToAdd = 1;
-         break;
-      default:
-         healthToAdd = 3;
+      if (!userEmail || !users[userEmail]) {
+         res.status(404).json({ message: 'Пользователь не найден' });
+         return;
+      }
+
+      let healthToRemove: number = 0;
+
+      switch (users[userEmail].difficulty) {
+         case 'hard':
+            healthToRemove = 3;
+            break;
+         default:
+            healthToRemove = 2;
+      }
+
+      users[userEmail].health -= healthToRemove;
+
+      const response: any = {
+         message: `Вычтено ${healthToRemove} здоровья`,
+         health: users[userEmail].health,
+         delta: -healthToRemove,
+         dead: false
+      };
+
+      if (users[userEmail].health <= 0) {
+         response.dead = true;
+         users[userEmail].health = 0;
+      }
+
+      res.json(response);
    }
+);
 
-   users[userEmail].health = Math.min(users[userEmail].health + healthToAdd, 50);
+app.post(
+   'me/restart',
+   authenticateToken,
+   (req: Request, res: Response): void => {
+      const userEmail = req.user?.email;
 
-   res.json({
-      message: `Добавлено ${healthToAdd} здоровья`,
-      health: users[userEmail].health,
-      delta: healthToAdd
-   });
-});
+      if (!userEmail || !users[userEmail]) {
+         res.status(404).json({ message: 'Пользователь не найден' });
+         return;
+      }
 
-app.post('/health/remove', authenticateToken, (req: Request, res: Response): void => {
-   const userEmail = req.user?.email;
+      users[userEmail].xp = 0;
+      users[userEmail].health = 50;
+      users[userEmail].difficulty = 'default';
 
-   if (!userEmail || !users[userEmail]) {
-      res.status(404).json({ message: 'Пользователь не найден' });
-      return;
+      res.json({
+         message: 'Игрок пересоздан',
+         xp: users[userEmail].xp,
+         health: users[userEmail].health,
+         difficulty: users[userEmail].difficulty,
+         ...getLevelAndProgress(0)
+      });
    }
-
-   let healthToRemove: number = 0;
-
-   switch (users[userEmail].difficulty) {
-      case 'hard':
-         healthToRemove = 3;
-         break;
-      default:
-         healthToRemove = 2;
-   }
-
-   users[userEmail].health -= healthToRemove;
-
-   const response: any = {
-      message: `Вычтено ${healthToRemove} здоровья`,
-      health: users[userEmail].health,
-      delta: -healthToRemove,
-      dead: false
-   };
-
-   if (users[userEmail].health <= 0) {
-      response.dead = true;
-      users[userEmail].health = 0;
-   }
-
-   res.json(response);
-});
-
-app.post('me/restart', authenticateToken, (req: Request, res: Response): void => {
-   const userEmail = req.user?.email;
-
-   if (!userEmail || !users[userEmail]) {
-      res.status(404).json({ message: 'Пользователь не найден' });
-      return;
-   }
-
-   users[userEmail].xp = 0;
-   users[userEmail].health = 50;
-   users[userEmail].difficulty = 'default';
-
-   res.json({
-      message: 'Игрок пересоздан',
-      xp: users[userEmail].xp,
-      health: users[userEmail].health,
-      difficulty: users[userEmail].difficulty,
-      ...getLevelAndProgress(0)
-   })
-});
+);
 
 // =================
 // GITHUB AUTH
 // =================
 
 interface IGitHubTokenResponse {
-  access_token: string;
-  scope: string;
-  token_type: string;
-};
+   access_token: string;
+   scope: string;
+   token_type: string;
+}
 
 app.get('/auth/github', (req: Request, res: Response) => {
    const redirectUrl = `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&scope=read:user%20repo&redirect_uri=http://localhost:5001/auth/github/callback`;
@@ -610,14 +691,15 @@ app.get('/auth/github/callback', async (req: Request, res: Response) => {
          {
             client_id: process.env.GITHUB_CLIENT_ID,
             client_secret: process.env.GITHUB_CLIENT_SECRET,
-            code,
+            code
          },
          { headers: { Accept: 'application/json' } }
       );
 
-      res.redirect(`http://localhost:5173/github/success?token=${tokenResponse.data.access_token}`);
-   } 
-   catch (error) {
+      res.redirect(
+         `http://localhost:5173/github/success?token=${tokenResponse.data.access_token}`
+      );
+   } catch (error) {
       console.error(error);
       res.redirect(`http://localhost:5173/github/error`);
    }
@@ -636,7 +718,7 @@ app.get('/shop/items', (req: Request, res: Response) => {
 app.post('/shop/buy', authenticateToken, (req: Request, res: Response) => {
    const { itemId } = req.body;
    const userEmail = req.user?.email;
-   const item = shopItems.find(item => item.id === itemId);
+   const item = shopItems.find((item) => item.id === itemId);
 
    if (!item) {
       return res.status(404).json({ message: 'Предмет не найден' });
@@ -647,17 +729,22 @@ app.post('/shop/buy', authenticateToken, (req: Request, res: Response) => {
    }
 
    if (users[userEmail].xp < item.cost) {
-      return res.status(400).json({ message: 'Недостаточно очков для покупки' });
+      return res
+         .status(400)
+         .json({ message: 'Недостаточно очков для покупки' });
    }
 
    users[userEmail].xp -= item.cost;
 
    if (item.effect.hp) {
-      users[userEmail].health = Math.min(50, users[userEmail].health + item.effect.hp);
+      users[userEmail].health = Math.min(
+         50,
+         users[userEmail].health + item.effect.hp
+      );
    }
 
    res.json({ message: 'Успешная покупка' });
-})
+});
 
 app.get('/', (req: Request, res: Response): void => {
    res.send('Сервер авторизации работает!');

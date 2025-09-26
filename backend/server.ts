@@ -13,7 +13,7 @@ import { shopItems } from './static/shopItems';
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 5001;
+const port = Number(process.env.PORT || 5001);
 
 declare global {
    namespace Express {
@@ -750,6 +750,6 @@ app.get('/', (req: Request, res: Response): void => {
    res.send('Сервер авторизации работает!');
 });
 
-app.listen(port, () => {
+app.listen(port, '0.0.0.0', () => {
    console.log(`Сервер запущен на порту ${port}`);
 });

@@ -426,9 +426,9 @@ app.patch(
 // USER AVATAR
 // ================
 
-const uploadDir = path.resolve('uploads');
+const uploadDir = path.resolve('/tmp/uploads');
 if (!fs.existsSync(uploadDir)) {
-   fs.mkdirSync(uploadDir);
+   fs.mkdirSync(uploadDir, { recursive: true });
 }
 
 const storage = multer.diskStorage({
@@ -705,7 +705,7 @@ app.get('/auth/github/callback', async (req: Request, res: Response) => {
    }
 });
 
-app.use('/uploads', express.static(path.resolve('uploads')));
+app.use('/uploads', express.static(path.resolve('/tmp/uploads')));
 
 // ==================
 // SHOP

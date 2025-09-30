@@ -14,6 +14,7 @@ dotenv.config();
 
 const app = express();
 const port = Number(process.env.PORT || 5001);
+const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
 
 declare global {
    namespace Express {
@@ -697,11 +698,11 @@ app.get('/auth/github/callback', async (req: Request, res: Response) => {
       );
 
       res.redirect(
-         `http://localhost:5173/github/success?token=${tokenResponse.data.access_token}`
+         `${clientUrl}/github/success?token=${tokenResponse.data.access_token}`
       );
    } catch (error) {
       console.error(error);
-      res.redirect(`http://localhost:5173/github/error`);
+      res.redirect(`${clientUrl}/github/error`);
    }
 });
 

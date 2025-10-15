@@ -11,14 +11,32 @@ interface IActivityCellItemProps {
    maxActivities: number;
 }
 
-const ActivityCellItem: FC<IActivityCellItemProps> = ({ day, isHidden, activities, maxActivities }) => {
+const ActivityCellItem: FC<IActivityCellItemProps> = ({
+   day,
+   isHidden,
+   activities,
+   maxActivities
+}) => {
    const level = getActivityLevel(activities, maxActivities);
-   
+
    return (
-      <Tooltip title={isHidden ? '' : `${activities} выполненных заданий за ${dayjs(day).format('DD-MM-YYYY')}`}>
-         <div className={`${styles.container} ${isHidden ? styles.hidden : ''} ${!isHidden ? styles[`level${level}`] : ''}`}></div>
+      <Tooltip
+         title={
+            isHidden
+               ? ''
+               : `${activities} выполненных заданий за ${dayjs(day).format(
+                    'DD-MM-YYYY'
+                 )}`
+         }
+      >
+         <div
+            data-testid="activity-cell"
+            className={`${styles.container} ${isHidden ? styles.hidden : ''} ${
+               !isHidden ? styles[`level${level}`] : ''
+            }`}
+         ></div>
       </Tooltip>
-   )
-}
+   );
+};
 
 export default ActivityCellItem;

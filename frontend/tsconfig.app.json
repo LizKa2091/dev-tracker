@@ -23,5 +23,11 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src"]
+  "extends": "./tsconfig.json",
+  "include": ["src"],
+  "exclude": [
+    "src/__tests__",
+    "**/*.test.ts",
+    "**/*.test.tsx"
+  ]
 }

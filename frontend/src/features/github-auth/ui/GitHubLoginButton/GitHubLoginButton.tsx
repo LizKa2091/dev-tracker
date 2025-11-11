@@ -9,7 +9,7 @@ const GitHubLoginButton: FC = () => {
    const githubToken = localStorage.getItem('githubToken');
 
    const handleClick = () => {
-      window.location.href = 'http://localhost:5001/auth/github';
+      window.location.href = `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001'}/auth/github`;
    }
 
    if (githubToken || !token) {

@@ -1,7 +1,7 @@
-import type { INotesStorage } from "../../notes/model/constants";
 import { loadNotes } from "../../notes/model/noteStorage";
-import type { IChartDataItem } from "../deadlineNoteTypes";
 import { formatNotes } from "./formatNotes";
+import type { INotesStorage } from "../../notes/model/constants";
+import type { IChartDataItem } from "../deadlineNoteTypes";
 
 interface getDeadlineChartData {
    chartData: IChartDataItem[] | null;

@@ -1,6 +1,6 @@
+import dayjs from 'dayjs';
 import type { INoteItem } from "../../notes/noteTypes";
 import type { IChartDataItem } from "../deadlineNoteTypes";
-import dayjs from 'dayjs';
 
 export const formatNotes = (notesData: INoteItem[]): IChartDataItem[] => {
    if (!notesData) return [];

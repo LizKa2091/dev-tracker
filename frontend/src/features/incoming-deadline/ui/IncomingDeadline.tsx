@@ -1,9 +1,9 @@
 import dayjs from 'dayjs';
 import { useEffect, useState, type FC } from 'react';
-import { getIncomingDeadline } from '../model/getIncomingDeadline';
-import type { INoteItem } from '../../notes/noteTypes';
-import AuthExports from '../../../shared/context/AuthContext';
 import { Button, Card, Flex } from 'antd';
+import { getIncomingDeadline } from '../lib/getIncomingDeadline';
+import AuthExports from '../../../shared/context/AuthContext';
+import type { INoteItem } from '../../notes/noteTypes';
 import styles from './IncomingDeadline.module.scss';
 
 const IncomingDeadline: FC = () => {

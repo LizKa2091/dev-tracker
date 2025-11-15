@@ -1,9 +1,9 @@
 import { useEffect, useState, type FC } from 'react';
-import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import type { IChartDataItem } from '../deadlineNoteTypes';
 import { Flex } from 'antd';
-import { getDeadlineChartData } from '../model/getDeadlineChartData';
+import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { getDeadlineChartData } from '../lib/getDeadlineChartData';
 import { demoChartData, demoTypeData } from '../demoDeadlineData';
+import type { IChartDataItem } from '../deadlineNoteTypes';
 import styles from './DeadlineChart.module.scss';
 
 const colors: string[] = ['#8884d8', '#82ca9d', '#ffc658', '#ff7f50', '#a4de6c'];

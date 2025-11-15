@@ -3,7 +3,7 @@ import { useEffect, useState, type FC } from 'react'
 import type { INoteItem } from '../../../../features/notes/noteTypes';
 import { Badge, Button, Card, Flex, Space, Tag, Grid } from 'antd';
 import { CheckOutlined, DeleteOutlined } from '@ant-design/icons';
-import { changeNoteStatus } from '../../model/changeNoteStatus';
+import { changeNoteStatus } from '../../lib/changeNoteStatus';
 import { useXpAction } from '../../model/useXpAction';
 import { useHealthAction } from '../../model/useHealthAction';
 import { useCompletedNoteNotification } from '../../../notifications/lib/useCompletedNoteNotification';

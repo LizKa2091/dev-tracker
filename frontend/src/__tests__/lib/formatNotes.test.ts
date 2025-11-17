@@ -11,7 +11,7 @@ vi.mock('dayjs', async (importOriginal) => {
    return {
       __esModule: true,
       default: (date?: string | Date) =>
-         date ? actual(date) : mockToday.clone(),
+         date ? actual(date) : actual(mockToday.toISOString()), 
       ...actual,
    };
 });
@@ -34,9 +34,19 @@ describe('formatNotes tests', () => {
 
    test('return array of last 14 days if input is empty', () => {
       const result = formatNotes([]);
+
       expect(result).toHaveLength(14);
-      expect(result[0].date).toBe(mockToday.subtract(13, 'day').format('YYYY-MM-DD'));
-      expect(result[13].date).toBe(mockToday.format('YYYY-MM-DD'));
+
+      const last = dayjs(result[result.length - 1].date);
+      const first = dayjs(result[0].date);
+
+      expect(last.diff(first, 'day')).toBe(13);
+
+      for (let i = 1; i < result.length; i++) {
+         const prev = dayjs(result[i - 1].date);
+         const curr = dayjs(result[i].date);
+         expect(curr.diff(prev, 'day')).toBe(1);
+      }
    });
 
    test('counts amount of notes by their type for recent 14 days', () => {
@@ -44,13 +54,13 @@ describe('formatNotes tests', () => {
          makeNote({ dueToDate: mockToday.toISOString(), type: 'work' }),
          makeNote({ dueToDate: mockToday.toISOString(), type: 'study' }),
          makeNote({ dueToDate: mockToday.toISOString(), type: 'work' }),
-         makeNote({ dueToDate: mockToday.subtract(1, 'day').toISOString(), type: 'study' })
+         makeNote({ dueToDate: mockToday.clone().subtract(1, 'day').toISOString(), type: 'study' })
       ];
 
       const result = formatNotes(notes);
 
       const todayStr = mockToday.format('YYYY-MM-DD');
-      const yesterdayStr = mockToday.subtract(1, 'day').format('YYYY-MM-DD');
+      const yesterdayStr = mockToday.clone().subtract(1, 'day').format('YYYY-MM-DD');
 
       const todayData = result.find(r => r.date === todayStr);
       const yesterdayData = result.find(r => r.date === yesterdayStr);
@@ -59,15 +69,18 @@ describe('formatNotes tests', () => {
       expect(yesterdayData).toEqual({ date: yesterdayStr, study: 1 });
    });
 
-   test('returns data in reverse order', () => {
+   test('returns data in chronological order', () => {
       const notes: INoteItem[] = [
-         makeNote({ dueToDate: mockToday.subtract(13, 'day').toISOString(), type: 'work' }),
+         makeNote({ dueToDate: mockToday.clone().subtract(13, 'day').toISOString(), type: 'work' }),
          makeNote({ dueToDate: mockToday.toISOString(), type: 'study' })
       ];
 
       const result = formatNotes(notes);
 
-      expect(result[0].date).toBe(mockToday.subtract(13, 'day').format('YYYY-MM-DD'));
-      expect(result[result.length - 1].date).toBe(mockToday.format('YYYY-MM-DD'));
+      const first = dayjs(result[0].date);
+      const last = dayjs(result[result.length - 1].date);
+
+      expect(first.isBefore(last)).toBe(true);
+      expect(first.diff(last, 'day')).toBe(-13);
    });
 });

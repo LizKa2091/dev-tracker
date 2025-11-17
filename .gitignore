@@ -32,3 +32,6 @@ dist-ssr
 
 # env
 *.env
+
+# tests
+coverage

@@ -2,9 +2,9 @@ import '@testing-library/jest-dom';
 
 import { render, screen, waitFor } from '@testing-library/react';
 import { describe, test, expect, vi, beforeEach } from 'vitest';
-import DeadlineChart from '@/features/deadlines/ui/DeadlineChart';
-import { demoTypeData } from '@/features/deadlines/demoDeadlineData';
-import { getDeadlineChartData } from '@/features/deadlines/model/getDeadlineChartData';
+import DeadlineChart from '../../features/deadlines/ui/DeadlineChart';
+import { demoTypeData } from '../../features/deadlines/demoDeadlineData';
+import { getDeadlineChartData } from '../../features/deadlines/lib/getDeadlineChartData';
 
 global.ResizeObserver = class {
    observe() {}
@@ -22,11 +22,11 @@ vi.mock('recharts', async () => {
    };
 });
 
-vi.mock('@/features/deadlines/ui/DeadlineChart/DeadlineChart.module.scss', () => ({
+vi.mock('../../features/deadlines/ui/DeadlineChart/DeadlineChart.module.scss', () => ({
    default: { container: 'container' },
 }));
 
-vi.mock('@/features/deadlines/model/getDeadlineChartData', () => ({
+vi.mock('../../features/deadlines/lib/getDeadlineChartData', () => ({
    getDeadlineChartData: vi.fn(),
 }));
 

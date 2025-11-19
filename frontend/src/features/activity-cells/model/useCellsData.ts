@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { useUserData } from '../../user/model/useUserData';
-import { githubLoadCommits } from "../../github/lib/githubStorage";
+import { githubLoadCommits } from "../../github/model/githubStorage";
 import AuthExports from "../../../shared/context/AuthContext";
 import type { ICellsData } from "../activityCellTypes";
 import type { INoteItem } from "../../notes/noteTypes";

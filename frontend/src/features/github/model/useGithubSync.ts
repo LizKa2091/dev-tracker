@@ -6,7 +6,7 @@ import { getGithubCommits } from "../../../shared/api/github/getGithubCommits";
 import type { IGithubStorageCommit } from "../githubTypes";
 import { useXpAction } from "../../../shared/note-item/model/useXpAction";
 import { useCommitNotifications } from "../../../shared/notifications/lib/useCommitNotification";
-import { githubGetRepCommits, githubSaveCommits } from "../lib/githubStorage";
+import { githubGetRepCommits, githubSaveCommits } from "./githubStorage";
 import { githubCommitsCompare } from "../lib/githubCommitsCompare";
 
 export const useGithubSync = (githubToken: string | null) => {

@@ -42,7 +42,7 @@ describe('IncomingDeadline tests', () => {
       expect(screen.getByText(`Срок: ${formatted}`)).toBeInTheDocument();
    });
 
-   test('кнопка скрывает и показывает карточку', () => {
+   test('button hides and displays card', () => {
       (AuthExports.useAuthContext as any).mockReturnValue({ isAuthed: true });
 
       (getIncomingDeadline as any).mockReturnValue({

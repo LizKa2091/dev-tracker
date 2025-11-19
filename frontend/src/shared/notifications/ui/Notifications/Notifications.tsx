@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { Flex } from 'antd';
 import NotificationItem from '../NotificationItem/NotificationItem';
 import type { INotification } from '../../notificationTypes';
-import { useMissedDeadlinesNotifications } from '../../../../features/missed-deadline/lib/useMissedDeadlinesNotification';
+import { useMissedDeadlinesNotifications } from '../../../../features/missed-deadline/model/useMissedDeadlinesNotification';
 import { useCommitNotifications } from '../../lib/useCommitNotification';
 import NotificationsExports from '../../model/NotificationsContext';
 import styles from './Notifications.module.scss';

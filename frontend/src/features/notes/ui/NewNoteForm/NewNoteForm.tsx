@@ -91,7 +91,7 @@ const NewNoteForm: FC<INewNoteFormProps> = ({
                   name="title"
                   control={control}
                   rules={{ required: true }}
-                  render={({ field }) => <Input disabled={!token} {...field} />}
+                  render={({ field }) => <Input disabled={!token} data-testid='title-input' {...field} />}
                />
             </Form.Item>
             <Form.Item
@@ -110,6 +110,7 @@ const NewNoteForm: FC<INewNoteFormProps> = ({
                         showSearch
                         options={typeOptions}
                         disabled={!token}
+                        data-testid='type-select'
                         {...field}
                      />
                   )}
@@ -143,6 +144,7 @@ const NewNoteForm: FC<INewNoteFormProps> = ({
                   render={({ field }) => (
                      <DatePicker
                         disabled={!token}
+                        data-testid='date-input'
                         className={!token ? styles.dateDisabled : ''}
                         {...field}
                      />
@@ -169,6 +171,7 @@ const NewNoteForm: FC<INewNoteFormProps> = ({
                   color="default"
                   variant="solid"
                   htmlType="submit"
+                  data-testid='submit-btn'
                   disabled={!token}
                >
                   Создать

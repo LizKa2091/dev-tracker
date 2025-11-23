@@ -1,13 +1,13 @@
 import type { FC } from 'react';
 import { Flex } from 'antd';
 import NotificationItem from '../NotificationItem/NotificationItem';
-import type { INotification } from '../../notificationTypes';
-import { useMissedDeadlinesNotifications } from '../../../../features/missed-deadline/model/useMissedDeadlinesNotification';
-import { useCommitNotifications } from '../../lib/useCommitNotification';
 import NotificationsExports from '../../model/NotificationsContext';
-import styles from './Notifications.module.scss';
-import { useCompletedNoteNotification } from '../../lib/useCompletedNoteNotification';
+import { useMissedDeadlinesNotifications } from '../../../../features/missed-deadline/model/useMissedDeadlinesNotification';
+import { useCommitNotifications } from '../../model/useCommitNotification';
+import { useCompletedNoteNotification } from '../../model/useCompletedNoteNotification';
 import { usePurchaseNotification } from '../../../../features/shop-buy-item/model/usePurchaseNotification';
+import type { INotification } from '../../notificationTypes';
+import styles from './Notifications.module.scss';
 
 const Notifications: FC = () => {
    const { notificationsData, removeNotification } = NotificationsExports.useNotifications();

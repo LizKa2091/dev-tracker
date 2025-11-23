@@ -5,7 +5,7 @@ import * as GithubAPI from '../../shared/api/github/getGithubUser';
 import * as GithubReposAPI from '../../shared/api/github/getGithubRepositories';
 import * as GithubCommitsAPI from '../../shared/api/github/getGithubCommits';
 import * as XpHook from '../../shared/note-item/model/useXpAction';
-import * as NotifyHook from '../../shared/notifications/lib/useCommitNotification';
+import * as NotifyHook from '../../shared/notifications/model/useCommitNotification';
 import * as Storage from '../../features/github/model/githubStorage';
 import AuthExports from '../../shared/context/AuthContext';
 import type { IGithubStorageCommit } from '../../features/github/githubTypes';
@@ -14,7 +14,7 @@ vi.mock('../../shared/api/github/getGithubUser');
 vi.mock('../../shared/api/github/getGithubRepositories');
 vi.mock('../../shared/api/github/getGithubCommits');
 vi.mock('../../shared/note-item/model/useXpAction');
-vi.mock('../../shared/notifications/lib/useCommitNotification');
+vi.mock('../../shared/notifications/model/useCommitNotification');
 vi.mock('../../features/github/model/githubStorage');
 vi.mock('../../shared/context/AuthContext', async (importOriginal) => {
    const actual = await importOriginal<typeof import('../../shared/context/AuthContext')>();

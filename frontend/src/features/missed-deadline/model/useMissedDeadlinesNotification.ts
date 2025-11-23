@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { getMissedDeadlines } from "../model/getMissedDeadlines";
+import { getMissedDeadlines } from "./getMissedDeadlines";
 import AuthExports from "../../../shared/context/AuthContext";
 import NotificationsExports from "../../../shared/notifications/model/NotificationsContext";
 import type { INoteItem } from "../../notes/noteTypes";
-import { loadShownDeadlines, saveShownDeadlines } from "../model/loadShownDeadlines";
+import { loadShownDeadlines, saveShownDeadlines } from "./loadShownDeadlines";
 import { useHealthAction } from "../../../shared/note-item/model/useHealthAction";
 
 export const useMissedDeadlinesNotifications = () => {

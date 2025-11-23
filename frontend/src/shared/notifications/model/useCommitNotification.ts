@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import NotificationsExports from "../model/NotificationsContext";
+import NotificationsExports from "./NotificationsContext";
 import AuthExports from "../../context/AuthContext";
 
 export const useCommitNotifications = () => {

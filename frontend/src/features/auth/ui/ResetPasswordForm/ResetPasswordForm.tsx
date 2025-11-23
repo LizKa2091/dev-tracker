@@ -47,14 +47,53 @@ const ResetPasswordForm: FC = () => {
       <Flex vertical gap='middle' className={styles.mainContainer}>
          <h3>Смена пароля</h3>
          <Form onFinish={onFinish} className={styles.form}>
-            <Form.Item label='Новый пароль' required validateStatus={errors.newPassword ? 'error' : ''} help={errors.newPassword?.message} className={styles.formItem}>
-               <Controller name='newPassword' control={control} rules={{ required: 'Введите новый пароль', minLength: { value: 6, message: 'Минимум 6 символов' } }} render={({ field }) => <Input.Password {...field} />} />
+            <Form.Item 
+               label='Новый пароль'  
+               validateStatus={errors.newPassword ? 'error' : ''} 
+               help={errors.newPassword?.message} 
+               required
+               className={styles.formItem}
+            >
+               <Controller 
+                  name='newPassword' 
+                  control={control} 
+                  rules={{ 
+                     required: 'Введите новый пароль', 
+                     minLength: { value: 6, message: 'Минимум 6 символов' } 
+                  }} 
+                  render={({ field }) => 
+                     <Input.Password placeholder='Новый пароль' {...field} />
+                  } 
+               />
             </Form.Item>
-            <Form.Item label='Новый пароль повторно' required validateStatus={errors.passwordRepeat ? 'error' : ''} help={errors.passwordRepeat?.message} className={styles.formItem}>
-               <Controller name='passwordRepeat' control={control} rules={{ required: 'Введите новый пароль ещё раз', validate: (value) => value === watch('newPassword') || 'Пароли должны совпадать' }} render={({ field }) => <Input.Password {...field} />} />
+            <Form.Item 
+               label='Новый пароль повторно' 
+               validateStatus={errors.passwordRepeat ? 'error' : ''} 
+               help={errors.passwordRepeat?.message} 
+               required 
+               className={styles.formItem}
+            >
+               <Controller 
+                  name='passwordRepeat' 
+                  control={control} 
+                  rules={{ 
+                     required: 'Введите новый пароль ещё раз', 
+                     validate: (value) => value === watch('newPassword') || 'Пароли должны совпадать' 
+                  }} 
+                  render={({ field }) => 
+                     <Input.Password placeholder='Введите новый пароль повторно' {...field} />
+                  } 
+               />
             </Form.Item>
             <Flex justify='center'>
-               <Button color="default" variant="solid" htmlType='submit' disabled={isPending}>Сменить пароль</Button>
+               <Button 
+                  color="default" 
+                  variant="solid" 
+                  htmlType='submit' 
+                  disabled={isPending}
+               >
+                  Сменить пароль
+               </Button>
             </Flex>
          </Form>
          <Flex vertical align='center' gap='middle'>

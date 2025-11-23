@@ -90,7 +90,7 @@ const LoginForm: FC = () => {
                         message: 'Неверный формат почты'
                      }
                   }}
-                  render={({ field }) => <Input {...field} />}
+                  render={({ field }) => <Input data-testid='email' {...field} />}
                />
             </Form.Item>
             <Form.Item
@@ -110,7 +110,7 @@ const LoginForm: FC = () => {
                         message: 'Пароль должен содержать минимум 6 символов'
                      }
                   }}
-                  render={({ field }) => <Input.Password {...field} />}
+                  render={({ field }) => <Input.Password data-testid='password' {...field} />}
                />
             </Form.Item>
             <Flex justify="center">

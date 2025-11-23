@@ -6,7 +6,7 @@ import { CheckOutlined, DeleteOutlined } from '@ant-design/icons';
 import { changeNoteStatus } from '../../lib/changeNoteStatus';
 import { useXpAction } from '../../model/useXpAction';
 import { useHealthAction } from '../../model/useHealthAction';
-import { useCompletedNoteNotification } from '../../../notifications/lib/useCompletedNoteNotification';
+import { useCompletedNoteNotification } from '../../../notifications/model/useCompletedNoteNotification';
 import EditField from '../EditField/EditField';
 import AuthExports from '../../../context/AuthContext';
 import UndoProgress from '../UndoProgress/UndoProgress';

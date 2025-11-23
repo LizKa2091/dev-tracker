@@ -7,7 +7,7 @@ vi.mock('../../features/user/model/useUserData', () => ({
    useUserData: vi.fn(),
 }));
 
-vi.mock('../../features/github/lib/githubStorage', () => ({
+vi.mock('../../features/github/model/githubStorage', () => ({
    githubLoadCommits: vi.fn(),
 }));
 
@@ -18,7 +18,7 @@ vi.mock('../../shared/context/AuthContext', () => ({
 }));
 
 import { useUserData } from '../../features/user/model/useUserData';
-import { githubLoadCommits } from '../../features/github/lib/githubStorage';
+import { githubLoadCommits } from '../../features/github/model/githubStorage';
 import AuthExports from '../../shared/context/AuthContext';
 
 describe('useCellsData tests', () => {

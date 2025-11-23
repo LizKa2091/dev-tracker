@@ -1,5 +1,5 @@
 import type { IGithubStorageRepCommits } from "../../github/githubTypes";
-import { githubLoadCommits } from "../../github/lib/githubStorage";
+import { githubLoadCommits } from "../../github/model/githubStorage";
 import dayjs from 'dayjs';
 
 dayjs().format()

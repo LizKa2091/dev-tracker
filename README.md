@@ -1,5 +1,6 @@
 ![React](https://img.shields.io/badge/React-19.1.0-blue?logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.8.3-3178C6?logo=typescript)
+![Redux Toolkit](https://img.shields.io/badge/Redux%20Toolkit-764ABC?logo=redux&logoColor=white)
 ![React Query](https://img.shields.io/badge/React_Query-5.83.0-FF4154?logo=react-query)
 ![React Hook Form](https://img.shields.io/badge/React_Hook_Form-7.60.0-EC5990?logo=react-hook-form)
 ![React Router](https://img.shields.io/badge/React_Router_DOM-7.7.0-CA4245?logo=react-router)
@@ -7,18 +8,22 @@
 ![SCSS](https://img.shields.io/badge/SCSS-1.89.2-CC6699?logo=sass)
 ![Ant Design](https://img.shields.io/badge/AntDesign-5.26.5-0170FE?logo=ant-design)
 ![Vite](https://img.shields.io/badge/Vite-7.0.4-646CFF?logo=vite) 
-![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-000?logo=vercel)
+
+![Vitest](https://img.shields.io/badge/Tested%20with-Vitest-6E9F18?logo=vitest&logoColor=white)
+![React Testing Library](https://img.shields.io/badge/React%20Testing%20Library-FF4154?logo=testinglibrary&logoColor=white)
 ![Coverage](https://img.shields.io/badge/Coverage-65.65%25-brightgreen)
 
+![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-000?logo=vercel)
+
 # Dev Tracker
-Сервис для отслеживания прогресса в разработке — управление задачами, система здоровья и опыта, магазин и интеграция активности GitHub
+Сервис для отслеживания прогресса в разработке - управление задачами, система здоровья и опыта, магазин и интеграция активности GitHub
 
 🔗 [Демо](https://dev-tracker-client.vercel.app/)
 
 ---
 
 ## 📌 О проекте
-Dev Tracker — это веб-приложение, которое помогает разработчикам:
+Dev Tracker - это веб-приложение, которое помогает разработчикам:
 
 - вести учёт активности через заметки, их статусы и сроки
 - визуализировать прогресс (диаграммы, статистика)
@@ -34,9 +39,9 @@ Dev Tracker — это веб-приложение, которое помога�
 - SCSS
 - React Hook Form (для форм и валидации)
 - React Query + Axios (для работы с API, кеширования)
-- Recharts (для построения графиков)
 - React Router DOM (для роутинга)
-- Context API (для глобального состояния)
+- Redux Toolkit (для глобального состояния)
+- Recharts (для построения графиков)
 - Vite (для сборки)
 - Vitest, React Testing library (для тестирования)
 
